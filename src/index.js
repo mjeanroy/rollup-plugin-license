@@ -31,7 +31,7 @@ const MagicString = require('magic-string');
 
 const EOL = '\n';
 
-module.exports = function (options) {
+module.exports = (options) => {
   return {
     transformBundle(code) {
       const file = path.resolve(options.file);
