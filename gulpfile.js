@@ -26,9 +26,24 @@ const fs = require('fs');
 const path = require('path');
 const gulp = require('gulp');
 const jasmine = require('gulp-jasmine');
+const babel = require('gulp-babel');
+const del = require('del');
 
-gulp.task('test', function() {
+gulp.task('test', ['build'], () => {
   return gulp
     .src(path.join(__dirname, 'test', '**', '*.spec.js'))
     .pipe(jasmine());
+});
+
+gulp.task('clean', () => {
+  return del([
+    path.join(__dirname, 'dist')
+  ]);
+});
+
+gulp.task('build', ['clean'], () => {
+  return gulp
+    .src(path.join(__dirname, 'src', 'index.js'))
+    .pipe(babel())
+    .pipe(gulp.dest(path.join(__dirname, 'dist')));
 });

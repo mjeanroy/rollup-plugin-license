@@ -24,7 +24,7 @@
 
 const path = require('path');
 const moment = require('moment');
-const plugin = require('../src/index.js');
+const plugin = require('../dist/index.js');
 
 describe('rollup-plugin-license', () => {
   it('should prepend banner to bundle', (done) => {

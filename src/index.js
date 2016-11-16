@@ -47,13 +47,13 @@ module.exports = function (options) {
         const tmpl = _.template(content);
 
         // Generate the banner.
-        var banner = tmpl({_, moment});
+        let banner = tmpl({_, moment});
 
         // Make a block comment if needed
         const trimmedBanner = banner.trim();
         const start = trimmedBanner.slice(0, 3);
         if (start !== '/**') {
-          var bannerContent = trimmedBanner
+          const bannerContent = trimmedBanner
             .split(`${EOL}`)
             .map((line) => _.trimEnd(` * ${line}`))
             .join(`${EOL}`);
