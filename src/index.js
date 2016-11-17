@@ -31,62 +31,71 @@ const MagicString = require('magic-string');
 
 const EOL = '\n';
 
-module.exports = (options) => {
+module.exports = (options = {}) => {
   return {
     transformBundle(code) {
-      const file = path.resolve(options.file);
+      const file = options.file || 'LICENSE';
+      const filePath = path.resolve(file);
 
       const deferred = Q.defer();
 
-      fs.readFile(file, 'utf-8', (error, content) => {
-        if (error) {
-          return deferred.reject(error);
+      fs.exists(filePath, (exists) => {
+        if (!exists) {
+          deferred.reject(new Error(`File ${filePath} does not exist`));
+          return;
         }
 
-        // Import the `package.json` of the project.
-        // The `resolve` function
-        const pkgPath = path.resolve(process.cwd(), 'package.json');
-        const pkg = require(pkgPath);
+        fs.readFile(filePath, 'utf-8', (error, content) => {
+          if (error) {
+            deferred.reject(error);
+            return;
+          }
 
-        // Create the template function with lodash.
-        const tmpl = _.template(content);
+          // Import the `package.json` of the project.
+          // Use `process.cdwd()`
+          const pkgPath = path.resolve(process.cwd(), 'package.json');
+          const pkg = require(pkgPath);
 
-        // Generate the banner.
-        let banner = tmpl({_, moment, pkg});
+          // Create the template function with lodash.
+          const tmpl = _.template(content);
 
-        // Make a block comment if needed
-        const trimmedBanner = banner.trim();
-        const start = trimmedBanner.slice(0, 3);
-        if (start !== '/**') {
-          const bannerContent = trimmedBanner
-            .split(`${EOL}`)
-            .map((line) => _.trimEnd(` * ${line}`))
-            .join(`${EOL}`);
+          // Generate the banner.
+          let banner = tmpl({_, moment, pkg});
 
-          banner = `/**${EOL}${bannerContent}${EOL} */${EOL}`;
-        }
+          // Make a block comment if needed
+          const trimmedBanner = banner.trim();
+          const start = trimmedBanner.slice(0, 3);
+          if (start !== '/**') {
+            const bannerContent = trimmedBanner
+              .split(`${EOL}`)
+              .map((line) => _.trimEnd(` * ${line}`))
+              .join(`${EOL}`);
 
-        // Create a magicString: do not manipulate the string directly since it
-        // will be used to generate the sourcemap.
-        const magicString = new MagicString(code);
+            banner = `/**${EOL}${bannerContent}${EOL} */${EOL}`;
+          }
 
-        // Prepend the banner.
-        magicString.prepend(`${banner}${EOL}`);
+          // Create a magicString: do not manipulate the string directly since it
+          // will be used to generate the sourcemap.
+          const magicString = new MagicString(code);
 
-        // Create the result object.
-        const result = {
-          code: magicString.toString(),
-        };
+          // Prepend the banner.
+          magicString.prepend(`${banner}${EOL}`);
 
-        // Add sourceMap information if it is enabled.
-        if (options.sourceMap !== false) {
-          result.map = magicString.generateMap({
-            hires: true,
-          });
-        }
+          // Create the result object.
+          const result = {
+            code: magicString.toString(),
+          };
 
-        // Everything is ok.
-        return deferred.resolve(result);
+          // Add sourceMap information if it is enabled.
+          if (options.sourceMap !== false) {
+            result.map = magicString.generateMap({
+              hires: true,
+            });
+          }
+
+          // Everything is ok.
+          deferred.resolve(result);
+        });
       });
 
       return deferred.promise;

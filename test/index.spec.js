@@ -52,6 +52,21 @@ describe('rollup-plugin-license', () => {
     });
   });
 
+  it('should prepend default LICENSE file banner to bundle', (done) => {
+    const instance = plugin();
+
+    const code = 'var foo = 0;';
+
+    const promise = instance.transformBundle(code);
+
+    promise.then((result) => {
+      expect(result).toBeDefined();
+      expect(result.code).toBeDefined();
+      expect(result.code).toContain('The MIT License (MIT)');
+      done();
+    });
+  });
+
   it('should prepend banner and create block comment', (done) => {
     const instance = plugin({
       file: path.join(__dirname, 'fixtures', 'banner.txt'),
