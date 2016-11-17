@@ -41,7 +41,7 @@ module.exports = (options = {}) => {
 
       fs.exists(filePath, (exists) => {
         if (!exists) {
-          deferred.reject(new Error(`File ${filePath} does not exist`));
+          deferred.resolve({code});
           return;
         }
 

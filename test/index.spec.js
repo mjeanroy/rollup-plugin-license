@@ -67,6 +67,23 @@ describe('rollup-plugin-license', () => {
     });
   });
 
+  it('should not fail if banner file does not exist', (done) => {
+    const instance = plugin({
+      file: path.join(__dirname, 'fixtures', 'dummy'),
+    });
+
+    const code = 'var foo = 0;';
+
+    const promise = instance.transformBundle(code);
+
+    promise.then((result) => {
+      expect(result).toBeDefined();
+      expect(result.code).toBeDefined();
+      expect(result.code).toBe(code);
+      done();
+    });
+  });
+
   it('should prepend banner and create block comment', (done) => {
     const instance = plugin({
       file: path.join(__dirname, 'fixtures', 'banner.txt'),
