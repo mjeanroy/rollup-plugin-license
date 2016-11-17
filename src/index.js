@@ -43,11 +43,16 @@ module.exports = (options) => {
           return deferred.reject(error);
         }
 
+        // Import the `package.json` of the project.
+        // The `resolve` function
+        const pkgPath = path.resolve(process.cwd(), 'package.json');
+        const pkg = require(pkgPath);
+
         // Create the template function with lodash.
         const tmpl = _.template(content);
 
         // Generate the banner.
-        let banner = tmpl({_, moment});
+        let banner = tmpl({_, moment, pkg});
 
         // Make a block comment if needed
         const trimmedBanner = banner.trim();

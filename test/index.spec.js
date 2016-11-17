@@ -134,4 +134,27 @@ describe('rollup-plugin-license', () => {
       done();
     });
   });
+
+  it('should prepend banner and replace package variables', (done) => {
+    const instance = plugin({
+      file: path.join(__dirname, 'fixtures', 'banner-with-pkg.js'),
+    });
+
+    const code = 'var foo = 0;';
+
+    const promise = instance.transformBundle(code);
+
+    promise.then((result) => {
+      expect(result).toBeDefined();
+      expect(result.code).toEqual(
+        `/**\n` +
+        ` * Name: rollup-plugin-license\n` +
+        ` */\n` +
+        `\n` +
+        `var foo = 0;`
+      );
+
+      done();
+    });
+  });
 });
