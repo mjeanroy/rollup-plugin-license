@@ -27,106 +27,89 @@ const moment = require('moment');
 const plugin = require('../dist/index.js');
 
 describe('rollup-plugin-license', () => {
-  it('should prepend banner to bundle', (done) => {
+  it('should prepend banner to bundle', () => {
     const instance = plugin({
       file: path.join(__dirname, 'fixtures', 'banner.js'),
     });
 
     const code = 'var foo = 0;';
 
-    const promise = instance.transformBundle(code);
+    const result = instance.transformBundle(code);
 
-    promise.then((result) => {
-      expect(result).toBeDefined();
-      expect(result.code).toEqual(
-        `/**\n` +
-        ` * Test banner.\n` +
-        ` *\n` +
-        ` * With a second line.\n` +
-        ` */\n` +
-        `\n` +
-        `${code}`
-      );
-
-      done();
-    });
+    expect(result).toBeDefined();
+    expect(result.code).toEqual(
+      `/**\n` +
+      ` * Test banner.\n` +
+      ` *\n` +
+      ` * With a second line.\n` +
+      ` */\n` +
+      `\n` +
+      `${code}`
+    );
   });
 
-  it('should prepend default LICENSE file banner to bundle', (done) => {
+  it('should prepend default LICENSE file banner to bundle', () => {
     const instance = plugin();
 
     const code = 'var foo = 0;';
 
-    const promise = instance.transformBundle(code);
+    const result = instance.transformBundle(code);
 
-    promise.then((result) => {
-      expect(result).toBeDefined();
-      expect(result.code).toBeDefined();
-      expect(result.code).toContain('The MIT License (MIT)');
-      done();
-    });
+    expect(result).toBeDefined();
+    expect(result.code).toBeDefined();
+    expect(result.code).toContain('The MIT License (MIT)');
   });
 
-  it('should not fail if banner file does not exist', (done) => {
+  it('should not fail if banner file does not exist', () => {
     const instance = plugin({
       file: path.join(__dirname, 'fixtures', 'dummy'),
     });
 
     const code = 'var foo = 0;';
 
-    const promise = instance.transformBundle(code);
+    const result = instance.transformBundle(code);
 
-    promise.then((result) => {
-      expect(result).toBeDefined();
-      expect(result.code).toBeDefined();
-      expect(result.code).toBe(code);
-      done();
-    });
+    expect(result).toBeDefined();
+    expect(result.code).toBeDefined();
+    expect(result.code).toBe(code);
   });
 
-  it('should prepend banner and create block comment', (done) => {
+  it('should prepend banner and create block comment', () => {
     const instance = plugin({
       file: path.join(__dirname, 'fixtures', 'banner.txt'),
     });
 
     const code = 'var foo = 0;';
 
-    const promise = instance.transformBundle(code);
+    const result = instance.transformBundle(code);
 
-    promise.then((result) => {
-      expect(result).toBeDefined();
-      expect(result.code).toEqual(
-        `/**\n` +
-        ` * Test banner.\n` +
-        ` *\n` +
-        ` * With a second line.\n` +
-        ` */\n` +
-        `\n` +
-        `${code}`
-      );
-
-      done();
-    });
+    expect(result).toBeDefined();
+    expect(result.code).toEqual(
+      `/**\n` +
+      ` * Test banner.\n` +
+      ` *\n` +
+      ` * With a second line.\n` +
+      ` */\n` +
+      `\n` +
+      `${code}`
+    );
   });
 
-  it('should prepend banner to bundle and create sourceMap', (done) => {
+  it('should prepend banner to bundle and create sourceMap', () => {
     const instance = plugin({
       file: path.join(__dirname, 'fixtures', 'banner.js'),
     });
 
     const code = 'var foo = 0;';
 
-    const promise = instance.transformBundle(code);
+    const result = instance.transformBundle(code);
 
-    promise.then((result) => {
-      expect(result).toBeDefined();
-      expect(result.code).toBeDefined();
-      expect(result.map).toBeDefined();
-      done();
-    });
+    expect(result).toBeDefined();
+    expect(result.code).toBeDefined();
+    expect(result.map).toBeDefined();
   });
 
-  it('should prepend banner to bundle and do not create sourceMap', (done) => {
+  it('should prepend banner to bundle and do not create sourceMap', () => {
     const instance = plugin({
       sourceMap: false,
       file: path.join(__dirname, 'fixtures', 'banner.js'),
@@ -134,59 +117,48 @@ describe('rollup-plugin-license', () => {
 
     const code = 'var foo = 0;';
 
-    const promise = instance.transformBundle(code);
+    const result = instance.transformBundle(code);
 
-    promise.then((result) => {
-      expect(result).toBeDefined();
-      expect(result.code).toBeDefined();
-      expect(result.map).not.toBeDefined();
-      done();
-    });
+    expect(result).toBeDefined();
+    expect(result.code).toBeDefined();
+    expect(result.map).not.toBeDefined();
   });
 
-  it('should prepend banner and replace moment variables', (done) => {
+  it('should prepend banner and replace moment variables', () => {
     const instance = plugin({
       file: path.join(__dirname, 'fixtures', 'banner-with-moment.js'),
     });
 
     const code = 'var foo = 0;';
 
-    const promise = instance.transformBundle(code);
+    const result = instance.transformBundle(code);
 
-    promise.then((result) => {
-      expect(result).toBeDefined();
-      expect(result.code).toEqual(
-        `/**\n` +
-        ` * Date: ${moment().format('YYYY-MM-DD')}\n` +
-        ` */\n` +
-        `\n` +
-        `var foo = 0;`
-      );
-
-      done();
-    });
+    expect(result).toBeDefined();
+    expect(result.code).toEqual(
+      `/**\n` +
+      ` * Date: ${moment().format('YYYY-MM-DD')}\n` +
+      ` */\n` +
+      `\n` +
+      `var foo = 0;`
+    );
   });
 
-  it('should prepend banner and replace package variables', (done) => {
+  it('should prepend banner and replace package variables', () => {
     const instance = plugin({
       file: path.join(__dirname, 'fixtures', 'banner-with-pkg.js'),
     });
 
     const code = 'var foo = 0;';
 
-    const promise = instance.transformBundle(code);
+    const result = instance.transformBundle(code);
 
-    promise.then((result) => {
-      expect(result).toBeDefined();
-      expect(result.code).toEqual(
-        `/**\n` +
-        ` * Name: rollup-plugin-license\n` +
-        ` */\n` +
-        `\n` +
-        `var foo = 0;`
-      );
-
-      done();
-    });
+    expect(result).toBeDefined();
+    expect(result.code).toEqual(
+      `/**\n` +
+      ` * Name: rollup-plugin-license\n` +
+      ` */\n` +
+      `\n` +
+      `var foo = 0;`
+    );
   });
 });

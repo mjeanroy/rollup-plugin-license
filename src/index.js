@@ -24,7 +24,6 @@
 
 const fs = require('fs');
 const path = require('path');
-const Q = require('q');
 const _ = require('lodash');
 const moment = require('moment');
 const MagicString = require('magic-string');
@@ -37,68 +36,56 @@ module.exports = (options = {}) => {
       const file = options.file || 'LICENSE';
       const filePath = path.resolve(file);
 
-      const deferred = Q.defer();
+      const exists = fs.existsSync(filePath);
+      if (!exists) {
+        return {code};
+      }
 
-      fs.exists(filePath, (exists) => {
-        if (!exists) {
-          deferred.resolve({code});
-          return;
-        }
+      const content = fs.readFileSync(filePath, 'utf-8');
 
-        fs.readFile(filePath, 'utf-8', (error, content) => {
-          if (error) {
-            deferred.reject(error);
-            return;
-          }
+      // Import the `package.json` of the project.
+      // Use `process.cdwd()`
+      const pkgPath = path.resolve(process.cwd(), 'package.json');
+      const pkg = require(pkgPath);
 
-          // Import the `package.json` of the project.
-          // Use `process.cdwd()`
-          const pkgPath = path.resolve(process.cwd(), 'package.json');
-          const pkg = require(pkgPath);
+      // Create the template function with lodash.
+      const tmpl = _.template(content);
 
-          // Create the template function with lodash.
-          const tmpl = _.template(content);
+      // Generate the banner.
+      let banner = tmpl({_, moment, pkg});
 
-          // Generate the banner.
-          let banner = tmpl({_, moment, pkg});
+      // Make a block comment if needed
+      const trimmedBanner = banner.trim();
+      const start = trimmedBanner.slice(0, 3);
+      if (start !== '/**') {
+        const bannerContent = trimmedBanner
+          .split(`${EOL}`)
+          .map((line) => _.trimEnd(` * ${line}`))
+          .join(`${EOL}`);
 
-          // Make a block comment if needed
-          const trimmedBanner = banner.trim();
-          const start = trimmedBanner.slice(0, 3);
-          if (start !== '/**') {
-            const bannerContent = trimmedBanner
-              .split(`${EOL}`)
-              .map((line) => _.trimEnd(` * ${line}`))
-              .join(`${EOL}`);
+        banner = `/**${EOL}${bannerContent}${EOL} */${EOL}`;
+      }
 
-            banner = `/**${EOL}${bannerContent}${EOL} */${EOL}`;
-          }
+      // Create a magicString: do not manipulate the string directly since it
+      // will be used to generate the sourcemap.
+      const magicString = new MagicString(code);
 
-          // Create a magicString: do not manipulate the string directly since it
-          // will be used to generate the sourcemap.
-          const magicString = new MagicString(code);
+      // Prepend the banner.
+      magicString.prepend(`${banner}${EOL}`);
 
-          // Prepend the banner.
-          magicString.prepend(`${banner}${EOL}`);
+      // Create the result object.
+      const result = {
+        code: magicString.toString(),
+      };
 
-          // Create the result object.
-          const result = {
-            code: magicString.toString(),
-          };
-
-          // Add sourceMap information if it is enabled.
-          if (options.sourceMap !== false) {
-            result.map = magicString.generateMap({
-              hires: true,
-            });
-          }
-
-          // Everything is ok.
-          deferred.resolve(result);
+      // Add sourceMap information if it is enabled.
+      if (options.sourceMap !== false) {
+        result.map = magicString.generateMap({
+          hires: true,
         });
-      });
+      }
 
-      return deferred.promise;
+      return result;
     },
   };
 };
