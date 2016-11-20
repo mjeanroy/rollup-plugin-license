@@ -22,8 +22,4 @@
  * SOFTWARE.
  */
 
-const LicensePlugin = require('./license-plugin.js');
-
-module.exports = (options = {}) => {
-  return new LicensePlugin(options);
-};
+console.log('fake-package');

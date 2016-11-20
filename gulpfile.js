@@ -43,7 +43,7 @@ gulp.task('clean', () => {
 
 gulp.task('build', ['clean', 'lint'], () => {
   return gulp
-    .src(path.join(__dirname, 'src', 'index.js'))
+    .src(path.join(__dirname, 'src', '*.js'))
     .pipe(babel())
     .pipe(gulp.dest(path.join(__dirname, 'dist')));
 });
