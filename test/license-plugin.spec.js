@@ -52,6 +52,7 @@ describe('LicensePlugin', () => {
         version: '1.0.0',
         description: 'Fake package used in unit tests',
         license: 'MIT',
+        private: true,
       },
     ]);
   });
@@ -75,10 +76,12 @@ describe('LicensePlugin', () => {
       name: 'foo',
       version: '0.0.0',
       author: 'Mickael Jeanroy <mickael.jeanroy@gmail.com>',
+      contributors: ['Test <test@gmail.com>'],
       description: 'Fake Description',
       main: 'src/index.js',
       license: 'MIT',
       homepage: 'https://www.google.fr',
+      private: true,
       repository: {
         type: 'GIT',
         url: 'https://github.com/npm/npm.git',
@@ -93,9 +96,11 @@ describe('LicensePlugin', () => {
       name: 'foo',
       version: '0.0.0',
       author: 'Mickael Jeanroy <mickael.jeanroy@gmail.com>',
+      contributors: ['Test <test@gmail.com>'],
       description: 'Fake Description',
       license: 'MIT',
       homepage: 'https://www.google.fr',
+      private: true,
       repository: {
         type: 'GIT',
         url: 'https://github.com/npm/npm.git',

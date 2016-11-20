@@ -148,11 +148,15 @@ class LicensePlugin {
     this._dependencies.push(_.pick(pkg, [
       'name',
       'author',
+      'contributors',
+      'maintainers',
       'version',
       'description',
       'license',
+      'licenses',
       'repository',
       'homepage',
+      'private',
     ]));
   }
 }
