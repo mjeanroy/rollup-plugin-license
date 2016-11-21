@@ -119,52 +119,50 @@ class LicensePlugin {
     const filePath = path.resolve(file);
 
     const exists = fs.existsSync(filePath);
-    if (!exists) {
-      return {code};
-    }
+    const result = {code};
 
-    const content = fs.readFileSync(filePath, 'utf-8');
+    if (exists) {
+      const content = fs.readFileSync(filePath, 'utf-8');
 
-    // Create the template function with lodash.
-    const tmpl = _.template(content);
+      // Create the template function with lodash.
+      const tmpl = _.template(content);
 
-    // Generate the banner.
-    let banner = tmpl({
-      _,
-      moment,
-      pkg: this._pkg,
-      dependencies: _.values(this._dependencies),
-    });
-
-    // Make a block comment if needed
-    const trimmedBanner = banner.trim();
-    const start = trimmedBanner.slice(0, 3);
-    if (start !== '/**') {
-      const bannerContent = trimmedBanner
-        .split(`${EOL}`)
-        .map((line) => _.trimEnd(` * ${line}`))
-        .join(`${EOL}`);
-
-      banner = `/**${EOL}${bannerContent}${EOL} */${EOL}`;
-    }
-
-    // Create a magicString: do not manipulate the string directly since it
-    // will be used to generate the sourcemap.
-    const magicString = new MagicString(code);
-
-    // Prepend the banner.
-    magicString.prepend(`${banner}${EOL}`);
-
-    // Create the result object.
-    const result = {
-      code: magicString.toString(),
-    };
-
-    // Add sourceMap information if it is enabled.
-    if (this._options.sourceMap !== false) {
-      result.map = magicString.generateMap({
-        hires: true,
+      // Generate the banner.
+      let banner = tmpl({
+        _,
+        moment,
+        pkg: this._pkg,
+        dependencies: _.values(this._dependencies),
       });
+
+      // Make a block comment if needed
+      const trimmedBanner = banner.trim();
+      const start = trimmedBanner.slice(0, 3);
+      if (start !== '/**') {
+        const bannerContent = trimmedBanner
+          .split(`${EOL}`)
+          .map((line) => _.trimEnd(` * ${line}`))
+          .join(`${EOL}`);
+
+        banner = `/**${EOL}${bannerContent}${EOL} */${EOL}`;
+      }
+
+      // Create a magicString: do not manipulate the string directly since it
+      // will be used to generate the sourcemap.
+      const magicString = new MagicString(code);
+
+      // Prepend the banner.
+      magicString.prepend(`${banner}${EOL}`);
+
+      // Create the result object.
+      result.code = magicString.toString();
+
+      // Add sourceMap information if it is enabled.
+      if (this._options.sourceMap !== false) {
+        result.map = magicString.generateMap({
+          hires: true,
+        });
+      }
     }
 
     return result;
