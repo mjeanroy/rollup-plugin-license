@@ -26,6 +26,7 @@ const fs = require('fs');
 const path = require('path');
 const _ = require('lodash');
 const moment = require('moment');
+const parseAuthor = require('parse-author');
 const MagicString = require('magic-string');
 const EOL = '\n';
 
@@ -192,6 +193,38 @@ class LicensePlugin {
         'homepage',
         'private',
       ]);
+
+      // Parse the author field to get an object.
+      if (_.isString(dependency.author)) {
+        dependency.author = parseAuthor(dependency.author);
+      }
+
+      // Parse the contributor array.
+      if (dependency.contributors) {
+        // Translate to an array if it is not already.
+        if (_.isString(dependency.contributors)) {
+          dependency.contributors = [dependency.contributors];
+        }
+
+        // Parse each contributor to produce a single object for each person.
+        dependency.contributors = _.map(dependency.contributors, (contributor) => {
+          return _.isString(contributor) ? parseAuthor(contributor) : contributor;
+        });
+      }
+
+      // The `licenses` field is deprecated but may be used in some packages.
+      // Map it to a standard license field.
+      if (!dependency.license && dependency.licenses) {
+        // Map it to a valid license field.
+        // See: https://docs.npmjs.com/files/package.json#license
+        dependency.license = `(${_.chain(dependency.licenses)
+          .map((license) => license.type || license)
+          .value()
+          .join(' OR ')})`;
+
+        // Remove it.
+        delete dependency.licenses;
+      }
 
       this._dependencies[name] = dependency;
     }

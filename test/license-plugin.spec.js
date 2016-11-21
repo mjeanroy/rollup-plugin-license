@@ -24,7 +24,6 @@
 
 const fs = require('fs');
 const path = require('path');
-const _ = require('lodash');
 const moment = require('moment');
 const LicensePlugin = require('../dist/license-plugin.js');
 
@@ -49,11 +48,14 @@ describe('LicensePlugin', () => {
     expect(plugin._dependencies).toEqual({
       'fake-package': {
         name: 'fake-package',
-        author: 'Mickael Jeanroy <mickael.jeanroy@gmail.com>',
         version: '1.0.0',
         description: 'Fake package used in unit tests',
         license: 'MIT',
         private: true,
+        author: {
+          name: 'Mickael Jeanroy',
+          email: 'mickael.jeanroy@gmail.com',
+        },
       },
     });
   });
@@ -80,7 +82,17 @@ describe('LicensePlugin', () => {
     plugin.load(id);
 
     expect(plugin._dependencies).toEqual({
-      'fake-package': _.pick(pkg, ['name', 'author', 'version', 'description', 'license', 'private']),
+      'fake-package': {
+        name: 'fake-package',
+        version: '1.0.0',
+        description: 'Fake package used in unit tests',
+        license: 'MIT',
+        private: true,
+        author: {
+          name: 'Mickael Jeanroy',
+          email: 'mickael.jeanroy@gmail.com',
+        },
+      },
     });
 
     expect(plugin._cache).toEqual({
@@ -122,17 +134,14 @@ describe('LicensePlugin', () => {
     const pkg = {
       name: 'foo',
       version: '0.0.0',
-      author: 'Mickael Jeanroy <mickael.jeanroy@gmail.com>',
-      contributors: ['Test <test@gmail.com>'],
+      author: {name: 'Mickael Jeanroy', email: 'mickael.jeanroy@gmail.com'},
+      contributors: [{name: 'Mickael Jeanroy', email: 'mickael.jeanroy@gmail.com'}],
       description: 'Fake Description',
       main: 'src/index.js',
       license: 'MIT',
       homepage: 'https://www.google.fr',
       private: true,
-      repository: {
-        type: 'GIT',
-        url: 'https://github.com/npm/npm.git',
-      },
+      repository: {type: 'GIT', url: 'https://github.com/npm/npm.git'},
     };
 
     plugin.addDependency(pkg);
@@ -143,8 +152,8 @@ describe('LicensePlugin', () => {
       foo: {
         name: 'foo',
         version: '0.0.0',
-        author: 'Mickael Jeanroy <mickael.jeanroy@gmail.com>',
-        contributors: ['Test <test@gmail.com>'],
+        author: {name: 'Mickael Jeanroy', email: 'mickael.jeanroy@gmail.com'},
+        contributors: [{name: 'Mickael Jeanroy', email: 'mickael.jeanroy@gmail.com'}],
         description: 'Fake Description',
         license: 'MIT',
         homepage: 'https://www.google.fr',
@@ -157,22 +166,128 @@ describe('LicensePlugin', () => {
     });
   });
 
-  it('should add dependency twice', () => {
+  it('should add dependency and parse author field', () => {
     const plugin = new LicensePlugin();
     const pkg = {
       name: 'foo',
       version: '0.0.0',
-      author: 'Mickael Jeanroy <mickael.jeanroy@gmail.com>',
-      contributors: ['Test <test@gmail.com>'],
+      author: 'Mickael Jeanroy <mickael.jeanroy@gmail.com> (https://mjeanroy.com)',
+      contributors: [{name: 'Mickael Jeanroy', email: 'mickael.jeanroy@gmail.com'}],
       description: 'Fake Description',
       main: 'src/index.js',
       license: 'MIT',
       homepage: 'https://www.google.fr',
       private: true,
-      repository: {
-        type: 'GIT',
-        url: 'https://github.com/npm/npm.git',
+      repository: {type: 'GIT', url: 'https://github.com/npm/npm.git'},
+    };
+
+    plugin.addDependency(pkg);
+
+    expect(plugin._dependencies.foo).toBeDefined();
+    expect(plugin._dependencies.foo).toEqual(jasmine.objectContaining({
+      author: {
+        name: 'Mickael Jeanroy',
+        url: 'https://mjeanroy.com',
+        email: 'mickael.jeanroy@gmail.com',
       },
+    }));
+  });
+
+  it('should add dependency and parse contributors field as a string', () => {
+    const plugin = new LicensePlugin();
+    const pkg = {
+      name: 'foo',
+      version: '0.0.0',
+      author: 'Mickael Jeanroy <mickael.jeanroy@gmail.com> (https://mjeanroy.com)',
+      contributors: 'Mickael Jeanroy <mickael.jeanroy@gmail.com> (https://mjeanroy.com)',
+      description: 'Fake Description',
+      main: 'src/index.js',
+      license: 'MIT',
+      homepage: 'https://www.google.fr',
+      private: true,
+      repository: {type: 'GIT', url: 'https://github.com/npm/npm.git'},
+    };
+
+    plugin.addDependency(pkg);
+
+    expect(plugin._dependencies.foo).toBeDefined();
+    expect(plugin._dependencies.foo).toEqual(jasmine.objectContaining({
+      contributors: [{
+        name: 'Mickael Jeanroy',
+        url: 'https://mjeanroy.com',
+        email: 'mickael.jeanroy@gmail.com',
+      }],
+    }));
+  });
+
+  it('should add dependency and parse contributors field', () => {
+    const plugin = new LicensePlugin();
+    const pkg = {
+      name: 'foo',
+      version: '0.0.0',
+      author: 'Mickael Jeanroy <mickael.jeanroy@gmail.com> (https://mjeanroy.com)',
+      contributors: [
+        'Mickael Jeanroy <mickael.jeanroy@gmail.com> (https://mjeanroy.com)',
+        {name: 'John Doe', email: 'johndoe@doe.com'},
+      ],
+      description: 'Fake Description',
+      main: 'src/index.js',
+      license: 'MIT',
+      homepage: 'https://www.google.fr',
+      private: true,
+      repository: {type: 'GIT', url: 'https://github.com/npm/npm.git'},
+    };
+
+    plugin.addDependency(pkg);
+
+    expect(plugin._dependencies.foo).toBeDefined();
+    expect(plugin._dependencies.foo).toEqual(jasmine.objectContaining({
+      contributors: [
+        {name: 'Mickael Jeanroy', url: 'https://mjeanroy.com', email: 'mickael.jeanroy@gmail.com'},
+        {name: 'John Doe', email: 'johndoe@doe.com'},
+      ],
+    }));
+  });
+
+  it('should add dependency and parse licenses field', () => {
+    const plugin = new LicensePlugin();
+    const pkg = {
+      name: 'foo',
+      version: '0.0.0',
+      author: 'Mickael Jeanroy <mickael.jeanroy@gmail.com> (https://mjeanroy.com)',
+      description: 'Fake Description',
+      main: 'src/index.js',
+      licenses: [
+        {type: 'MIT', url: 'http://www.opensource.org/licenses/mit-license.php'},
+        {type: 'Apache-2.0', url: 'http://opensource.org/licenses/apache2.0.php'},
+      ],
+      homepage: 'https://www.google.fr',
+      private: true,
+      repository: {type: 'GIT', url: 'https://github.com/npm/npm.git'},
+    };
+
+    plugin.addDependency(pkg);
+
+    expect(plugin._dependencies.foo).toBeDefined();
+    expect(plugin._dependencies.foo.licenses).not.toBeDefined();
+    expect(plugin._dependencies.foo).toEqual(jasmine.objectContaining({
+      license: '(MIT OR Apache-2.0)',
+    }));
+  });
+
+  it('should not add dependency twice', () => {
+    const plugin = new LicensePlugin();
+    const pkg = {
+      name: 'foo',
+      version: '0.0.0',
+      author: {name: 'Mickael Jeanroy', email: 'mickael.jeanroy@gmail.com'},
+      contributors: [{name: 'Mickael Jeanroy', email: 'mickael.jeanroy@gmail.com'}],
+      description: 'Fake Description',
+      main: 'src/index.js',
+      license: 'MIT',
+      homepage: 'https://www.google.fr',
+      private: true,
+      repository: {type: 'GIT', url: 'https://github.com/npm/npm.git'},
     };
 
     plugin.addDependency(pkg);
@@ -183,16 +298,13 @@ describe('LicensePlugin', () => {
       foo: {
         name: 'foo',
         version: '0.0.0',
-        author: 'Mickael Jeanroy <mickael.jeanroy@gmail.com>',
-        contributors: ['Test <test@gmail.com>'],
+        author: {name: 'Mickael Jeanroy', email: 'mickael.jeanroy@gmail.com'},
+        contributors: [{name: 'Mickael Jeanroy', email: 'mickael.jeanroy@gmail.com'}],
         description: 'Fake Description',
         license: 'MIT',
         homepage: 'https://www.google.fr',
         private: true,
-        repository: {
-          type: 'GIT',
-          url: 'https://github.com/npm/npm.git',
-        },
+        repository: {type: 'GIT', url: 'https://github.com/npm/npm.git'},
       },
     });
 
@@ -204,16 +316,13 @@ describe('LicensePlugin', () => {
       foo: {
         name: 'foo',
         version: '0.0.0',
-        author: 'Mickael Jeanroy <mickael.jeanroy@gmail.com>',
-        contributors: ['Test <test@gmail.com>'],
+        author: {name: 'Mickael Jeanroy', email: 'mickael.jeanroy@gmail.com'},
+        contributors: [{name: 'Mickael Jeanroy', email: 'mickael.jeanroy@gmail.com'}],
         description: 'Fake Description',
         license: 'MIT',
         homepage: 'https://www.google.fr',
         private: true,
-        repository: {
-          type: 'GIT',
-          url: 'https://github.com/npm/npm.git',
-        },
+        repository: {type: 'GIT', url: 'https://github.com/npm/npm.git'},
       },
     });
   });
