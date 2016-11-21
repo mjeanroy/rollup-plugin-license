@@ -43,6 +43,11 @@ class LicensePlugin {
     this._cwd = process.cwd();
     this._dependencies = {};
     this._pkg = require(path.join(this._cwd, 'package.json'));
+
+    // This is a cache storing a directory path to associated package.
+    // This is an improvement to avoid looking for package information for
+    // already scanned directory.
+    this._cache = {};
   }
 
   /**
@@ -61,18 +66,44 @@ class LicensePlugin {
   load(id) {
     // Look for the `package.json` file
     let dir = path.parse(id).dir;
-    while (dir && dir !== this._cwd) {
-      const pkg = path.join(dir, 'package.json');
-      const exists = fs.existsSync(pkg);
+    let pkg = null;
 
-      if (exists) {
-        this.addDependency(require(pkg));
+    const scannedDirs = [];
+
+    while (dir && dir !== this._cwd) {
+      // Try the cache.
+      if (_.has(this._cache, dir)) {
+        pkg = this._cache[dir];
+        if (pkg) {
+          this.addDependency(pkg);
+        }
+
         break;
       }
 
-      const parent = path.join(dir, '..');
-      dir = path.normalize(parent);
+      scannedDirs.push(dir);
+
+      const pkgPath = path.join(dir, 'package.json');
+      const exists = fs.existsSync(pkgPath);
+      if (exists) {
+        // Read `package.json` file
+        pkg = require(pkgPath);
+
+        // Add the new dependency to the set of third-party dependencies.
+        this.addDependency(pkg);
+
+        // We can stop now.
+        break;
+      }
+
+      // Go up in the directory tree.
+      dir = path.normalize(path.join(dir, '..'));
     }
+
+    // Update the cache
+    _.forEach(scannedDirs, (scannedDir) => {
+      this._cache[scannedDir] = pkg;
+    });
   }
 
   /**

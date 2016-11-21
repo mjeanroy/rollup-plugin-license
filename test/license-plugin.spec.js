@@ -22,7 +22,9 @@
  * SOFTWARE.
  */
 
+const fs = require('fs');
 const path = require('path');
+const _ = require('lodash');
 const moment = require('moment');
 const LicensePlugin = require('../dist/license-plugin.js');
 
@@ -67,6 +69,52 @@ describe('LicensePlugin', () => {
     expect(result).not.toBeDefined();
     expect(plugin.addDependency).not.toHaveBeenCalled();
     expect(plugin._dependencies).toEqual({});
+  });
+
+  it('should load pkg and update cache', () => {
+    const plugin = new LicensePlugin();
+    const fakePackage = path.join(__dirname, 'fixtures', 'fake-package');
+    const id = path.join(fakePackage, 'src', 'index.js');
+    const pkg = require(path.join(fakePackage, 'package.json'));
+
+    plugin.load(id);
+
+    expect(plugin._dependencies).toEqual({
+      'fake-package': _.pick(pkg, ['name', 'author', 'version', 'description', 'license', 'private']),
+    });
+
+    expect(plugin._cache).toEqual({
+      [path.join(__dirname, 'fixtures', 'fake-package', 'src')]: pkg,
+      [path.join(__dirname, 'fixtures', 'fake-package')]: pkg,
+    });
+  });
+
+  it('should load pkg and put null without package', () => {
+    const plugin = new LicensePlugin();
+    const id = path.join(__dirname, '..', 'src', 'index.js');
+
+    plugin.load(id);
+
+    expect(plugin._dependencies).toEqual({});
+    expect(plugin._cache).toEqual({
+      [path.normalize(path.join(__dirname, '..', 'src'))]: null,
+    });
+  });
+
+  it('should load pkg and use the cache if available', () => {
+    const plugin = new LicensePlugin();
+    const fakePackage = path.join(__dirname, 'fixtures', 'fake-package');
+    const id = path.join(fakePackage, 'src', 'index.js');
+
+    plugin._cache[path.join(fakePackage, 'src')] = null;
+    plugin._cache[fakePackage] = null;
+
+    spyOn(fs, 'existsSync').and.callThrough();
+
+    plugin.load(id);
+
+    expect(plugin._dependencies).toEqual({});
+    expect(fs.existsSync).not.toHaveBeenCalled();
   });
 
   it('should add dependency', () => {
