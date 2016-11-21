@@ -31,7 +31,7 @@ describe('LicensePlugin', () => {
     const plugin = new LicensePlugin();
     expect(plugin._cwd).toBeDefined();
     expect(plugin._pkg).toBeDefined();
-    expect(plugin._dependencies).toEqual([]);
+    expect(plugin._dependencies).toEqual({});
   });
 
   it('should load pkg', () => {
@@ -44,9 +44,8 @@ describe('LicensePlugin', () => {
 
     expect(result).not.toBeDefined();
     expect(plugin.addDependency).toHaveBeenCalled();
-    expect(plugin._dependencies.length).toBe(1);
-    expect(plugin._dependencies).toEqual([
-      {
+    expect(plugin._dependencies).toEqual({
+      'fake-package': {
         name: 'fake-package',
         author: 'Mickael Jeanroy <mickael.jeanroy@gmail.com>',
         version: '1.0.0',
@@ -54,7 +53,7 @@ describe('LicensePlugin', () => {
         license: 'MIT',
         private: true,
       },
-    ]);
+    });
   });
 
   it('should load pkg and stop on cwd', () => {
@@ -67,7 +66,7 @@ describe('LicensePlugin', () => {
 
     expect(result).not.toBeDefined();
     expect(plugin.addDependency).not.toHaveBeenCalled();
-    expect(plugin._dependencies.length).toBe(0);
+    expect(plugin._dependencies).toEqual({});
   });
 
   it('should add dependency', () => {
@@ -90,20 +89,83 @@ describe('LicensePlugin', () => {
 
     plugin.addDependency(pkg);
 
-    expect(plugin._dependencies.length).toBe(1);
-    expect(plugin._dependencies[0]).not.toBe(pkg);
-    expect(plugin._dependencies[0]).toEqual({
+    expect(plugin._dependencies.foo).toBeDefined();
+    expect(plugin._dependencies.foo).not.toBe(pkg);
+    expect(plugin._dependencies).toEqual({
+      foo: {
+        name: 'foo',
+        version: '0.0.0',
+        author: 'Mickael Jeanroy <mickael.jeanroy@gmail.com>',
+        contributors: ['Test <test@gmail.com>'],
+        description: 'Fake Description',
+        license: 'MIT',
+        homepage: 'https://www.google.fr',
+        private: true,
+        repository: {
+          type: 'GIT',
+          url: 'https://github.com/npm/npm.git',
+        },
+      },
+    });
+  });
+
+  it('should add dependency twice', () => {
+    const plugin = new LicensePlugin();
+    const pkg = {
       name: 'foo',
       version: '0.0.0',
       author: 'Mickael Jeanroy <mickael.jeanroy@gmail.com>',
       contributors: ['Test <test@gmail.com>'],
       description: 'Fake Description',
+      main: 'src/index.js',
       license: 'MIT',
       homepage: 'https://www.google.fr',
       private: true,
       repository: {
         type: 'GIT',
         url: 'https://github.com/npm/npm.git',
+      },
+    };
+
+    plugin.addDependency(pkg);
+
+    expect(plugin._dependencies.foo).toBeDefined();
+    expect(plugin._dependencies.foo).not.toBe(pkg);
+    expect(plugin._dependencies).toEqual({
+      foo: {
+        name: 'foo',
+        version: '0.0.0',
+        author: 'Mickael Jeanroy <mickael.jeanroy@gmail.com>',
+        contributors: ['Test <test@gmail.com>'],
+        description: 'Fake Description',
+        license: 'MIT',
+        homepage: 'https://www.google.fr',
+        private: true,
+        repository: {
+          type: 'GIT',
+          url: 'https://github.com/npm/npm.git',
+        },
+      },
+    });
+
+    // Try to add the same pkg id
+
+    plugin.addDependency(pkg);
+
+    expect(plugin._dependencies).toEqual({
+      foo: {
+        name: 'foo',
+        version: '0.0.0',
+        author: 'Mickael Jeanroy <mickael.jeanroy@gmail.com>',
+        contributors: ['Test <test@gmail.com>'],
+        description: 'Fake Description',
+        license: 'MIT',
+        homepage: 'https://www.google.fr',
+        private: true,
+        repository: {
+          type: 'GIT',
+          url: 'https://github.com/npm/npm.git',
+        },
       },
     });
   });

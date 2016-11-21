@@ -41,7 +41,7 @@ class LicensePlugin {
   constructor(options = {}) {
     this._options = options;
     this._cwd = process.cwd();
-    this._dependencies = [];
+    this._dependencies = {};
     this._pkg = require(path.join(this._cwd, 'package.json'));
   }
 
@@ -101,7 +101,7 @@ class LicensePlugin {
       _,
       moment,
       pkg: this._pkg,
-      dependencies: this._dependencies,
+      dependencies: _.values(this._dependencies),
     });
 
     // Make a block comment if needed
@@ -145,19 +145,25 @@ class LicensePlugin {
    * @return {void}
    */
   addDependency(pkg) {
-    this._dependencies.push(_.pick(pkg, [
-      'name',
-      'author',
-      'contributors',
-      'maintainers',
-      'version',
-      'description',
-      'license',
-      'licenses',
-      'repository',
-      'homepage',
-      'private',
-    ]));
+    const name = pkg.name;
+
+    if (!_.has(this._dependencies, name)) {
+      const dependency = _.pick(pkg, [
+        'name',
+        'author',
+        'contributors',
+        'maintainers',
+        'version',
+        'description',
+        'license',
+        'licenses',
+        'repository',
+        'homepage',
+        'private',
+      ]);
+
+      this._dependencies[name] = dependency;
+    }
   }
 }
 

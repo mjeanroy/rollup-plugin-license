@@ -28,6 +28,6 @@ describe('rollup-plugin-license', () => {
   it('should return new plugin instance', () => {
     const instance = plugin();
     expect(instance).toBeDefined();
-    expect(instance._dependencies).toEqual([]);
+    expect(instance._dependencies).toEqual({});
   });
 });
