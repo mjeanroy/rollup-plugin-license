@@ -28,7 +28,69 @@ const _ = require('lodash');
 const moment = require('moment');
 const parseAuthor = require('parse-author');
 const MagicString = require('magic-string');
+
 const EOL = '\n';
+
+/**
+ * Return the person identity as a formatted string.
+ *
+ * @param {Object} person The person identity.
+ * @return {string} The formatted string.
+ */
+function formatAuthor(person) {
+  let text = `${person.name}`;
+
+  if (person.email) {
+    text += ` <${person.email}>`;
+  }
+
+  if (person.url) {
+    text += ` (${person.url})`;
+  }
+
+  return text;
+}
+
+/**
+ * Format dependency data to a single string.
+ *
+ * @param {Object} dependency Dependency to format.
+ * @return {string} The output string.
+ */
+function formatDependency(dependency) {
+  const lines = [];
+
+  lines.push(`Name: ${dependency.name}`);
+  lines.push(`Version: ${dependency.version}`);
+  lines.push(`License: ${dependency.license}`);
+  lines.push(`Private: ${dependency.private || false}`);
+
+  if (dependency.description) {
+    lines.push(`Description: ${dependency.description || false}`);
+  }
+
+  if (dependency.repository) {
+    lines.push(`Repository: ${dependency.repository.url}`);
+  }
+
+  if (dependency.homepage) {
+    lines.push(`Homepage: ${dependency.homepage}`);
+  }
+
+  if (dependency.author) {
+    lines.push(`Author: ${formatAuthor(dependency.author)}`);
+  }
+
+  if (dependency.contributors) {
+    lines.push(`Contributors:${EOL}${_.chain(dependency.contributors)
+      .map(formatAuthor)
+      .map((line) => `  ${line}`)
+      .value()
+      .join(EOL)}`);
+  }
+
+  return lines.join(EOL);
+}
 
 /**
  * Rollup Plugin.
@@ -225,6 +287,33 @@ class LicensePlugin {
       }
 
       this._dependencies[name] = dependency;
+    }
+  }
+
+  /**
+   * Generate third-party dependencies summary.
+   *
+   * @param {boolean} includePrivate Flag that can be used to include / exclude private dependencies.
+   * @return {void}
+   */
+  ongenerate() {
+    const thirdParty = this._options.thirdParty;
+    if (!thirdParty) {
+      return;
+    }
+
+    const output = thirdParty.output;
+    if (output) {
+      const includePrivate = thirdParty.includePrivate;
+      const text = _.chain(this._dependencies)
+        .values()
+        .filter((dependency) => includePrivate || !dependency.private)
+        .map(formatDependency)
+        .value();
+
+      const file = this._options.thirdParty.output;
+      const content = text.join(`${EOL}${EOL}---${EOL}${EOL}`).trim();
+      fs.writeFileSync(file, content);
     }
   }
 }

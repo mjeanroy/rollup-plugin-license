@@ -24,10 +24,20 @@
 
 const fs = require('fs');
 const path = require('path');
+const tmp = require('tmp');
 const moment = require('moment');
 const LicensePlugin = require('../dist/license-plugin.js');
 
 describe('LicensePlugin', () => {
+  // eslint-disable-next-line
+  var tmpDir;
+
+  beforeEach(() => {
+    tmpDir = tmp.dirSync({
+      unsafeCleanup: true,
+    });
+  });
+
   it('should initialize instance', () => {
     const plugin = new LicensePlugin();
     expect(plugin._cwd).toBeDefined();
@@ -486,5 +496,257 @@ describe('LicensePlugin', () => {
       `\n` +
       `var foo = 0;`
     );
+  });
+
+  it('should display single dependency', (done) => {
+    const file = path.join(tmpDir.name, 'third-party.txt');
+    const instance = new LicensePlugin({
+      thirdParty: {
+        output: file,
+      },
+    });
+
+    instance._dependencies.foo = {
+      name: 'foo',
+      version: '1.0.0',
+      description: 'Foo Package',
+      license: 'MIT',
+      private: false,
+      author: {
+        name: 'Mickael Jeanroy',
+        email: 'mickael.jeanroy@gmail.com',
+      },
+    };
+
+    const result = instance.ongenerate(false);
+
+    expect(result).not.toBeDefined();
+
+    fs.readFile(file, 'utf-8', (err, content) => {
+      if (err) {
+        done.fail(err);
+        return;
+      }
+
+      const txt = content.toString();
+      expect(txt).toBeDefined();
+      expect(txt).toEqual(
+        `Name: foo\n` +
+        `Version: 1.0.0\n` +
+        `License: MIT\n` +
+        `Private: false\n` +
+        `Description: Foo Package\n` +
+        `Author: Mickael Jeanroy <mickael.jeanroy@gmail.com>`
+      );
+
+      done();
+    });
+  });
+
+  it('should display list of dependencies', (done) => {
+    const file = path.join(tmpDir.name, 'third-party.txt');
+    const instance = new LicensePlugin({
+      thirdParty: {
+        output: file,
+      },
+    });
+
+    instance._dependencies.foo = {
+      name: 'foo',
+      version: '1.0.0',
+      description: 'Foo Package',
+      license: 'MIT',
+      private: false,
+      author: {
+        name: 'Mickael Jeanroy',
+        email: 'mickael.jeanroy@gmail.com',
+      },
+    };
+
+    instance._dependencies.bar = {
+      name: 'bar',
+      version: '2.0.0',
+      description: 'Bar Package',
+      license: 'Apache 2.0',
+      private: false,
+    };
+
+    const result = instance.ongenerate(false);
+
+    expect(result).not.toBeDefined();
+
+    fs.readFile(file, 'utf-8', (err, content) => {
+      if (err) {
+        done.fail(err);
+        return;
+      }
+
+      const txt = content.toString();
+      expect(txt).toBeDefined();
+      expect(txt).toEqual(
+        `Name: foo\n` +
+        `Version: 1.0.0\n` +
+        `License: MIT\n` +
+        `Private: false\n` +
+        `Description: Foo Package\n` +
+        `Author: Mickael Jeanroy <mickael.jeanroy@gmail.com>\n` +
+        `\n` +
+        `---\n` +
+        `\n` +
+        `Name: bar\n` +
+        `Version: 2.0.0\n` +
+        `License: Apache 2.0\n` +
+        `Private: false\n` +
+        `Description: Bar Package`
+      );
+
+      done();
+    });
+  });
+
+  it('should not display private dependencies by default', (done) => {
+    const file = path.join(tmpDir.name, 'third-party.txt');
+    const instance = new LicensePlugin({
+      thirdParty: {
+        output: file,
+      },
+    });
+
+    instance._dependencies.foo = {
+      name: 'foo',
+      version: '1.0.0',
+      description: 'Foo Package',
+      license: 'MIT',
+      private: false,
+      author: {
+        name: 'Mickael Jeanroy',
+        email: 'mickael.jeanroy@gmail.com',
+      },
+    };
+
+    instance._dependencies.bar = {
+      name: 'bar',
+      version: '2.0.0',
+      description: 'Bar Package',
+      license: 'Apache 2.0',
+      private: true,
+    };
+
+    const result = instance.ongenerate(false);
+
+    expect(result).not.toBeDefined();
+
+    fs.readFile(file, 'utf-8', (err, content) => {
+      if (err) {
+        done.fail(err);
+        return;
+      }
+
+      const txt = content.toString();
+      expect(txt).toBeDefined();
+      expect(txt).toEqual(
+        `Name: foo\n` +
+        `Version: 1.0.0\n` +
+        `License: MIT\n` +
+        `Private: false\n` +
+        `Description: Foo Package\n` +
+        `Author: Mickael Jeanroy <mickael.jeanroy@gmail.com>`
+      );
+
+      done();
+    });
+  });
+
+  it('should display private dependencies if enabled', (done) => {
+    const file = path.join(tmpDir.name, 'third-party.txt');
+    const instance = new LicensePlugin({
+      thirdParty: {
+        output: file,
+        includePrivate: true,
+      },
+    });
+
+    instance._dependencies.foo = {
+      name: 'foo',
+      version: '1.0.0',
+      description: 'Foo Package',
+      license: 'MIT',
+      private: false,
+      author: {
+        name: 'Mickael Jeanroy',
+        email: 'mickael.jeanroy@gmail.com',
+      },
+    };
+
+    instance._dependencies.bar = {
+      name: 'bar',
+      version: '2.0.0',
+      description: 'Bar Package',
+      license: 'Apache 2.0',
+      private: true,
+    };
+
+    const result = instance.ongenerate(false);
+
+    expect(result).not.toBeDefined();
+
+    fs.readFile(file, 'utf-8', (err, content) => {
+      if (err) {
+        done.fail(err);
+        return;
+      }
+
+      const txt = content.toString();
+      expect(txt).toBeDefined();
+      expect(txt).toEqual(
+        `Name: foo\n` +
+        `Version: 1.0.0\n` +
+        `License: MIT\n` +
+        `Private: false\n` +
+        `Description: Foo Package\n` +
+        `Author: Mickael Jeanroy <mickael.jeanroy@gmail.com>\n` +
+        `\n` +
+        `---\n` +
+        `\n` +
+        `Name: bar\n` +
+        `Version: 2.0.0\n` +
+        `License: Apache 2.0\n` +
+        `Private: true\n` +
+        `Description: Bar Package`
+      );
+
+      done();
+    });
+  });
+
+  it('should not try to display dependencies without output file', () => {
+    const instance = new LicensePlugin();
+
+    instance._dependencies.foo = {
+      name: 'foo',
+      version: '1.0.0',
+      description: 'Foo Package',
+      license: 'MIT',
+      private: false,
+      author: {
+        name: 'Mickael Jeanroy',
+        email: 'mickael.jeanroy@gmail.com',
+      },
+    };
+
+    instance._dependencies.bar = {
+      name: 'bar',
+      version: '2.0.0',
+      description: 'Bar Package',
+      license: 'Apache 2.0',
+      private: true,
+    };
+
+    spyOn(fs, 'writeFileSync').and.callThrough();
+
+    const result = instance.ongenerate(false);
+
+    expect(result).not.toBeDefined();
+    expect(fs.writeFileSync).not.toHaveBeenCalled();
   });
 });
