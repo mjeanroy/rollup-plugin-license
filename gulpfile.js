@@ -29,28 +29,33 @@ const babel = require('gulp-babel');
 const del = require('del');
 const eslint = require('gulp-eslint');
 
+const root = path.join(__dirname);
+const config = {
+  src: path.join(root, 'src'),
+  test: path.join(root, 'test'),
+  dist: path.join(root, 'dist'),
+};
+
 gulp.task('test', ['build'], () => {
   return gulp
-    .src(path.join(__dirname, 'test', '**', '*.spec.js'))
+    .src(path.join(config.test, '**', '*.spec.js'))
     .pipe(jasmine());
 });
 
 gulp.task('clean', () => {
-  return del([
-    path.join(__dirname, 'dist'),
-  ]);
+  return del([config.dist]);
 });
 
 gulp.task('build', ['clean', 'lint'], () => {
   return gulp
-    .src(path.join(__dirname, 'src', '*.js'))
+    .src(path.join(config.src, '*.js'))
     .pipe(babel())
     .pipe(gulp.dest(path.join(__dirname, 'dist')));
 });
 
 gulp.task('lint', () => {
-  const srcFiles = path.join(__dirname, 'src/**/*.js');
-  const testFiles = path.join(__dirname, 'test/**/*.js');
+  const srcFiles = path.join(config.src, '**', '*.js');
+  const testFiles = path.join(config.test, '**', '*.js');
   return gulp
         .src([srcFiles, testFiles])
         .pipe(eslint())
