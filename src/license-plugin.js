@@ -42,6 +42,9 @@ class LicensePlugin {
    * @param {Object} options Plugin options.
    */
   constructor(options = {}) {
+    // Plugin name, used by rollup.
+    this.name = 'rollup-plugin-license';
+
     this._options = options;
     this._cwd = process.cwd();
     this._dependencies = {};
