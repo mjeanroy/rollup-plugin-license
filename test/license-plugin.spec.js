@@ -358,7 +358,7 @@ describe('LicensePlugin', () => {
     );
   });
 
-  it('should prepend default LICENSE file banner to bundle', () => {
+  it('should not prepend default banner to bundle', () => {
     const instance = new LicensePlugin();
 
     const code = 'var foo = 0;';
@@ -367,7 +367,7 @@ describe('LicensePlugin', () => {
 
     expect(result).toBeDefined();
     expect(result.code).toBeDefined();
-    expect(result.code).toContain('The MIT License (MIT)');
+    expect(result.code).toBe(code);
   });
 
   it('should not fail if banner file does not exist', () => {
