@@ -204,8 +204,7 @@ class LicensePlugin {
         .trim()
         .value();
 
-      const file = this._options.thirdParty.output;
-      fs.writeFileSync(file, text);
+      fs.writeFileSync(output, text);
     }
   }
 }
