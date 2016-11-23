@@ -26,71 +26,11 @@ const fs = require('fs');
 const path = require('path');
 const _ = require('lodash');
 const moment = require('moment');
-const parseAuthor = require('parse-author');
 const MagicString = require('magic-string');
-
-const EOL = '\n';
-
-/**
- * Return the person identity as a formatted string.
- *
- * @param {Object} person The person identity.
- * @return {string} The formatted string.
- */
-function formatAuthor(person) {
-  let text = `${person.name}`;
-
-  if (person.email) {
-    text += ` <${person.email}>`;
-  }
-
-  if (person.url) {
-    text += ` (${person.url})`;
-  }
-
-  return text;
-}
-
-/**
- * Format dependency data to a single string.
- *
- * @param {Object} dependency Dependency to format.
- * @return {string} The output string.
- */
-function formatDependency(dependency) {
-  const lines = [];
-
-  lines.push(`Name: ${dependency.name}`);
-  lines.push(`Version: ${dependency.version}`);
-  lines.push(`License: ${dependency.license}`);
-  lines.push(`Private: ${dependency.private || false}`);
-
-  if (dependency.description) {
-    lines.push(`Description: ${dependency.description || false}`);
-  }
-
-  if (dependency.repository) {
-    lines.push(`Repository: ${dependency.repository.url}`);
-  }
-
-  if (dependency.homepage) {
-    lines.push(`Homepage: ${dependency.homepage}`);
-  }
-
-  if (dependency.author) {
-    lines.push(`Author: ${formatAuthor(dependency.author)}`);
-  }
-
-  if (dependency.contributors) {
-    lines.push(`Contributors:${EOL}${_.chain(dependency.contributors)
-      .map(formatAuthor)
-      .map((line) => `  ${line}`)
-      .value()
-      .join(EOL)}`);
-  }
-
-  return lines.join(EOL);
-}
+const parseDependency = require('./parse-dependency.js');
+const formatDependency = require('./format-dependency.js');
+const generateBlockComment = require('./generate-block-comment.js');
+const EOL = require('./eol.js');
 
 /**
  * Rollup Plugin.
@@ -200,13 +140,8 @@ class LicensePlugin {
       // Make a block comment if needed
       const trimmedBanner = banner.trim();
       const start = trimmedBanner.slice(0, 3);
-      if (start !== '/**') {
-        const bannerContent = trimmedBanner
-          .split(`${EOL}`)
-          .map((line) => _.trimEnd(` * ${line}`))
-          .join(`${EOL}`);
-
-        banner = `/**${EOL}${bannerContent}${EOL} */${EOL}`;
+      if (start !== '/**' && start !== '/*!') {
+        banner = generateBlockComment(banner);
       }
 
       // Create a magicString: do not manipulate the string directly since it
@@ -238,55 +173,8 @@ class LicensePlugin {
    */
   addDependency(pkg) {
     const name = pkg.name;
-
     if (!_.has(this._dependencies, name)) {
-      const dependency = _.pick(pkg, [
-        'name',
-        'author',
-        'contributors',
-        'maintainers',
-        'version',
-        'description',
-        'license',
-        'licenses',
-        'repository',
-        'homepage',
-        'private',
-      ]);
-
-      // Parse the author field to get an object.
-      if (_.isString(dependency.author)) {
-        dependency.author = parseAuthor(dependency.author);
-      }
-
-      // Parse the contributor array.
-      if (dependency.contributors) {
-        // Translate to an array if it is not already.
-        if (_.isString(dependency.contributors)) {
-          dependency.contributors = [dependency.contributors];
-        }
-
-        // Parse each contributor to produce a single object for each person.
-        dependency.contributors = _.map(dependency.contributors, (contributor) => {
-          return _.isString(contributor) ? parseAuthor(contributor) : contributor;
-        });
-      }
-
-      // The `licenses` field is deprecated but may be used in some packages.
-      // Map it to a standard license field.
-      if (!dependency.license && dependency.licenses) {
-        // Map it to a valid license field.
-        // See: https://docs.npmjs.com/files/package.json#license
-        dependency.license = `(${_.chain(dependency.licenses)
-          .map((license) => license.type || license)
-          .value()
-          .join(' OR ')})`;
-
-        // Remove it.
-        delete dependency.licenses;
-      }
-
-      this._dependencies[name] = dependency;
+      this._dependencies[name] = parseDependency(pkg);
     }
   }
 
@@ -309,11 +197,12 @@ class LicensePlugin {
         .values()
         .filter((dependency) => includePrivate || !dependency.private)
         .map(formatDependency)
+        .join(`${EOL}${EOL}---${EOL}${EOL}`)
+        .trim()
         .value();
 
       const file = this._options.thirdParty.output;
-      const content = text.join(`${EOL}${EOL}---${EOL}${EOL}`).trim();
-      fs.writeFileSync(file, content);
+      fs.writeFileSync(file, text);
     }
   }
 }
