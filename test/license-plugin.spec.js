@@ -604,6 +604,33 @@ describe('LicensePlugin', () => {
     });
   });
 
+  it('should display default message without dependencies', (done) => {
+    const file = path.join(tmpDir.name, 'third-party.txt');
+    const instance = new LicensePlugin({
+      thirdParty: {
+        output: file,
+      },
+    });
+
+    instance._dependencies = {};
+
+    const result = instance.ongenerate(false);
+
+    expect(result).not.toBeDefined();
+
+    fs.readFile(file, 'utf-8', (err, content) => {
+      if (err) {
+        done.fail(err);
+        return;
+      }
+
+      const txt = content.toString();
+      expect(txt).toBeDefined();
+      expect(txt).toEqual('No third parties dependencies');
+      done();
+    });
+  });
+
   it('should not display private dependencies by default', (done) => {
     const file = path.join(tmpDir.name, 'third-party.txt');
     const instance = new LicensePlugin({

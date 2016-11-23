@@ -204,7 +204,7 @@ class LicensePlugin {
         .trim()
         .value();
 
-      fs.writeFileSync(output, text);
+      fs.writeFileSync(output, text || 'No third parties dependencies');
     }
   }
 }
