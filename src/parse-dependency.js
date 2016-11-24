@@ -23,7 +23,7 @@
  */
 
 const _ = require('lodash');
-const parseAuthor = require('parse-author');
+const parseAuthor = require('./parse-author.js');
 
 /**
  * Parse package description and generate an uniform dependency object:
