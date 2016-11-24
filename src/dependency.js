@@ -23,7 +23,32 @@
  */
 
 const _ = require('lodash');
-const parseAuthor = require('./parse-author.js');
+const EOL = require('./eol.js');
+const Person = require('./person.js');
+
+/**
+ * Dependency structure.
+ */
+class Dependency {
+  /**
+   * Create new dependency from package description.
+   *
+   * @param {Object} pkg Package description.
+   * @constructor
+   */
+  constructor(pkg) {
+    _.extend(this, parseDependency(pkg));
+  }
+
+  /**
+   * Serialize dependency as a string.
+   *
+   * @return {string} The dependency correctly formatted.
+   */
+  toString() {
+    return formatDependency(this);
+  }
+}
 
 /**
  * Parse package description and generate an uniform dependency object:
@@ -34,7 +59,7 @@ const parseAuthor = require('./parse-author.js');
  * @param {Object} pkg Package description.
  * @return {Object} Dependency description.
  */
-module.exports = function parseDependency(pkg) {
+function parseDependency(pkg) {
   const dependency = _.pick(pkg, [
     'name',
     'author',
@@ -50,8 +75,8 @@ module.exports = function parseDependency(pkg) {
   ]);
 
   // Parse the author field to get an object.
-  if (_.isString(dependency.author)) {
-    dependency.author = parseAuthor(dependency.author);
+  if (dependency.author) {
+    dependency.author = new Person(dependency.author);
   }
 
   // Parse the contributor array.
@@ -63,7 +88,7 @@ module.exports = function parseDependency(pkg) {
 
     // Parse each contributor to produce a single object for each person.
     dependency.contributors = _.map(dependency.contributors, (contributor) => {
-      return _.isString(contributor) ? parseAuthor(contributor) : contributor;
+      return new Person(contributor);
     });
   }
 
@@ -82,4 +107,47 @@ module.exports = function parseDependency(pkg) {
   }
 
   return dependency;
-};
+}
+
+/**
+ * Format dependency data to a single string.
+ *
+ * @param {Object} dependency Dependency to format.
+ * @return {string} The output string.
+ */
+function formatDependency(dependency) {
+  const lines = [];
+
+  lines.push(`Name: ${dependency.name}`);
+  lines.push(`Version: ${dependency.version}`);
+  lines.push(`License: ${dependency.license}`);
+  lines.push(`Private: ${dependency.private || false}`);
+
+  if (dependency.description) {
+    lines.push(`Description: ${dependency.description || false}`);
+  }
+
+  if (dependency.repository) {
+    lines.push(`Repository: ${dependency.repository.url}`);
+  }
+
+  if (dependency.homepage) {
+    lines.push(`Homepage: ${dependency.homepage}`);
+  }
+
+  if (dependency.author) {
+    lines.push(`Author: ${dependency.author.toString()}`);
+  }
+
+  if (dependency.contributors) {
+    lines.push(`Contributors:${EOL}${_.chain(dependency.contributors)
+      .map((contributor) => contributor.toString())
+      .map((line) => `  ${line}`)
+      .value()
+      .join(EOL)}`);
+  }
+
+  return lines.join(EOL);
+}
+
+module.exports = Dependency;

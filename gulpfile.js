@@ -37,8 +37,13 @@ const config = {
 };
 
 gulp.task('test', ['build'], () => {
+  const src = [
+    path.join(config.test, 'base.spec.js'),
+    path.join(config.test, '**', '*.spec.js'),
+  ];
+
   return gulp
-    .src(path.join(config.test, '**', '*.spec.js'))
+    .src(src)
     .pipe(jasmine());
 });
 

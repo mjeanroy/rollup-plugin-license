@@ -23,38 +23,38 @@
  */
 
 const _ = require('lodash');
+const Dependency = require('../dist/dependency.js');
+const Person = require('../dist/person.js');
 
-/**
- * Parse person string to produce a valid person object containing name, email
- * and url.
- *
- * @param {string} person Person identity.
- * @return {Object} The person.
- */
-module.exports = function parseAuthor(person) {
-  if (!person) {
-    return person;
-  }
+beforeEach(() => {
+   jasmine.addCustomEqualityTester((first, second) => {
+      if ((first instanceof Person) || (second instanceof Person)) {
+        const o1 = _.toPlainObject(first);
+        const o2 = _.toPlainObject(second);
+        return _.isEqual(o1, o2);
+      }
+   });
 
-  const o = {};
+   jasmine.addCustomEqualityTester((first, second) => {
+      if ((first instanceof Dependency) || (second instanceof Dependency)) {
+         const o1 = _.toPlainObject(first);
+         const o2 = _.toPlainObject(second);
 
-  let current = 'name';
-  for (let i = 0, size = person.length; i < size; ++i) {
-    const character = person.charAt(i);
-    if (character === '<') {
-      current = 'email';
-    } else if (character === '(') {
-      current = 'url';
-    } else if (character !== ')' && character !== '>') {
-      o[current] = (o[current] || '') + character;
-    }
-  }
+         if (o1.author) {
+            o1.author = _.toPlainObject(o1.author);
+         }
+         if (o1.contributors) {
+            o1.contributors = _.map(o1.contributors, _.toPlainObject);
+         }
 
-  _.forEach(['name', 'email', 'url'], (prop) => {
-    if (o[prop]) {
-      o[prop] = _.trim(o[prop]);
-    }
-  });
+         if (o2.author) {
+            o2.author = _.toPlainObject(o2.author);
+         }
+         if (o2.contributors) {
+            o2.contributors = _.map(o2.contributors, _.toPlainObject);
+         }
 
-  return o;
-};
+         return _.isEqual(o1, o2);
+      }
+   });
+});

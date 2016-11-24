@@ -27,8 +27,7 @@ const path = require('path');
 const _ = require('lodash');
 const moment = require('moment');
 const MagicString = require('magic-string');
-const parseDependency = require('./parse-dependency.js');
-const formatDependency = require('./format-dependency.js');
+const Dependency = require('./dependency.js');
 const generateBlockComment = require('./generate-block-comment.js');
 const EOL = require('./eol.js');
 
@@ -179,7 +178,7 @@ class LicensePlugin {
   addDependency(pkg) {
     const name = pkg.name;
     if (!_.has(this._dependencies, name)) {
-      this._dependencies[name] = parseDependency(pkg);
+      this._dependencies[name] = new Dependency(pkg);
     }
   }
 
@@ -201,7 +200,7 @@ class LicensePlugin {
       const text = _.chain(this._dependencies)
         .values()
         .filter((dependency) => includePrivate || !dependency.private)
-        .map(formatDependency)
+        .map((dependency) => dependency.toString())
         .join(`${EOL}${EOL}---${EOL}${EOL}`)
         .trim()
         .value();

@@ -194,13 +194,11 @@ describe('LicensePlugin', () => {
     plugin.addDependency(pkg);
 
     expect(plugin._dependencies.foo).toBeDefined();
-    expect(plugin._dependencies.foo).toEqual(jasmine.objectContaining({
-      author: {
-        name: 'Mickael Jeanroy',
-        url: 'https://mjeanroy.com',
-        email: 'mickael.jeanroy@gmail.com',
-      },
-    }));
+    expect(plugin._dependencies.foo.author).toEqual({
+      name: 'Mickael Jeanroy',
+      url: 'https://mjeanroy.com',
+      email: 'mickael.jeanroy@gmail.com',
+    });
   });
 
   it('should add dependency and parse contributors field as a string', () => {
@@ -221,13 +219,13 @@ describe('LicensePlugin', () => {
     plugin.addDependency(pkg);
 
     expect(plugin._dependencies.foo).toBeDefined();
-    expect(plugin._dependencies.foo).toEqual(jasmine.objectContaining({
-      contributors: [{
-        name: 'Mickael Jeanroy',
-        url: 'https://mjeanroy.com',
-        email: 'mickael.jeanroy@gmail.com',
-      }],
-    }));
+    expect(plugin._dependencies.foo.contributors).toBeDefined();
+    expect(plugin._dependencies.foo.contributors.length).toBe(1);
+    expect(plugin._dependencies.foo.contributors[0]).toEqual({
+      name: 'Mickael Jeanroy',
+      url: 'https://mjeanroy.com',
+      email: 'mickael.jeanroy@gmail.com',
+    });
   });
 
   it('should add dependency and parse contributors field', () => {
@@ -251,12 +249,19 @@ describe('LicensePlugin', () => {
     plugin.addDependency(pkg);
 
     expect(plugin._dependencies.foo).toBeDefined();
-    expect(plugin._dependencies.foo).toEqual(jasmine.objectContaining({
-      contributors: [
-        {name: 'Mickael Jeanroy', url: 'https://mjeanroy.com', email: 'mickael.jeanroy@gmail.com'},
-        {name: 'John Doe', email: 'johndoe@doe.com'},
-      ],
-    }));
+    expect(plugin._dependencies.foo.contributors).toBeDefined();
+    expect(plugin._dependencies.foo.contributors.length).toBe(2);
+
+    expect(plugin._dependencies.foo.contributors[0]).toEqual({
+      name: 'Mickael Jeanroy',
+      url: 'https://mjeanroy.com',
+      email: 'mickael.jeanroy@gmail.com',
+    });
+
+    expect(plugin._dependencies.foo.contributors[1]).toEqual({
+      name: 'John Doe',
+      email: 'johndoe@doe.com',
+    });
   });
 
   it('should add dependency and parse licenses field', () => {
@@ -280,9 +285,7 @@ describe('LicensePlugin', () => {
 
     expect(plugin._dependencies.foo).toBeDefined();
     expect(plugin._dependencies.foo.licenses).not.toBeDefined();
-    expect(plugin._dependencies.foo).toEqual(jasmine.objectContaining({
-      license: '(MIT OR Apache-2.0)',
-    }));
+    expect(plugin._dependencies.foo.license).toBe('(MIT OR Apache-2.0)');
   });
 
   it('should not add dependency twice', () => {
@@ -305,17 +308,7 @@ describe('LicensePlugin', () => {
     expect(plugin._dependencies.foo).toBeDefined();
     expect(plugin._dependencies.foo).not.toBe(pkg);
     expect(plugin._dependencies).toEqual({
-      foo: {
-        name: 'foo',
-        version: '0.0.0',
-        author: {name: 'Mickael Jeanroy', email: 'mickael.jeanroy@gmail.com'},
-        contributors: [{name: 'Mickael Jeanroy', email: 'mickael.jeanroy@gmail.com'}],
-        description: 'Fake Description',
-        license: 'MIT',
-        homepage: 'https://www.google.fr',
-        private: true,
-        repository: {type: 'GIT', url: 'https://github.com/npm/npm.git'},
-      },
+      foo: jasmine.anything(),
     });
 
     // Try to add the same pkg id
@@ -323,17 +316,7 @@ describe('LicensePlugin', () => {
     plugin.addDependency(pkg);
 
     expect(plugin._dependencies).toEqual({
-      foo: {
-        name: 'foo',
-        version: '0.0.0',
-        author: {name: 'Mickael Jeanroy', email: 'mickael.jeanroy@gmail.com'},
-        contributors: [{name: 'Mickael Jeanroy', email: 'mickael.jeanroy@gmail.com'}],
-        description: 'Fake Description',
-        license: 'MIT',
-        homepage: 'https://www.google.fr',
-        private: true,
-        repository: {type: 'GIT', url: 'https://github.com/npm/npm.git'},
-      },
+      foo: jasmine.anything(),
     });
   });
 
@@ -506,7 +489,7 @@ describe('LicensePlugin', () => {
       },
     });
 
-    instance._dependencies.foo = {
+    instance.addDependency({
       name: 'foo',
       version: '1.0.0',
       description: 'Foo Package',
@@ -516,7 +499,7 @@ describe('LicensePlugin', () => {
         name: 'Mickael Jeanroy',
         email: 'mickael.jeanroy@gmail.com',
       },
-    };
+    });
 
     const result = instance.ongenerate(false);
 
@@ -551,7 +534,7 @@ describe('LicensePlugin', () => {
       },
     });
 
-    instance._dependencies.foo = {
+    instance.addDependency({
       name: 'foo',
       version: '1.0.0',
       description: 'Foo Package',
@@ -561,15 +544,15 @@ describe('LicensePlugin', () => {
         name: 'Mickael Jeanroy',
         email: 'mickael.jeanroy@gmail.com',
       },
-    };
+    });
 
-    instance._dependencies.bar = {
+    instance.addDependency({
       name: 'bar',
       version: '2.0.0',
       description: 'Bar Package',
       license: 'Apache 2.0',
       private: false,
-    };
+    });
 
     const result = instance.ongenerate(false);
 
@@ -639,7 +622,7 @@ describe('LicensePlugin', () => {
       },
     });
 
-    instance._dependencies.foo = {
+    instance.addDependency({
       name: 'foo',
       version: '1.0.0',
       description: 'Foo Package',
@@ -649,15 +632,15 @@ describe('LicensePlugin', () => {
         name: 'Mickael Jeanroy',
         email: 'mickael.jeanroy@gmail.com',
       },
-    };
+    });
 
-    instance._dependencies.bar = {
+    instance.addDependency({
       name: 'bar',
       version: '2.0.0',
       description: 'Bar Package',
       license: 'Apache 2.0',
       private: true,
-    };
+    });
 
     const result = instance.ongenerate(false);
 
@@ -693,7 +676,7 @@ describe('LicensePlugin', () => {
       },
     });
 
-    instance._dependencies.foo = {
+    instance.addDependency({
       name: 'foo',
       version: '1.0.0',
       description: 'Foo Package',
@@ -703,15 +686,15 @@ describe('LicensePlugin', () => {
         name: 'Mickael Jeanroy',
         email: 'mickael.jeanroy@gmail.com',
       },
-    };
+    });
 
-    instance._dependencies.bar = {
+    instance.addDependency({
       name: 'bar',
       version: '2.0.0',
       description: 'Bar Package',
       license: 'Apache 2.0',
       private: true,
-    };
+    });
 
     const result = instance.ongenerate(false);
 
@@ -749,7 +732,7 @@ describe('LicensePlugin', () => {
   it('should not try to display dependencies without output file', () => {
     const instance = new LicensePlugin();
 
-    instance._dependencies.foo = {
+    instance.addDependency({
       name: 'foo',
       version: '1.0.0',
       description: 'Foo Package',
@@ -759,15 +742,15 @@ describe('LicensePlugin', () => {
         name: 'Mickael Jeanroy',
         email: 'mickael.jeanroy@gmail.com',
       },
-    };
+    });
 
-    instance._dependencies.bar = {
+    instance.addDependency({
       name: 'bar',
       version: '2.0.0',
       description: 'Bar Package',
       license: 'Apache 2.0',
       private: true,
-    };
+    });
 
     spyOn(fs, 'writeFileSync').and.callThrough();
 
