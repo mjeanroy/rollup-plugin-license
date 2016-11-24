@@ -322,7 +322,9 @@ describe('LicensePlugin', () => {
 
   it('should prepend banner to bundle', () => {
     const instance = new LicensePlugin({
-      file: path.join(__dirname, 'fixtures', 'banner.js'),
+      banner: {
+        file: path.join(__dirname, 'fixtures', 'banner.js'),
+      },
     });
 
     const code = 'var foo = 0;';
@@ -355,7 +357,9 @@ describe('LicensePlugin', () => {
 
   it('should not fail if banner file does not exist', () => {
     const instance = new LicensePlugin({
-      file: path.join(__dirname, 'fixtures', 'dummy'),
+      banner: {
+        file: path.join(__dirname, 'fixtures', 'dummy'),
+      },
     });
 
     const code = 'var foo = 0;';
@@ -369,7 +373,9 @@ describe('LicensePlugin', () => {
 
   it('should prepend banner and create block comment', () => {
     const instance = new LicensePlugin({
-      file: path.join(__dirname, 'fixtures', 'banner.txt'),
+      banner: {
+        file: path.join(__dirname, 'fixtures', 'banner.txt'),
+      },
     });
 
     const code = 'var foo = 0;';
@@ -390,7 +396,9 @@ describe('LicensePlugin', () => {
 
   it('should prepend banner to bundle and create sourceMap', () => {
     const instance = new LicensePlugin({
-      file: path.join(__dirname, 'fixtures', 'banner.js'),
+      banner: {
+        file: path.join(__dirname, 'fixtures', 'banner.js'),
+      },
     });
 
     const code = 'var foo = 0;';
@@ -405,7 +413,9 @@ describe('LicensePlugin', () => {
   it('should prepend banner to bundle and do not create sourceMap', () => {
     const instance = new LicensePlugin({
       sourceMap: false,
-      file: path.join(__dirname, 'fixtures', 'banner.js'),
+      banner: {
+        file: path.join(__dirname, 'fixtures', 'banner.js'),
+      },
     });
 
     const code = 'var foo = 0;';
@@ -419,7 +429,9 @@ describe('LicensePlugin', () => {
 
   it('should prepend banner and replace moment variables', () => {
     const instance = new LicensePlugin({
-      file: path.join(__dirname, 'fixtures', 'banner-with-moment.js'),
+      banner: {
+        file: path.join(__dirname, 'fixtures', 'banner-with-moment.js'),
+      },
     });
 
     const code = 'var foo = 0;';
@@ -438,7 +450,9 @@ describe('LicensePlugin', () => {
 
   it('should prepend banner and replace package variables', () => {
     const instance = new LicensePlugin({
-      file: path.join(__dirname, 'fixtures', 'banner-with-pkg.js'),
+      banner: {
+        file: path.join(__dirname, 'fixtures', 'banner-with-pkg.js'),
+      },
     });
 
     const code = 'var foo = 0;';
@@ -457,7 +471,9 @@ describe('LicensePlugin', () => {
 
   it('should prepend banner and replace dependencies placeholders', () => {
     const instance = new LicensePlugin({
-      file: path.join(__dirname, 'fixtures', 'banner-with-dependencies.js'),
+      banner: {
+        file: path.join(__dirname, 'fixtures', 'banner-with-dependencies.js'),
+      },
     });
 
     // Load a dependency

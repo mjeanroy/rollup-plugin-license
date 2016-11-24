@@ -119,7 +119,8 @@ class LicensePlugin {
    * @return {Object} The result containing the code and, optionnally, the source map.
    */
   transformBundle(code) {
-    const file = this._options.file;
+    const banner = this._options.banner;
+    const file = banner ? banner.file : banner;
     const result = {code};
 
     if (file) {
