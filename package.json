@@ -17,8 +17,8 @@
   "license": "MIT",
   "dependencies": {
     "lodash": "4.17.2",
-    "magic-string": "0.16.0",
-    "moment": "2.16.0"
+    "magic-string": "0.17.0",
+    "moment": "2.17.0"
   },
   "devDependencies": {
     "babel": "6.5.2",
