@@ -78,7 +78,7 @@ describe('Person', () => {
       name: 'Mickael Jeanroy',
     });
 
-    expect(person.toString()).toBe('Mickael Jeanroy');
+    expect(person.text()).toBe('Mickael Jeanroy');
   });
 
   it('should format person with a name and an email', () => {
@@ -87,7 +87,7 @@ describe('Person', () => {
       email: 'mickael.jeanroy@gmail.com',
     });
 
-    expect(person.toString()).toBe('Mickael Jeanroy <mickael.jeanroy@gmail.com>');
+    expect(person.text()).toBe('Mickael Jeanroy <mickael.jeanroy@gmail.com>');
   });
 
   it('should format person with a name and an url', () => {
@@ -96,7 +96,7 @@ describe('Person', () => {
       url: 'https://mjeanroy.com',
     });
 
-    expect(person.toString()).toBe('Mickael Jeanroy (https://mjeanroy.com)');
+    expect(person.text()).toBe('Mickael Jeanroy (https://mjeanroy.com)');
   });
 
   it('should format person with a name, an email and an url', () => {
@@ -106,7 +106,7 @@ describe('Person', () => {
       url: 'https://mjeanroy.com',
     });
 
-    expect(person.toString()).toBe(
+    expect(person.text()).toBe(
       'Mickael Jeanroy <mickael.jeanroy@gmail.com> (https://mjeanroy.com)'
     );
   });

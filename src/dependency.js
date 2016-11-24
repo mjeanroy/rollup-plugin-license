@@ -43,10 +43,13 @@ class Dependency {
   /**
    * Serialize dependency as a string.
    *
+   * @param {string} joiner Optional character used to join all the lines.
+   * @param {string} prefix Optional prefix prepended to the output string.
+   * @param {suffix} suffix Optional suffix appended to the output string.
    * @return {string} The dependency correctly formatted.
    */
-  toString() {
-    return formatDependency(this);
+  text(joiner = EOL, prefix = '', suffix = '') {
+    return `${prefix}${formatDependency(this, joiner)}${suffix}`;
   }
 }
 
@@ -113,41 +116,47 @@ function parseDependency(pkg) {
  * Format dependency data to a single string.
  *
  * @param {Object} dependency Dependency to format.
+ * @param {string} joiner Optional character used to join all the lines.
+ * @param {string} prefix Optional prefix prepended to the output string.
+ * @param {suffix} suffix Optional suffix appended to the output string.
  * @return {string} The output string.
  */
-function formatDependency(dependency) {
+function formatDependency(dependency, joiner = EOL, prefix = '', suffix = '') {
   const lines = [];
 
-  lines.push(`Name: ${dependency.name}`);
-  lines.push(`Version: ${dependency.version}`);
-  lines.push(`License: ${dependency.license}`);
-  lines.push(`Private: ${dependency.private || false}`);
+  lines.push(`${prefix}Name: ${dependency.name}${suffix}`);
+  lines.push(`${prefix}Version: ${dependency.version}${suffix}`);
+  lines.push(`${prefix}License: ${dependency.license}${suffix}`);
+  lines.push(`${prefix}Private: ${dependency.private || false}${suffix}`);
 
   if (dependency.description) {
-    lines.push(`Description: ${dependency.description || false}`);
+    lines.push(`${prefix}Description: ${dependency.description || false}${suffix}`);
   }
 
   if (dependency.repository) {
-    lines.push(`Repository: ${dependency.repository.url}`);
+    lines.push(`${prefix}Repository: ${dependency.repository.url}${suffix}`);
   }
 
   if (dependency.homepage) {
-    lines.push(`Homepage: ${dependency.homepage}`);
+    lines.push(`${prefix}Homepage: ${dependency.homepage}${suffix}`);
   }
 
   if (dependency.author) {
-    lines.push(`Author: ${dependency.author.toString()}`);
+    lines.push(`${prefix}Author: ${dependency.author.text(prefix, suffix)}${suffix}`);
   }
 
   if (dependency.contributors) {
-    lines.push(`Contributors:${EOL}${_.chain(dependency.contributors)
-      .map((contributor) => contributor.toString())
-      .map((line) => `  ${line}`)
-      .value()
-      .join(EOL)}`);
+    lines.push(`${prefix}Contributors:${suffix}`);
+
+    const allContributors = _.chain(dependency.contributors)
+      .map((contributor) => contributor.text(prefix, suffix))
+      .map((line) => `${prefix}  ${line}${suffix}`)
+      .value();
+
+    lines.push(...allContributors);
   }
 
-  return lines.join(EOL);
+  return lines.join(joiner);
 }
 
 module.exports = Dependency;

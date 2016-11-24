@@ -125,7 +125,7 @@ describe('Dependency', () => {
 
     const dependency = new Dependency(pkg);
 
-    expect(dependency.toString()).toEqual(
+    expect(dependency.text()).toEqual(
       `Name: ${pkg.name}\n` +
       `Version: ${pkg.version}\n` +
       `License: ${pkg.license}\n` +
@@ -143,7 +143,7 @@ describe('Dependency', () => {
 
     const dependency = new Dependency(pkg);
 
-    expect(dependency.toString()).toEqual(
+    expect(dependency.text()).toEqual(
       `Name: ${pkg.name}\n` +
       `Version: ${pkg.version}\n` +
       `License: ${pkg.license}\n` +
@@ -165,7 +165,7 @@ describe('Dependency', () => {
 
     const dependency = new Dependency(pkg);
 
-    expect(dependency.toString()).toEqual(
+    expect(dependency.text()).toEqual(
       `Name: ${pkg.name}\n` +
       `Version: ${pkg.version}\n` +
       `License: ${pkg.license}\n` +
@@ -187,7 +187,7 @@ describe('Dependency', () => {
 
     const dependency = new Dependency(pkg);
 
-    expect(dependency.toString()).toEqual(
+    expect(dependency.text()).toEqual(
       `Name: ${pkg.name}\n` +
       `Version: ${pkg.version}\n` +
       `License: ${pkg.license}\n` +
@@ -206,7 +206,7 @@ describe('Dependency', () => {
 
     const dependency = new Dependency(pkg);
 
-    expect(dependency.toString()).toEqual(
+    expect(dependency.text()).toEqual(
       `Name: ${pkg.name}\n` +
       `Version: ${pkg.version}\n` +
       `License: ${pkg.license}\n` +
@@ -228,7 +228,7 @@ describe('Dependency', () => {
 
     const dependency = new Dependency(pkg);
 
-    expect(dependency.toString()).toEqual(
+    expect(dependency.text()).toEqual(
       `Name: ${pkg.name}\n` +
       `Version: ${pkg.version}\n` +
       `License: ${pkg.license}\n` +
@@ -256,7 +256,7 @@ describe('Dependency', () => {
 
     const dependency = new Dependency(pkg);
 
-    expect(dependency.toString()).toEqual(
+    expect(dependency.text()).toEqual(
       `Name: ${pkg.name}\n` +
       `Version: ${pkg.version}\n` +
       `License: ${pkg.license}\n` +

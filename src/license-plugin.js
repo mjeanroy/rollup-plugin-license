@@ -200,7 +200,7 @@ class LicensePlugin {
       const text = _.chain(this._dependencies)
         .values()
         .filter((dependency) => includePrivate || !dependency.private)
-        .map((dependency) => dependency.toString())
+        .map((dependency) => dependency.text())
         .join(`${EOL}${EOL}---${EOL}${EOL}`)
         .trim()
         .value();
