@@ -110,4 +110,16 @@ describe('Person', () => {
       'Mickael Jeanroy <mickael.jeanroy@gmail.com> (https://mjeanroy.com)'
     );
   });
+
+  it('should format person with a suffix and a prefix', () => {
+    const person = new Person({
+      name: 'Mickael Jeanroy',
+      email: 'mickael.jeanroy@gmail.com',
+      url: 'https://mjeanroy.com',
+    });
+
+    expect(person.text('-- ', ' --')).toBe(
+      '-- Mickael Jeanroy <mickael.jeanroy@gmail.com> (https://mjeanroy.com) --'
+    );
+  });
 });

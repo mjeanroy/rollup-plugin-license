@@ -43,13 +43,13 @@ class Dependency {
   /**
    * Serialize dependency as a string.
    *
-   * @param {string} joiner Optional character used to join all the lines.
    * @param {string} prefix Optional prefix prepended to the output string.
    * @param {suffix} suffix Optional suffix appended to the output string.
+   * @param {string} joiner Optional character used to join all the lines.
    * @return {string} The dependency correctly formatted.
    */
-  text(joiner = EOL, prefix = '', suffix = '') {
-    return `${prefix}${formatDependency(this, joiner)}${suffix}`;
+  text(prefix = '', suffix = '', joiner = EOL) {
+    return formatDependency(this, prefix, suffix, joiner);
   }
 }
 
@@ -116,12 +116,12 @@ function parseDependency(pkg) {
  * Format dependency data to a single string.
  *
  * @param {Object} dependency Dependency to format.
- * @param {string} joiner Optional character used to join all the lines.
  * @param {string} prefix Optional prefix prepended to the output string.
  * @param {suffix} suffix Optional suffix appended to the output string.
+ * @param {string} joiner Optional character used to join all the lines.
  * @return {string} The output string.
  */
-function formatDependency(dependency, joiner = EOL, prefix = '', suffix = '') {
+function formatDependency(dependency, prefix = '', suffix = '', joiner = EOL) {
   const lines = [];
 
   lines.push(`${prefix}Name: ${dependency.name}${suffix}`);
@@ -142,14 +142,14 @@ function formatDependency(dependency, joiner = EOL, prefix = '', suffix = '') {
   }
 
   if (dependency.author) {
-    lines.push(`${prefix}Author: ${dependency.author.text(prefix, suffix)}${suffix}`);
+    lines.push(`${prefix}Author: ${dependency.author.text()}${suffix}`);
   }
 
   if (dependency.contributors) {
     lines.push(`${prefix}Contributors:${suffix}`);
 
     const allContributors = _.chain(dependency.contributors)
-      .map((contributor) => contributor.text(prefix, suffix))
+      .map((contributor) => contributor.text())
       .map((line) => `${prefix}  ${line}${suffix}`)
       .value();
 
