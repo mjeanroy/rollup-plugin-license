@@ -42,7 +42,28 @@ class Person {
    */
   constructor(person) {
     if (_.isString(person)) {
-      person = parseAuthor(person);
+      const o = {};
+
+      let current = 'name';
+
+      for (let i = 0, size = person.length; i < size; ++i) {
+        const character = person.charAt(i);
+        if (character === '<') {
+          current = 'email';
+        } else if (character === '(') {
+          current = 'url';
+        } else if (character !== ')' && character !== '>') {
+          o[current] = (o[current] || '') + character;
+        }
+      }
+
+      _.forEach(['name', 'email', 'url'], (prop) => {
+        if (_.has(o, prop)) {
+          o[prop] = _.trim(o[prop]);
+        }
+      });
+
+      person = o;
     }
 
     _.extend(this, person);
@@ -57,63 +78,18 @@ class Person {
    * @return {string} The person as a string.
    */
   text(prefix = '', suffix = '') {
-    return `${prefix}${formatAuthor(this)}${suffix}`;
+    let text = `${this.name}`;
+
+    if (this.email) {
+      text += ` <${this.email}>`;
+    }
+
+    if (this.url) {
+      text += ` (${this.url})`;
+    }
+
+    return `${prefix}${text}${suffix}`;
   }
 }
-
-/**
- * Return the person identity as a formatted string.
- *
- * @param {Object} person The person identity.
- * @return {string} The formatted string.
- */
-function formatAuthor(person) {
-  let text = `${person.name}`;
-
-  if (person.email) {
-    text += ` <${person.email}>`;
-  }
-
-  if (person.url) {
-    text += ` (${person.url})`;
-  }
-
-  return text;
-};
-
-/**
- * Parse person string to produce a valid person object containing name, email
- * and url.
- *
- * @param {string} person Person identity.
- * @return {Object} The person.
- */
-function parseAuthor(person) {
-  if (!person) {
-    return person;
-  }
-
-  const o = {};
-
-  let current = 'name';
-  for (let i = 0, size = person.length; i < size; ++i) {
-    const character = person.charAt(i);
-    if (character === '<') {
-      current = 'email';
-    } else if (character === '(') {
-      current = 'url';
-    } else if (character !== ')' && character !== '>') {
-      o[current] = (o[current] || '') + character;
-    }
-  }
-
-  _.forEach(['name', 'email', 'url'], (prop) => {
-    if (_.has(o, prop)) {
-      o[prop] = _.trim(o[prop]);
-    }
-  });
-
-  return o;
-};
 
 module.exports = Person;

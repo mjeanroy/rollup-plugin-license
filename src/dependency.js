@@ -37,7 +37,53 @@ class Dependency {
    * @constructor
    */
   constructor(pkg) {
-    _.extend(this, parseDependency(pkg));
+    const dependency = _.pick(pkg, [
+      'name',
+      'author',
+      'contributors',
+      'maintainers',
+      'version',
+      'description',
+      'license',
+      'licenses',
+      'repository',
+      'homepage',
+      'private',
+    ]);
+
+    // Parse the author field to get an object.
+    if (dependency.author) {
+      dependency.author = new Person(dependency.author);
+    }
+
+    // Parse the contributor array.
+    if (dependency.contributors) {
+      // Translate to an array if it is not already.
+      if (_.isString(dependency.contributors)) {
+        dependency.contributors = [dependency.contributors];
+      }
+
+      // Parse each contributor to produce a single object for each person.
+      dependency.contributors = _.map(dependency.contributors, (contributor) => {
+        return new Person(contributor);
+      });
+    }
+
+    // The `licenses` field is deprecated but may be used in some packages.
+    // Map it to a standard license field.
+    if (!dependency.license && dependency.licenses) {
+      // Map it to a valid license field.
+      // See: https://docs.npmjs.com/files/package.json#license
+      dependency.license = `(${_.chain(dependency.licenses)
+        .map((license) => license.type || license)
+        .join(' OR ')
+        .value()})`;
+
+      // Remove it.
+      delete dependency.licenses;
+    }
+
+    _.extend(this, dependency);
   }
 
   /**
@@ -49,114 +95,42 @@ class Dependency {
    * @return {string} The dependency correctly formatted.
    */
   text(prefix = '', suffix = '', joiner = EOL) {
-    return formatDependency(this, prefix, suffix, joiner);
-  }
-}
+    const lines = [];
 
-/**
- * Parse package description and generate an uniform dependency object:
- * - Parse author field if needed.
- * - Parse contributors array if needed.
- * - Parse deprecated licenses field if needed.
- *
- * @param {Object} pkg Package description.
- * @return {Object} Dependency description.
- */
-function parseDependency(pkg) {
-  const dependency = _.pick(pkg, [
-    'name',
-    'author',
-    'contributors',
-    'maintainers',
-    'version',
-    'description',
-    'license',
-    'licenses',
-    'repository',
-    'homepage',
-    'private',
-  ]);
+    lines.push(`${prefix}Name: ${this.name}${suffix}`);
+    lines.push(`${prefix}Version: ${this.version}${suffix}`);
+    lines.push(`${prefix}License: ${this.license}${suffix}`);
+    lines.push(`${prefix}Private: ${this.private || false}${suffix}`);
 
-  // Parse the author field to get an object.
-  if (dependency.author) {
-    dependency.author = new Person(dependency.author);
-  }
-
-  // Parse the contributor array.
-  if (dependency.contributors) {
-    // Translate to an array if it is not already.
-    if (_.isString(dependency.contributors)) {
-      dependency.contributors = [dependency.contributors];
+    if (this.description) {
+      lines.push(`${prefix}Description: ${this.description || false}${suffix}`);
     }
 
-    // Parse each contributor to produce a single object for each person.
-    dependency.contributors = _.map(dependency.contributors, (contributor) => {
-      return new Person(contributor);
-    });
+    if (this.repository) {
+      lines.push(`${prefix}Repository: ${this.repository.url}${suffix}`);
+    }
+
+    if (this.homepage) {
+      lines.push(`${prefix}Homepage: ${this.homepage}${suffix}`);
+    }
+
+    if (this.author) {
+      lines.push(`${prefix}Author: ${this.author.text()}${suffix}`);
+    }
+
+    if (this.contributors) {
+      lines.push(`${prefix}Contributors:${suffix}`);
+
+      const allContributors = _.chain(this.contributors)
+        .map((contributor) => contributor.text())
+        .map((line) => `${prefix}  ${line}${suffix}`)
+        .value();
+
+      lines.push(...allContributors);
+    }
+
+    return lines.join(joiner);
   }
-
-  // The `licenses` field is deprecated but may be used in some packages.
-  // Map it to a standard license field.
-  if (!dependency.license && dependency.licenses) {
-    // Map it to a valid license field.
-    // See: https://docs.npmjs.com/files/package.json#license
-    dependency.license = `(${_.chain(dependency.licenses)
-      .map((license) => license.type || license)
-      .join(' OR ')
-      .value()})`;
-
-    // Remove it.
-    delete dependency.licenses;
-  }
-
-  return dependency;
-}
-
-/**
- * Format dependency data to a single string.
- *
- * @param {Object} dependency Dependency to format.
- * @param {string} prefix Optional prefix prepended to the output string.
- * @param {suffix} suffix Optional suffix appended to the output string.
- * @param {string} joiner Optional character used to join all the lines.
- * @return {string} The output string.
- */
-function formatDependency(dependency, prefix = '', suffix = '', joiner = EOL) {
-  const lines = [];
-
-  lines.push(`${prefix}Name: ${dependency.name}${suffix}`);
-  lines.push(`${prefix}Version: ${dependency.version}${suffix}`);
-  lines.push(`${prefix}License: ${dependency.license}${suffix}`);
-  lines.push(`${prefix}Private: ${dependency.private || false}${suffix}`);
-
-  if (dependency.description) {
-    lines.push(`${prefix}Description: ${dependency.description || false}${suffix}`);
-  }
-
-  if (dependency.repository) {
-    lines.push(`${prefix}Repository: ${dependency.repository.url}${suffix}`);
-  }
-
-  if (dependency.homepage) {
-    lines.push(`${prefix}Homepage: ${dependency.homepage}${suffix}`);
-  }
-
-  if (dependency.author) {
-    lines.push(`${prefix}Author: ${dependency.author.text()}${suffix}`);
-  }
-
-  if (dependency.contributors) {
-    lines.push(`${prefix}Contributors:${suffix}`);
-
-    const allContributors = _.chain(dependency.contributors)
-      .map((contributor) => contributor.text())
-      .map((line) => `${prefix}  ${line}${suffix}`)
-      .value();
-
-    lines.push(...allContributors);
-  }
-
-  return lines.join(joiner);
 }
 
 module.exports = Dependency;
