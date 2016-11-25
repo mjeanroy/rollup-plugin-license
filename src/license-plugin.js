@@ -48,6 +48,7 @@ class LicensePlugin {
     this._cwd = process.cwd();
     this._dependencies = {};
     this._pkg = require(path.join(this._cwd, 'package.json'));
+    this._debug = options.debug || false;
 
     // This is a cache storing a directory path to associated package.
     // This is an improvement to avoid looking for package information for
@@ -69,6 +70,8 @@ class LicensePlugin {
    * @return {void}
    */
   scanDependency(id) {
+    this.debug(`scanning ${id}`);
+
     // Look for the `package.json` file
     let dir = path.parse(id).dir;
     let pkg = null;
@@ -80,6 +83,7 @@ class LicensePlugin {
       if (_.has(this._cache, dir)) {
         pkg = this._cache[dir];
         if (pkg) {
+          this.debug(`found package.json in cache (package: ${pkg.name})`);
           this.addDependency(pkg);
         }
 
@@ -91,6 +95,8 @@ class LicensePlugin {
       const pkgPath = path.join(dir, 'package.json');
       const exists = fs.existsSync(pkgPath);
       if (exists) {
+        this.debug(`found package.json at: ${pkgPath}, read it`);
+
         // Read `package.json` file
         pkg = require(pkgPath);
 
@@ -127,6 +133,8 @@ class LicensePlugin {
     const magicString = new MagicString(code);
 
     if (file) {
+      this.debug(`prepend banner from file: ${file}`);
+
       const filePath = path.resolve(file);
       const exists = fs.existsSync(filePath);
 
@@ -192,6 +200,8 @@ class LicensePlugin {
 
     const output = thirdParty.output;
     if (output) {
+      this.debug(`exporting third-party summary to ${output}`);
+
       const includePrivate = thirdParty.includePrivate;
       const text = _.chain(this._dependencies)
         .values()
@@ -202,6 +212,17 @@ class LicensePlugin {
         .value();
 
       fs.writeFileSync(output, text || 'No third parties dependencies');
+    }
+  }
+
+  /**
+   * Log debug message if debug mode is enabled.
+   *
+   * @param {string} msg Log message.
+   */
+  debug(msg) {
+    if (this._debug) {
+      console.log(`[${this.name}] -- ${msg}`);
     }
   }
 }
