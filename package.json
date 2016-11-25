@@ -7,7 +7,11 @@
     "lint": "gulp lint",
     "clean": "gulp clean",
     "build": "gulp build",
-    "test": "gulp test"
+    "test": "gulp test",
+    "release": "gulp release:minor",
+    "release:patch": "gulp release:patch",
+    "release:minor": "gulp release:minor",
+    "release:major": "gulp release:major"
   },
   "keywords": [
     "rollup",
@@ -28,9 +32,13 @@
     "eslint-config-google": "0.7.0",
     "gulp": "3.9.1",
     "gulp-babel": "6.1.2",
+    "gulp-bump": "2.5.1",
     "gulp-eslint": "3.0.1",
+    "gulp-git": "1.12.0",
     "gulp-jasmine": "2.4.2",
+    "gulp-util": "3.0.7",
     "jasmine-core": "2.5.2",
+    "run-sequence": "1.2.2",
     "tmp": "0.0.31"
   }
 }
