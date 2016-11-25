@@ -1,0 +1,5 @@
+# NPM modules
+node_modules/
+
+# Do not send test directory
+test/
