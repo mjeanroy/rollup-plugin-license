@@ -22,12 +22,48 @@
  * SOFTWARE.
  */
 
+const path = require('path');
+const LicensePlugin = require('../dist/license-plugin.js');
 const plugin = require('../dist/index.js');
 
 describe('rollup-plugin-license', () => {
   it('should return new plugin instance', () => {
     const instance = plugin();
-    expect(instance).toBeDefined();
-    expect(instance._dependencies).toEqual({});
+    expect(instance.name).toBe('rollup-plugin-license');
+  });
+
+  it('should scan dependency on load', () => {
+    spyOn(LicensePlugin.prototype, 'scanDependency').and.callThrough();
+
+    const instance = plugin();
+    const id = path.join(__dirname, 'fixtures', 'fake-package', 'src', 'index.js');
+
+    const result = instance.load(id);
+
+    expect(result).not.toBeDefined();
+    expect(LicensePlugin.prototype.scanDependency).toHaveBeenCalledWith(id);
+  });
+
+  it('should prepend banner when bundle is transformed', () => {
+    spyOn(LicensePlugin.prototype, 'prependBanner').and.callThrough();
+
+    const instance = plugin();
+    const code = 'var foo = 0;';
+
+    const result = instance.transformBundle(code);
+
+    expect(result).toBeDefined();
+    expect(LicensePlugin.prototype.prependBanner).toHaveBeenCalledWith(code);
+  });
+
+  it('should create third-parties file when bundle is generated', () => {
+    spyOn(LicensePlugin.prototype, 'exportThirdParties').and.callThrough();
+
+    const instance = plugin();
+
+    const result = instance.ongenerate();
+
+    expect(result).not.toBeDefined();
+    expect(LicensePlugin.prototype.exportThirdParties).toHaveBeenCalledWith();
   });
 });

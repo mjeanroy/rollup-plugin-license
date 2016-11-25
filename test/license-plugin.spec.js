@@ -51,7 +51,7 @@ describe('LicensePlugin', () => {
 
     spyOn(plugin, 'addDependency').and.callThrough();
 
-    const result = plugin.load(id);
+    const result = plugin.scanDependency(id);
 
     expect(result).not.toBeDefined();
     expect(plugin.addDependency).toHaveBeenCalled();
@@ -76,7 +76,7 @@ describe('LicensePlugin', () => {
 
     spyOn(plugin, 'addDependency').and.callThrough();
 
-    const result = plugin.load(id);
+    const result = plugin.scanDependency(id);
 
     expect(result).not.toBeDefined();
     expect(plugin.addDependency).not.toHaveBeenCalled();
@@ -89,7 +89,7 @@ describe('LicensePlugin', () => {
     const id = path.join(fakePackage, 'src', 'index.js');
     const pkg = require(path.join(fakePackage, 'package.json'));
 
-    plugin.load(id);
+    plugin.scanDependency(id);
 
     expect(plugin._dependencies).toEqual({
       'fake-package': {
@@ -115,7 +115,7 @@ describe('LicensePlugin', () => {
     const plugin = new LicensePlugin();
     const id = path.join(__dirname, '..', 'src', 'index.js');
 
-    plugin.load(id);
+    plugin.scanDependency(id);
 
     expect(plugin._dependencies).toEqual({});
     expect(plugin._cache).toEqual({
@@ -133,7 +133,7 @@ describe('LicensePlugin', () => {
 
     spyOn(fs, 'existsSync').and.callThrough();
 
-    plugin.load(id);
+    plugin.scanDependency(id);
 
     expect(plugin._dependencies).toEqual({});
     expect(fs.existsSync).not.toHaveBeenCalled();
@@ -329,7 +329,7 @@ describe('LicensePlugin', () => {
 
     const code = 'var foo = 0;';
 
-    const result = instance.transformBundle(code);
+    const result = instance.prependBanner(code);
 
     expect(result).toBeDefined();
     expect(result.code).toEqual(
@@ -348,7 +348,7 @@ describe('LicensePlugin', () => {
 
     const code = 'var foo = 0;';
 
-    const result = instance.transformBundle(code);
+    const result = instance.prependBanner(code);
 
     expect(result).toBeDefined();
     expect(result.code).toBeDefined();
@@ -364,7 +364,7 @@ describe('LicensePlugin', () => {
 
     const code = 'var foo = 0;';
 
-    const result = instance.transformBundle(code);
+    const result = instance.prependBanner(code);
 
     expect(result).toBeDefined();
     expect(result.code).toBeDefined();
@@ -380,7 +380,7 @@ describe('LicensePlugin', () => {
 
     const code = 'var foo = 0;';
 
-    const result = instance.transformBundle(code);
+    const result = instance.prependBanner(code);
 
     expect(result).toBeDefined();
     expect(result.code).toEqual(
@@ -403,7 +403,7 @@ describe('LicensePlugin', () => {
 
     const code = 'var foo = 0;';
 
-    const result = instance.transformBundle(code);
+    const result = instance.prependBanner(code);
 
     expect(result).toBeDefined();
     expect(result.code).toBeDefined();
@@ -420,7 +420,7 @@ describe('LicensePlugin', () => {
 
     const code = 'var foo = 0;';
 
-    const result = instance.transformBundle(code);
+    const result = instance.prependBanner(code);
 
     expect(result).toBeDefined();
     expect(result.code).toBeDefined();
@@ -436,7 +436,7 @@ describe('LicensePlugin', () => {
 
     const code = 'var foo = 0;';
 
-    const result = instance.transformBundle(code);
+    const result = instance.prependBanner(code);
 
     expect(result).toBeDefined();
     expect(result.code).toEqual(
@@ -457,7 +457,7 @@ describe('LicensePlugin', () => {
 
     const code = 'var foo = 0;';
 
-    const result = instance.transformBundle(code);
+    const result = instance.prependBanner(code);
 
     expect(result).toBeDefined();
     expect(result.code).toEqual(
@@ -477,10 +477,10 @@ describe('LicensePlugin', () => {
     });
 
     // Load a dependency
-    instance.load(path.join(__dirname, 'fixtures', 'fake-package', 'src', 'index.js'));
+    instance.scanDependency(path.join(__dirname, 'fixtures', 'fake-package', 'src', 'index.js'));
 
     const code = 'var foo = 0;';
-    const result = instance.transformBundle(code);
+    const result = instance.prependBanner(code);
 
     expect(result).toBeDefined();
     expect(result.code).toEqual(
@@ -517,7 +517,7 @@ describe('LicensePlugin', () => {
       },
     });
 
-    const result = instance.ongenerate(false);
+    const result = instance.exportThirdParties();
 
     expect(result).not.toBeDefined();
 
@@ -570,7 +570,7 @@ describe('LicensePlugin', () => {
       private: false,
     });
 
-    const result = instance.ongenerate(false);
+    const result = instance.exportThirdParties();
 
     expect(result).not.toBeDefined();
 
@@ -613,7 +613,7 @@ describe('LicensePlugin', () => {
 
     instance._dependencies = {};
 
-    const result = instance.ongenerate(false);
+    const result = instance.exportThirdParties();
 
     expect(result).not.toBeDefined();
 
@@ -658,7 +658,7 @@ describe('LicensePlugin', () => {
       private: true,
     });
 
-    const result = instance.ongenerate(false);
+    const result = instance.exportThirdParties();
 
     expect(result).not.toBeDefined();
 
@@ -712,7 +712,7 @@ describe('LicensePlugin', () => {
       private: true,
     });
 
-    const result = instance.ongenerate(false);
+    const result = instance.exportThirdParties();
 
     expect(result).not.toBeDefined();
 
@@ -770,7 +770,7 @@ describe('LicensePlugin', () => {
 
     spyOn(fs, 'writeFileSync').and.callThrough();
 
-    const result = instance.ongenerate(false);
+    const result = instance.exportThirdParties();
 
     expect(result).not.toBeDefined();
     expect(fs.writeFileSync).not.toHaveBeenCalled();

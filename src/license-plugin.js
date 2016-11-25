@@ -68,7 +68,7 @@ class LicensePlugin {
    * @param {string} id Module identifier.
    * @return {void}
    */
-  load(id) {
+  scanDependency(id) {
     // Look for the `package.json` file
     let dir = path.parse(id).dir;
     let pkg = null;
@@ -118,7 +118,7 @@ class LicensePlugin {
    * @param {string} code The bundle content.
    * @return {Object} The result containing the code and, optionnally, the source map.
    */
-  transformBundle(code) {
+  prependBanner(code) {
     const banner = this._options.banner;
     const file = banner ? banner.file : banner;
     const result = {code};
@@ -189,7 +189,7 @@ class LicensePlugin {
    * @param {boolean} includePrivate Flag that can be used to include / exclude private dependencies.
    * @return {void}
    */
-  ongenerate() {
+  exportThirdParties() {
     const thirdParty = this._options.thirdParty;
     if (!thirdParty) {
       return;

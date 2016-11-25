@@ -25,5 +25,21 @@
 const LicensePlugin = require('./license-plugin.js');
 
 module.exports = (options = {}) => {
-  return new LicensePlugin(options);
+  const plugin = new LicensePlugin(options);
+
+  return {
+    name: plugin.name,
+
+    load(id) {
+      plugin.scanDependency(id);
+    },
+
+    transformBundle(code) {
+      return plugin.prependBanner(code);
+    },
+
+    ongenerate() {
+      plugin.exportThirdParties();
+    },
+  };
 };
