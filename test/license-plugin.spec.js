@@ -352,6 +352,7 @@ describe('LicensePlugin', () => {
 
     expect(result).toBeDefined();
     expect(result.code).toBeDefined();
+    expect(result.map).toBeDefined();
     expect(result.code).toBe(code);
   });
 
@@ -368,6 +369,7 @@ describe('LicensePlugin', () => {
 
     expect(result).toBeDefined();
     expect(result.code).toBeDefined();
+    expect(result.map).toBeDefined();
     expect(result.code).toBe(code);
   });
 
@@ -408,23 +410,6 @@ describe('LicensePlugin', () => {
     expect(result).toBeDefined();
     expect(result.code).toBeDefined();
     expect(result.map).toBeDefined();
-  });
-
-  it('should prepend banner to bundle and do not create sourceMap', () => {
-    const instance = new LicensePlugin({
-      sourceMap: false,
-      banner: {
-        file: path.join(__dirname, 'fixtures', 'banner.js'),
-      },
-    });
-
-    const code = 'var foo = 0;';
-
-    const result = instance.prependBanner(code);
-
-    expect(result).toBeDefined();
-    expect(result.code).toBeDefined();
-    expect(result.map).not.toBeDefined();
   });
 
   it('should prepend banner and replace moment variables', () => {

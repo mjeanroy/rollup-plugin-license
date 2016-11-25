@@ -121,7 +121,10 @@ class LicensePlugin {
   prependBanner(code) {
     const banner = this._options.banner;
     const file = banner ? banner.file : banner;
-    const result = {code};
+
+    // Create a magicString: do not manipulate the string directly since it
+    // will be used to generate the sourcemap.
+    const magicString = new MagicString(code);
 
     if (file) {
       const filePath = path.resolve(file);
@@ -148,26 +151,18 @@ class LicensePlugin {
           banner = generateBlockComment(banner);
         }
 
-        // Create a magicString: do not manipulate the string directly since it
-        // will be used to generate the sourcemap.
-        const magicString = new MagicString(code);
-
         // Prepend the banner.
         magicString.prepend(`${banner}${EOL}`);
-
-        // Create the result object.
-        result.code = magicString.toString();
-
-        // Add sourceMap information if it is enabled.
-        if (this._options.sourceMap !== false) {
-          result.map = magicString.generateMap({
-            hires: true,
-          });
-        }
       }
     }
 
-    return result;
+    return {
+      code: magicString.toString(),
+      map: magicString.generateMap({
+        includeContent: true,
+        hires: true,
+      }),
+    };
   }
 
   /**
