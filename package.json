@@ -19,6 +19,14 @@
   ],
   "author": "Mickael Jeanroy <mickael.jeanroy@gmail.com>",
   "license": "MIT",
+  "homepage": "https://github.com/mjeanroy/rollup-plugin-license",
+  "bugs": {
+    "url": "https://github.com/mjeanroy/rollup-plugin-license/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url" : "https://github.com/mjeanroy/rollup-plugin-license"
+  },
   "dependencies": {
     "lodash": "4.17.2",
     "magic-string": "0.17.0",
