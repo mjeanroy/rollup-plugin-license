@@ -24,6 +24,7 @@
 
 const fs = require('fs');
 const path = require('path');
+const mkdirp = require('mkdirp');
 const _ = require('lodash');
 const moment = require('moment');
 const MagicString = require('magic-string');
@@ -201,6 +202,9 @@ class LicensePlugin {
     const output = thirdParty.output;
     if (output) {
       this.debug(`exporting third-party summary to ${output}`);
+
+      // Create directory if it does not already exist.
+      mkdirp(path.parse(output).dir);
 
       const includePrivate = thirdParty.includePrivate;
       const text = _.chain(this._dependencies)

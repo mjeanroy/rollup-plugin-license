@@ -527,6 +527,51 @@ describe('LicensePlugin', () => {
     });
   });
 
+  it('should display single dependency and create directory if needed', (done) => {
+    const file = path.join(tmpDir.name, 'output', 'third-party.txt');
+    const instance = new LicensePlugin({
+      thirdParty: {
+        output: file,
+      },
+    });
+
+    instance.addDependency({
+      name: 'foo',
+      version: '1.0.0',
+      description: 'Foo Package',
+      license: 'MIT',
+      private: false,
+      author: {
+        name: 'Mickael Jeanroy',
+        email: 'mickael.jeanroy@gmail.com',
+      },
+    });
+
+    const result = instance.exportThirdParties();
+
+    expect(result).not.toBeDefined();
+
+    fs.readFile(file, 'utf-8', (err, content) => {
+      if (err) {
+        done.fail(err);
+        return;
+      }
+
+      const txt = content.toString();
+      expect(txt).toBeDefined();
+      expect(txt).toEqual(
+        `Name: foo\n` +
+        `Version: 1.0.0\n` +
+        `License: MIT\n` +
+        `Private: false\n` +
+        `Description: Foo Package\n` +
+        `Author: Mickael Jeanroy <mickael.jeanroy@gmail.com>`
+      );
+
+      done();
+    });
+  });
+
   it('should display list of dependencies', (done) => {
     const file = path.join(tmpDir.name, 'third-party.txt');
     const instance = new LicensePlugin({
