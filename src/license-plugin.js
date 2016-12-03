@@ -46,6 +46,7 @@ class LicensePlugin {
     this.name = 'rollup-plugin-license';
 
     this._options = options;
+    this._sourceMap = false;
     this._cwd = process.cwd();
     this._dependencies = {};
     this._pkg = require(path.join(this._cwd, 'package.json'));
@@ -55,6 +56,15 @@ class LicensePlugin {
     // This is an improvement to avoid looking for package information for
     // already scanned directory.
     this._cache = {};
+  }
+
+  /**
+   * Enable source map.
+   *
+   * @return {void}
+   */
+  enableSourceMap() {
+    this._sourceMap = true;
   }
 
   /**
@@ -123,7 +133,8 @@ class LicensePlugin {
    * This hook is used here to prepend the license banner to the final bundle.
    *
    * @param {string} code The bundle content.
-   * @return {Object} The result containing the code and, optionnally, the source map.
+   * @return {Object} The result containing the code and, optionnally, the source map
+   *                  if it has been enabled (using `enableSourceMap` method).
    */
   prependBanner(code) {
     const banner = this._options.banner;
@@ -165,13 +176,17 @@ class LicensePlugin {
       }
     }
 
-    return {
+    const result = {
       code: magicString.toString(),
-      map: magicString.generateMap({
-        includeContent: true,
-        hires: true,
-      }),
     };
+
+    if (this._sourceMap) {
+      result.map = magicString.generateMap({
+        hires: true,
+      });
+    }
+
+    return result;
   }
 
   /**

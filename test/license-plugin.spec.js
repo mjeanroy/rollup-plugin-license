@@ -42,7 +42,16 @@ describe('LicensePlugin', () => {
     const plugin = new LicensePlugin();
     expect(plugin._cwd).toBeDefined();
     expect(plugin._pkg).toBeDefined();
+    expect(plugin._sourceMap).toBe(false);
     expect(plugin._dependencies).toEqual({});
+  });
+
+  it('should enable source map', () => {
+    const plugin = new LicensePlugin();
+    expect(plugin._sourceMap).toBe(false);
+
+    plugin.enableSourceMap();
+    expect(plugin._sourceMap).toBe(true);
   });
 
   it('should load pkg', () => {
@@ -332,6 +341,32 @@ describe('LicensePlugin', () => {
     const result = instance.prependBanner(code);
 
     expect(result).toBeDefined();
+    expect(result.map).not.toBeDefined();
+    expect(result.code).toEqual(
+      `/**\n` +
+      ` * Test banner.\n` +
+      ` *\n` +
+      ` * With a second line.\n` +
+      ` */\n` +
+      `\n` +
+      `${code}`
+    );
+  });
+
+  it('should prepend banner to bundle with source map', () => {
+    const instance = new LicensePlugin({
+      banner: {
+        file: path.join(__dirname, 'fixtures', 'banner.js'),
+      },
+    });
+
+    instance.enableSourceMap();
+
+    const code = 'var foo = 0;';
+    const result = instance.prependBanner(code);
+
+    expect(result).toBeDefined();
+    expect(result.map).toBeDefined();
     expect(result.code).toEqual(
       `/**\n` +
       ` * Test banner.\n` +
@@ -345,9 +380,9 @@ describe('LicensePlugin', () => {
 
   it('should not prepend default banner to bundle', () => {
     const instance = new LicensePlugin();
+    instance.enableSourceMap();
 
     const code = 'var foo = 0;';
-
     const result = instance.prependBanner(code);
 
     expect(result).toBeDefined();
@@ -363,8 +398,9 @@ describe('LicensePlugin', () => {
       },
     });
 
-    const code = 'var foo = 0;';
+    instance.enableSourceMap();
 
+    const code = 'var foo = 0;';
     const result = instance.prependBanner(code);
 
     expect(result).toBeDefined();
@@ -403,8 +439,9 @@ describe('LicensePlugin', () => {
       },
     });
 
-    const code = 'var foo = 0;';
+    instance.enableSourceMap();
 
+    const code = 'var foo = 0;';
     const result = instance.prependBanner(code);
 
     expect(result).toBeDefined();

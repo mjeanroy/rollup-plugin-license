@@ -28,16 +28,54 @@ module.exports = (options = {}) => {
   const plugin = new LicensePlugin(options);
 
   return {
+    /**
+     * Name of the plugin, used automatically by rollup.
+     * @type {string}
+     */
     name: plugin.name,
 
+    /**
+     * Function called by rollup when a JS file is loaded: it is used to scan
+     * third-party dependencies.
+     *
+     * @param {string} id JS file path.
+     * @return {void}
+     */
     load(id) {
       plugin.scanDependency(id);
     },
 
+    /**
+     * Function called by rollup to read global options: if source map parameter
+     * is truthy, enable it on the plugin.
+     *
+     * @param {object} opts Rollup options.
+     * @return {void}
+     */
+    options(opts) {
+      if (opts && opts.sourceMap) {
+        plugin.enableSourceMap();
+      }
+    },
+
+    /**
+     * Function called by rollup when the final bundle is generated: it is used
+     * to prepend the banner file on the generated bundle.
+     *
+     * @param {string} code Bundle content.
+     * @return {void}
+     */
     transformBundle(code) {
       return plugin.prependBanner(code);
     },
 
+    /**
+     * Function called by rollup when the final bundle will be written on disk: it
+     * is used to generate a file containing a summary of all third-party dependencies
+     * with license information.
+     *
+     * @return {void}
+     */
     ongenerate() {
       plugin.exportThirdParties();
     },
