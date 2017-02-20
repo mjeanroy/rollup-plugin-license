@@ -157,22 +157,19 @@ class LicensePlugin {
         const tmpl = _.template(content);
 
         // Generate the banner.
-        let banner = tmpl({
-          _,
-          moment,
-          pkg: this._pkg,
-          dependencies: _.values(this._dependencies),
-        });
+        const pkg = this._pkg;
+        const dependencies = _.values(this._dependencies);
+        let text = tmpl({_, moment, pkg, dependencies});
 
         // Make a block comment if needed
-        const trimmedBanner = banner.trim();
+        const trimmedBanner = text.trim();
         const start = trimmedBanner.slice(0, 3);
         if (start !== '/**' && start !== '/*!') {
-          banner = generateBlockComment(banner);
+          text = generateBlockComment(text);
         }
 
         // Prepend the banner.
-        magicString.prepend(`${banner}${EOL}`);
+        magicString.prepend(`${text}${EOL}`);
       }
     }
 
