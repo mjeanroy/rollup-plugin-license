@@ -16,21 +16,38 @@ Then add it to your rollup configuration:
 const path = require('path');
 const license = require('rollup-plugin-license');
 
-module.exports ={
+module.exports = {
   plugins: [
     license({
       sourceMap: true,
 
       banner: {
         file: path.join(__dirname, 'LICENSE'),
+        encoding: 'utf-8', // Default is utf-8
       },
 
       thirdParty: {
         output: path.join(__dirname, 'dist', 'dependencies.txt'),
         includePrivate: true, // Default is false.
+        encoding: 'utf-8', // Default is utf-8.
       },
-    })
-  ]
+    }),
+  ],
+}
+```
+
+Since version 0.3.0, `banner` can be a simple string that will be used directly:
+
+```javascript
+const path = require('path');
+const license = require('rollup-plugin-license');
+
+module.exports = {
+  plugins: [
+    license({
+      banner: `Copyright <%= moment().format('YYYY') %>`,
+    }),
+  ],
 }
 ```
 
@@ -68,6 +85,12 @@ license({
   },
 })
 ```
+
+## Changelogs
+
+- 0.3.0
+  - Add encoding option for banner and third-party output file.
+  - Banner can be a simple string.
 
 ## License
 

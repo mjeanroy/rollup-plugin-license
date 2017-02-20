@@ -137,43 +137,49 @@ class LicensePlugin {
    *                  if it has been enabled (using `enableSourceMap` method).
    */
   prependBanner(code) {
-    const banner = this._options.banner;
-    const file = banner ? banner.file : banner;
-
     // Create a magicString: do not manipulate the string directly since it
     // will be used to generate the sourcemap.
     const magicString = new MagicString(code);
 
-    if (file) {
+    const banner = this._options.banner;
+
+    let content;
+    if (_.isString(banner)) {
+      this.debug('prepend banner from template');
+      content = banner;
+    } else if (banner) {
+      const file = banner.file;
       this.debug(`prepend banner from file: ${file}`);
 
       const filePath = path.resolve(file);
       const exists = fs.existsSync(filePath);
-
       if (exists) {
         const encoding = banner.encoding || 'utf-8';
         this.debug(`use encoding: ${encoding}`);
-
-        const content = fs.readFileSync(filePath, encoding);
-
-        // Create the template function with lodash.
-        const tmpl = _.template(content);
-
-        // Generate the banner.
-        const pkg = this._pkg;
-        const dependencies = _.values(this._dependencies);
-        let text = tmpl({_, moment, pkg, dependencies});
-
-        // Make a block comment if needed
-        const trimmedBanner = text.trim();
-        const start = trimmedBanner.slice(0, 3);
-        if (start !== '/**' && start !== '/*!') {
-          text = generateBlockComment(text);
-        }
-
-        // Prepend the banner.
-        magicString.prepend(`${text}${EOL}`);
+        content = fs.readFileSync(filePath, encoding);
+      } else {
+        this.debug('template file does not exist, skip.');
       }
+    }
+
+    if (content) {
+      // Create the template function with lodash.
+      const tmpl = _.template(content);
+
+      // Generate the banner.
+      const pkg = this._pkg;
+      const dependencies = _.values(this._dependencies);
+      let text = tmpl({_, moment, pkg, dependencies});
+
+      // Make a block comment if needed
+      const trimmedBanner = text.trim();
+      const start = trimmedBanner.slice(0, 3);
+      if (start !== '/**' && start !== '/*!') {
+        text = generateBlockComment(text);
+      }
+
+      // Prepend the banner.
+      magicString.prepend(`${text}${EOL}`);
     }
 
     const result = {

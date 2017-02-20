@@ -329,11 +329,35 @@ describe('LicensePlugin', () => {
     });
   });
 
-  it('should prepend banner to bundle', () => {
+  it('should prepend banner to bundle from a file', () => {
     const instance = new LicensePlugin({
       banner: {
         file: path.join(__dirname, 'fixtures', 'banner.js'),
       },
+    });
+
+    const code = 'var foo = 0;';
+
+    const result = instance.prependBanner(code);
+
+    expect(result).toBeDefined();
+    expect(result.map).not.toBeDefined();
+    expect(result.code).toEqual(
+      `/**\n` +
+      ` * Test banner.\n` +
+      ` *\n` +
+      ` * With a second line.\n` +
+      ` */\n` +
+      `\n` +
+      `${code}`
+    );
+  });
+
+  it('should prepend banner to bundle with template', () => {
+    const file = path.join(__dirname, 'fixtures', 'banner.js');
+    const tmpl = fs.readFileSync(file, 'utf-8');
+    const instance = new LicensePlugin({
+      banner: tmpl,
     });
 
     const code = 'var foo = 0;';
