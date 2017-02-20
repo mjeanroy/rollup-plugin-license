@@ -25,9 +25,10 @@
   },
   "repository": {
     "type": "git",
-    "url" : "https://github.com/mjeanroy/rollup-plugin-license"
+    "url": "https://github.com/mjeanroy/rollup-plugin-license"
   },
   "dependencies": {
+    "commenting": "1.0.3",
     "lodash": "4.17.2",
     "magic-string": "0.17.0",
     "mkdirp": "0.5.1",

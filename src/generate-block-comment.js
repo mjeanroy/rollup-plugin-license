@@ -22,8 +22,7 @@
  * SOFTWARE.
  */
 
-const _ = require('lodash');
-const EOL = require('./eol.js');
+const commenting = require('commenting');
 
 /**
  * Generate block comment from given text content.
@@ -32,12 +31,5 @@ const EOL = require('./eol.js');
  * @return {string} Block comment.
  */
 module.exports = function generateBlockComment(text) {
-  const bannerContent = _.chain(text)
-    .trim()
-    .split(EOL)
-    .map((line) => _.trimEnd(` * ${line}`))
-    .join(EOL)
-    .value();
-
-  return `/**${EOL}${bannerContent}${EOL} */${EOL}`;
+  return commenting(text.trim(), {extension: '.js'});
 };
