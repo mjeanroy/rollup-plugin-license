@@ -353,6 +353,35 @@ describe('LicensePlugin', () => {
     );
   });
 
+  it('should prepend banner to bundle with custom encoding', () => {
+    spyOn(fs, 'readFileSync').and.callThrough();
+
+    const encoding = 'ascii';
+    const instance = new LicensePlugin({
+      banner: {
+        file: path.join(__dirname, 'fixtures', 'banner.js'),
+        encoding,
+      },
+    });
+
+    const code = 'var foo = 0;';
+
+    const result = instance.prependBanner(code);
+
+    expect(fs.readFileSync).toHaveBeenCalledWith(jasmine.any(String), encoding);
+    expect(result).toBeDefined();
+    expect(result.map).not.toBeDefined();
+    expect(result.code).toEqual(
+      `/**\n` +
+      ` * Test banner.\n` +
+      ` *\n` +
+      ` * With a second line.\n` +
+      ` */\n` +
+      `\n` +
+      `${code}`
+    );
+  });
+
   it('should prepend banner to bundle with source map', () => {
     const instance = new LicensePlugin({
       banner: {
@@ -642,6 +671,74 @@ describe('LicensePlugin', () => {
     expect(result).not.toBeDefined();
 
     fs.readFile(file, 'utf-8', (err, content) => {
+      if (err) {
+        done.fail(err);
+        return;
+      }
+
+      const txt = content.toString();
+      expect(txt).toBeDefined();
+      expect(txt).toEqual(
+        `Name: foo\n` +
+        `Version: 1.0.0\n` +
+        `License: MIT\n` +
+        `Private: false\n` +
+        `Description: Foo Package\n` +
+        `Author: Mickael Jeanroy <mickael.jeanroy@gmail.com>\n` +
+        `\n` +
+        `---\n` +
+        `\n` +
+        `Name: bar\n` +
+        `Version: 2.0.0\n` +
+        `License: Apache 2.0\n` +
+        `Private: false\n` +
+        `Description: Bar Package`
+      );
+
+      done();
+    });
+  });
+
+  it('should display list of dependencies with custom encoding', (done) => {
+    const file = path.join(tmpDir.name, 'third-party.txt');
+    const encoding = 'ascii';
+    const instance = new LicensePlugin({
+      thirdParty: {
+        output: file,
+        encoding,
+      },
+    });
+
+    instance.addDependency({
+      name: 'foo',
+      version: '1.0.0',
+      description: 'Foo Package',
+      license: 'MIT',
+      private: false,
+      author: {
+        name: 'Mickael Jeanroy',
+        email: 'mickael.jeanroy@gmail.com',
+      },
+    });
+
+    instance.addDependency({
+      name: 'bar',
+      version: '2.0.0',
+      description: 'Bar Package',
+      license: 'Apache 2.0',
+      private: false,
+    });
+
+    spyOn(fs, 'writeFileSync').and.callThrough();
+
+    const result = instance.exportThirdParties();
+
+    expect(result).not.toBeDefined();
+    expect(fs.writeFileSync).toHaveBeenCalledWith(jasmine.any(String), jasmine.any(String), {
+      encoding,
+    });
+
+    fs.readFile(file, encoding, (err, content) => {
       if (err) {
         done.fail(err);
         return;

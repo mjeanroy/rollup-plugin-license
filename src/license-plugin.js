@@ -151,7 +151,10 @@ class LicensePlugin {
       const exists = fs.existsSync(filePath);
 
       if (exists) {
-        const content = fs.readFileSync(filePath, 'utf-8');
+        const encoding = banner.encoding || 'utf-8';
+        this.debug(`use encoding: ${encoding}`);
+
+        const content = fs.readFileSync(filePath, encoding);
 
         // Create the template function with lodash.
         const tmpl = _.template(content);
@@ -227,7 +230,12 @@ class LicensePlugin {
         .trim()
         .value();
 
-      fs.writeFileSync(output, text || 'No third parties dependencies');
+      const encoding = thirdParty.encoding || 'utf-8';
+      this.debug(`use encoding: ${encoding}`);
+
+      fs.writeFileSync(output, text || 'No third parties dependencies', {
+        encoding,
+      });
     }
   }
 
