@@ -51,7 +51,7 @@ Bundle of <%= pkg.name %>
 Generated: <%= moment().format('YYYY-MM-DD') %>
 Version: <%= pkg.version %>
 Dependencies:
-<% _.forEach(dependencies, function (dependency) {) %>
+<% _.forEach(dependencies, function (dependency) { %>
   <%= dependency.name %> -- <%= dependency.version %>
 <% }) %>
 ```
