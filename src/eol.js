@@ -22,4 +22,6 @@
  * SOFTWARE.
  */
 
+'use strict';
+
 module.exports = '\n';

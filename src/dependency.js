@@ -22,6 +22,8 @@
  * SOFTWARE.
  */
 
+'use strict';
+
 const _ = require('lodash');
 const EOL = require('./eol.js');
 const Person = require('./person.js');

@@ -22,6 +22,8 @@
  * SOFTWARE.
  */
 
+'use strict';
+
 const commenting = require('commenting');
 
 /**

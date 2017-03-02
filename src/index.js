@@ -22,6 +22,8 @@
  * SOFTWARE.
  */
 
+'use strict';
+
 const LicensePlugin = require('./license-plugin.js');
 
 module.exports = (options = {}) => {
