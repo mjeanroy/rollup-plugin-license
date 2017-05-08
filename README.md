@@ -1,5 +1,7 @@
 # rollup-plugin-license
 
+[![Greenkeeper badge](https://badges.greenkeeper.io/mjeanroy/rollup-plugin-license.svg)](https://greenkeeper.io/)
+
 Rollup plugin that can be used to:
 - Prepend a banner from a file.
 - Create a file containing all third-parties used in the bundle (and display the license of each dependency).
