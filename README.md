@@ -92,6 +92,9 @@ license({
 
 ## Changelogs
 
+- 0.4.0
+  - Dependency update (`moment`).
+  - Dependency update (`magic-string`).
 - 0.3.0
   - Add encoding option for banner and third-party output file.
   - Banner can be a simple string.
