@@ -28,7 +28,7 @@
     "url": "https://github.com/mjeanroy/rollup-plugin-license"
   },
   "dependencies": {
-    "commenting": "1.0.3",
+    "commenting": "1.0.4",
     "lodash": "4.17.4",
     "magic-string": "0.21.3",
     "mkdirp": "0.5.1",
