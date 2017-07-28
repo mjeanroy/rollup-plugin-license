@@ -47,7 +47,7 @@
     "gulp-git": "2.4.1",
     "gulp-jasmine": "2.4.2",
     "gulp-util": "3.0.8",
-    "jasmine-core": "2.6.4",
+    "jasmine-core": "2.7.0",
     "rollup": "0.45.2",
     "rollup-plugin-commonjs": "8.0.2",
     "rollup-plugin-node-resolve": "3.0.0",
