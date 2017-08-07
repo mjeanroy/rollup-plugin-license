@@ -41,7 +41,7 @@
     "eslint": "4.4.1",
     "eslint-config-google": "0.9.1",
     "gulp": "3.9.1",
-    "gulp-babel": "6.1.2",
+    "gulp-babel": "7.0.0",
     "gulp-bump": "2.7.0",
     "gulp-eslint": "4.0.0",
     "gulp-git": "2.4.1",
