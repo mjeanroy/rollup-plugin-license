@@ -52,6 +52,6 @@
     "rollup-plugin-commonjs": "8.1.0",
     "rollup-plugin-node-resolve": "3.0.0",
     "run-sequence": "2.1.0",
-    "tmp": "0.0.31"
+    "tmp": "0.0.33"
   }
 }
