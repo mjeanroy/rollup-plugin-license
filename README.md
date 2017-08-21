@@ -92,6 +92,11 @@ license({
 
 ## Changelogs
 
+- 0.5.0
+  - Feat: Sourcemap is now enable by default to ensure compatibility with other rollup plugins.
+  - Fix: Add compatibility with rollup >= 0.48.0 (the new `sourcemap` option).
+  - Fix: Ensure plugin `sourcemp` is used instead of the "global" one in rollup options.
+  - Chore: dependency updates.
 - 0.4.0
   - Dependency update (`moment`).
   - Dependency update (`magic-string`).
