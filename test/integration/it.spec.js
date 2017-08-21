@@ -50,9 +50,16 @@ describe('Dependency', () => {
     const thirdPartyOutput = path.join(tmpDir.name, 'dependencies.txt');
 
     const rollupConfig = {
+      // Keep the `entry` option because of `rollup-plugin-commonjs`
       entry: path.join(__dirname, 'bundle.js'),
-      dest: bundleOutput,
-      format: 'es',
+
+      input: path.join(__dirname, 'bundle.js'),
+
+      output: {
+        file: bundleOutput,
+        format: 'es',
+      },
+
       plugins: [
         nodeResolve(),
         commonjs(),
@@ -66,7 +73,7 @@ describe('Dependency', () => {
     };
 
     rollup.rollup(rollupConfig)
-      .then((bundle) => bundle.write(rollupConfig))
+      .then((bundle) => bundle.write(rollupConfig.output))
       .then(() => {
         fs.readFile(thirdPartyOutput, 'utf8', (err, data) => {
           if (err) {
@@ -86,21 +93,25 @@ describe('Dependency', () => {
     const EOL = '\n';
 
     const rollupConfig = {
+      // Keep the `entry` option because of `rollup-plugin-commonjs`
       entry: path.join(__dirname, 'bundle.js'),
-      dest: bundleOutput,
-      format: 'es',
+
+      input: path.join(__dirname, 'bundle.js'),
+
+      output: {
+        file: bundleOutput,
+        format: 'es',
+      },
+
       plugins: [
         nodeResolve(),
         commonjs(),
-
-        licensePlugin({
-          banner,
-        }),
+        licensePlugin({banner}),
       ],
     };
 
     rollup.rollup(rollupConfig)
-      .then((bundle) => bundle.write(rollupConfig))
+      .then((bundle) => bundle.write(rollupConfig.output))
       .then(() => {
         fs.readFile(bundleOutput, 'utf8', (err, data) => {
           if (err) {
