@@ -24,6 +24,7 @@
 
 'use strict';
 
+const _ = require('lodash');
 const LicensePlugin = require('./license-plugin.js');
 
 module.exports = (options = {}) => {
@@ -56,6 +57,11 @@ module.exports = (options = {}) => {
      */
     options(opts) {
       if (!opts) {
+        return;
+      }
+
+      if (_.has(options, 'sourceMap') || _.has(options, 'sourcemap')) {
+        // SourceMap has been set on the plugin itself.
         return;
       }
 

@@ -46,6 +46,28 @@ describe('LicensePlugin', () => {
     expect(plugin._dependencies).toEqual({});
   });
 
+  it('should initialize instance with sourceMap = false', () => {
+    const plugin = new LicensePlugin({
+      sourceMap: false,
+    });
+
+    expect(plugin._cwd).toBeDefined();
+    expect(plugin._pkg).toBeDefined();
+    expect(plugin._sourceMap).toBe(false);
+    expect(plugin._dependencies).toEqual({});
+  });
+
+  it('should initialize instance with sourcemap = false (lowercase)', () => {
+    const plugin = new LicensePlugin({
+      sourcemap: false,
+    });
+
+    expect(plugin._cwd).toBeDefined();
+    expect(plugin._pkg).toBeDefined();
+    expect(plugin._sourceMap).toBe(false);
+    expect(plugin._dependencies).toEqual({});
+  });
+
   it('should disable source map', () => {
     const plugin = new LicensePlugin();
     expect(plugin._sourceMap).toBe(true);

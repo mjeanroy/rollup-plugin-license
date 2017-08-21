@@ -48,11 +48,13 @@ class LicensePlugin {
     this.name = 'rollup-plugin-license';
 
     this._options = options;
-    this._sourceMap = true;
     this._cwd = process.cwd();
     this._dependencies = {};
     this._pkg = require(path.join(this._cwd, 'package.json'));
     this._debug = options.debug || false;
+
+    // SourceMap can now be disable/enable on the plugin.
+    this._sourceMap = options.sourceMap !== false && options.sourcemap !== false;
 
     // This is a cache storing a directory path to associated package.
     // This is an improvement to avoid looking for package information for
