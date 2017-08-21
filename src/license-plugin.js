@@ -48,7 +48,7 @@ class LicensePlugin {
     this.name = 'rollup-plugin-license';
 
     this._options = options;
-    this._sourceMap = false;
+    this._sourceMap = true;
     this._cwd = process.cwd();
     this._dependencies = {};
     this._pkg = require(path.join(this._cwd, 'package.json'));
@@ -65,8 +65,8 @@ class LicensePlugin {
    *
    * @return {void}
    */
-  enableSourceMap() {
-    this._sourceMap = true;
+  disableSourceMap() {
+    this._sourceMap = false;
   }
 
   /**

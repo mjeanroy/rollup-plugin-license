@@ -45,7 +45,7 @@ describe('rollup-plugin-license', () => {
   });
 
   it('should enable sourceMap if options.sourceMap is true', () => {
-    spyOn(LicensePlugin.prototype, 'enableSourceMap').and.callThrough();
+    spyOn(LicensePlugin.prototype, 'disableSourceMap').and.callThrough();
 
     const instance = plugin();
     const result = instance.options({
@@ -53,11 +53,11 @@ describe('rollup-plugin-license', () => {
     });
 
     expect(result).not.toBeDefined();
-    expect(LicensePlugin.prototype.enableSourceMap).toHaveBeenCalledWith();
+    expect(LicensePlugin.prototype.disableSourceMap).not.toHaveBeenCalled();
   });
 
   it('should enable sourceMap if options.sourcemap (lowercase) is true', () => {
-    spyOn(LicensePlugin.prototype, 'enableSourceMap').and.callThrough();
+    spyOn(LicensePlugin.prototype, 'disableSourceMap').and.callThrough();
 
     const instance = plugin();
     const result = instance.options({
@@ -65,11 +65,11 @@ describe('rollup-plugin-license', () => {
     });
 
     expect(result).not.toBeDefined();
-    expect(LicensePlugin.prototype.enableSourceMap).toHaveBeenCalledWith();
+    expect(LicensePlugin.prototype.disableSourceMap).not.toHaveBeenCalled();
   });
 
   it('should not enable sourceMap if options.sourceMap is false', () => {
-    spyOn(LicensePlugin.prototype, 'enableSourceMap').and.callThrough();
+    spyOn(LicensePlugin.prototype, 'disableSourceMap').and.callThrough();
 
     const instance = plugin();
     const result = instance.options({
@@ -77,27 +77,39 @@ describe('rollup-plugin-license', () => {
     });
 
     expect(result).not.toBeDefined();
-    expect(LicensePlugin.prototype.enableSourceMap).not.toHaveBeenCalled();
+    expect(LicensePlugin.prototype.disableSourceMap).toHaveBeenCalledWith();
   });
 
-  it('should not enable sourceMap by default', () => {
-    spyOn(LicensePlugin.prototype, 'enableSourceMap').and.callThrough();
+  it('should not enable sourceMap if options.sourcemap (lowercase) is false', () => {
+    spyOn(LicensePlugin.prototype, 'disableSourceMap').and.callThrough();
+
+    const instance = plugin();
+    const result = instance.options({
+      sourcemap: false,
+    });
+
+    expect(result).not.toBeDefined();
+    expect(LicensePlugin.prototype.disableSourceMap).toHaveBeenCalledWith();
+  });
+
+  it('should enable sourceMap by default', () => {
+    spyOn(LicensePlugin.prototype, 'disableSourceMap').and.callThrough();
 
     const instance = plugin();
     const result = instance.options({});
 
     expect(result).not.toBeDefined();
-    expect(LicensePlugin.prototype.enableSourceMap).not.toHaveBeenCalled();
+    expect(LicensePlugin.prototype.disableSourceMap).not.toHaveBeenCalled();
   });
 
-  it('should not enable sourceMap if options is not set', () => {
-    spyOn(LicensePlugin.prototype, 'enableSourceMap').and.callThrough();
+  it('should enable sourceMap if options is not set', () => {
+    spyOn(LicensePlugin.prototype, 'disableSourceMap').and.callThrough();
 
     const instance = plugin();
     const result = instance.options();
 
     expect(result).not.toBeDefined();
-    expect(LicensePlugin.prototype.enableSourceMap).not.toHaveBeenCalled();
+    expect(LicensePlugin.prototype.disableSourceMap).not.toHaveBeenCalled();
   });
 
   it('should prepend banner when bundle is transformed', () => {
