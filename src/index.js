@@ -55,7 +55,12 @@ module.exports = (options = {}) => {
      * @return {void}
      */
     options(opts) {
-      if (opts && opts.sourceMap) {
+      if (!opts) {
+        return;
+      }
+
+      // Rollup >= 0.48 replace `sourceMap` with `sourcemap`.
+      if (opts.sourceMap || opts.sourcemap) {
         plugin.enableSourceMap();
       }
     },

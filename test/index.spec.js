@@ -56,6 +56,18 @@ describe('rollup-plugin-license', () => {
     expect(LicensePlugin.prototype.enableSourceMap).toHaveBeenCalledWith();
   });
 
+  it('should enable sourceMap if options.sourcemap (lowercase) is true', () => {
+    spyOn(LicensePlugin.prototype, 'enableSourceMap').and.callThrough();
+
+    const instance = plugin();
+    const result = instance.options({
+      sourcemap: true,
+    });
+
+    expect(result).not.toBeDefined();
+    expect(LicensePlugin.prototype.enableSourceMap).toHaveBeenCalledWith();
+  });
+
   it('should not enable sourceMap if options.sourceMap is false', () => {
     spyOn(LicensePlugin.prototype, 'enableSourceMap').and.callThrough();
 
