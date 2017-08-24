@@ -50,9 +50,6 @@ describe('Dependency', () => {
     const thirdPartyOutput = path.join(tmpDir.name, 'dependencies.txt');
 
     const rollupConfig = {
-      // Keep the `entry` option because of `rollup-plugin-commonjs`
-      entry: path.join(__dirname, 'bundle.js'),
-
       input: path.join(__dirname, 'bundle.js'),
 
       output: {
@@ -93,9 +90,6 @@ describe('Dependency', () => {
     const EOL = '\n';
 
     const rollupConfig = {
-      // Keep the `entry` option because of `rollup-plugin-commonjs`
-      entry: path.join(__dirname, 'bundle.js'),
-
       input: path.join(__dirname, 'bundle.js'),
 
       output: {
