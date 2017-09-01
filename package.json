@@ -44,7 +44,7 @@
     "gulp": "3.9.1",
     "gulp-babel": "7.0.0",
     "gulp-bump": "2.7.0",
-    "gulp-conventional-changelog": "1.1.4",
+    "gulp-conventional-changelog": "1.1.5",
     "gulp-eslint": "4.0.0",
     "gulp-git": "2.4.2",
     "gulp-jasmine": "2.4.2",
