@@ -23,12 +23,12 @@
  */
 
 const path = require('path');
+const log = require('fancy-log');
 const gulp = require('gulp');
 const jasmine = require('gulp-jasmine');
 const babel = require('gulp-babel');
 const del = require('del');
 const eslint = require('gulp-eslint');
-const gutil = require('gulp-util');
 const conventionalChangelog = require('gulp-conventional-changelog');
 const git = require('gulp-git');
 const bump = require('gulp-bump');
@@ -102,8 +102,8 @@ gulp.task('tag', (done) => {
 ['major', 'minor', 'patch'].forEach((level) => {
   gulp.task(`bump:${level}`, () => {
     return gulp.src(path.join(ROOT, 'package.json'))
-      .pipe(bump({type: level})
-      .on('error', gutil.log))
+      .pipe(bump({type: level}))
+      .on('error', (e) => log.error(e))
       .pipe(gulp.dest(ROOT));
   });
 
