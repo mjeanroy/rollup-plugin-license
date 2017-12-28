@@ -44,7 +44,7 @@
     "fancy-log": "1.3.2",
     "gulp": "3.9.1",
     "gulp-babel": "7.0.0",
-    "gulp-bump": "2.9.0",
+    "gulp-bump": "3.0.0",
     "gulp-conventional-changelog": "1.1.7",
     "gulp-eslint": "4.0.0",
     "gulp-git": "2.5.0",
