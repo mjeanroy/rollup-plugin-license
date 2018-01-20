@@ -49,7 +49,7 @@
     "gulp-eslint": "4.0.1",
     "gulp-git": "2.5.1",
     "gulp-jasmine": "3.0.0",
-    "jasmine-core": "2.8.0",
+    "jasmine-core": "2.9.0",
     "rollup": "0.54.0",
     "rollup-plugin-commonjs": "8.2.6",
     "rollup-plugin-node-resolve": "3.0.2",
