@@ -50,7 +50,7 @@
     "gulp-git": "2.5.1",
     "gulp-jasmine": "3.0.0",
     "jasmine-core": "2.9.1",
-    "rollup": "0.54.0",
+    "rollup": "0.54.1",
     "rollup-plugin-commonjs": "8.2.6",
     "rollup-plugin-node-resolve": "3.0.2",
     "run-sequence": "2.2.1",
