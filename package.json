@@ -29,28 +29,28 @@
     "url": "https://github.com/mjeanroy/rollup-plugin-license"
   },
   "dependencies": {
-    "commenting": "1.0.4",
+    "commenting": "1.0.5",
     "lodash": "4.17.5",
     "magic-string": "0.22.4",
     "mkdirp": "0.5.1",
-    "moment": "2.20.1"
+    "moment": "2.21.0"
   },
   "devDependencies": {
     "babel-core": "6.26.0",
     "babel-preset-env": "1.6.1",
     "del": "3.0.0",
-    "eslint": "4.18.1",
+    "eslint": "4.18.2",
     "eslint-config-google": "0.9.1",
     "fancy-log": "1.3.2",
     "gulp": "3.9.1",
     "gulp-babel": "7.0.1",
     "gulp-bump": "3.1.0",
-    "gulp-conventional-changelog": "1.1.17",
+    "gulp-conventional-changelog": "1.1.18",
     "gulp-eslint": "4.0.2",
     "gulp-git": "2.5.2",
     "gulp-jasmine": "3.0.0",
     "jasmine-core": "3.1.0",
-    "rollup": "0.56.3",
+    "rollup": "0.56.4",
     "rollup-plugin-commonjs": "8.3.0",
     "rollup-plugin-node-resolve": "3.0.3",
     "run-sequence": "2.2.1",
