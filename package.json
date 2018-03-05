@@ -51,7 +51,7 @@
     "gulp-jasmine": "3.0.0",
     "jasmine-core": "3.0.0",
     "rollup": "0.56.3",
-    "rollup-plugin-commonjs": "8.3.0",
+    "rollup-plugin-commonjs": "8.4.0",
     "rollup-plugin-node-resolve": "3.0.3",
     "run-sequence": "2.2.1",
     "tmp": "0.0.33"
