@@ -29,6 +29,13 @@ module.exports = {
       banner: {
         file: path.join(__dirname, 'LICENSE'),
         encoding: 'utf-8', // Default is utf-8
+
+        // Optional, may be an object or a function returning an object.
+        data() {
+          return {
+            foo: 'foo',
+          };
+        },
       },
 
       thirdParty: {
@@ -51,13 +58,6 @@ module.exports = {
   plugins: [
     license({
       banner: `Copyright <%= moment().format('YYYY') %>`,
-
-      // May be an object or a function returning an object.
-      data() {
-        return {
-          foo: 'foo',
-        };
-      },
     }),
   ],
 }
