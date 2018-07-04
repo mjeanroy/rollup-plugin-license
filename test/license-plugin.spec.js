@@ -550,6 +550,60 @@ describe('LicensePlugin', () => {
     );
   });
 
+  it('should prepend banner and replace custom data object', () => {
+    const instance = new LicensePlugin({
+      banner: {
+        file: path.join(__dirname, 'fixtures', 'banner-with-data.js'),
+        data: {
+          foo: 'bar',
+          bar: 'baz',
+        },
+      },
+    });
+
+    const code = 'var foo = 0;';
+
+    const result = instance.prependBanner(code);
+
+    expect(result).toBeDefined();
+    expect(result.code).toEqual(
+      `/**\n` +
+      ` * Foo: bar\n` +
+      ` * Bar: baz\n` +
+      ` */\n` +
+      `\n` +
+      `var foo = 0;`
+    );
+  });
+
+  it('should prepend banner and replace custom data function', () => {
+    const instance = new LicensePlugin({
+      banner: {
+        file: path.join(__dirname, 'fixtures', 'banner-with-data.js'),
+        data() {
+          return {
+            foo: 'bar',
+            bar: 'baz',
+          };
+        },
+      },
+    });
+
+    const code = 'var foo = 0;';
+
+    const result = instance.prependBanner(code);
+
+    expect(result).toBeDefined();
+    expect(result.code).toEqual(
+      `/**\n` +
+      ` * Foo: bar\n` +
+      ` * Bar: baz\n` +
+      ` */\n` +
+      `\n` +
+      `var foo = 0;`
+    );
+  });
+
   it('should prepend banner and replace package variables', () => {
     const instance = new LicensePlugin({
       banner: {

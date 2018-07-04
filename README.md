@@ -51,6 +51,13 @@ module.exports = {
   plugins: [
     license({
       banner: `Copyright <%= moment().format('YYYY') %>`,
+
+      // May be an object or a function returning an object.
+      data() {
+        return {
+          foo: 'foo',
+        };
+      },
     }),
   ],
 }
@@ -65,6 +72,7 @@ Note that the content will be translated to a lodash template with the following
 - `dependencies`: An array of all the dependencies included in the bundle.
 - `moment`: The `moment` object.
 - `_`: The lodash object.
+- `data` A custom data object, defined in banner options.
 
 Here is a valid banner:
 
@@ -95,6 +103,8 @@ license({
 
 - 0.6.0
   - Add `cwd` option to specify custom working directory (optional option).
+  - Add a way to specify custom data object when rendering banner.
+  - Upgrade dependencies.
 - 0.5.0
   - Feat: Sourcemap is now enable by default to ensure compatibility with other rollup plugins.
   - Fix: Add compatibility with rollup >= 0.48.0 (the new `sourcemap` option).

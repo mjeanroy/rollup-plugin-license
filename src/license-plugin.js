@@ -173,7 +173,9 @@ class LicensePlugin {
       // Generate the banner.
       const pkg = this._pkg;
       const dependencies = _.values(this._dependencies);
-      let text = tmpl({_, moment, pkg, dependencies});
+      const data = banner.data ? _.result(banner, 'data') : {};
+
+      let text = tmpl({_, moment, pkg, dependencies, data});
 
       // Make a block comment if needed
       const trimmedBanner = text.trim();
