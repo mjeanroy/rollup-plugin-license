@@ -24,6 +24,7 @@ module.exports = {
   plugins: [
     license({
       sourceMap: true,
+      cwd: '.', // Default is process.cwd()
 
       banner: {
         file: path.join(__dirname, 'LICENSE'),
@@ -92,6 +93,8 @@ license({
 
 ## Changelogs
 
+- 0.6.0
+  - Add `cwd` option to specify custom working directory (optional option).
 - 0.5.0
   - Feat: Sourcemap is now enable by default to ensure compatibility with other rollup plugins.
   - Fix: Add compatibility with rollup >= 0.48.0 (the new `sourcemap` option).

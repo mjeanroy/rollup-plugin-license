@@ -48,7 +48,7 @@ class LicensePlugin {
     this.name = 'rollup-plugin-license';
 
     this._options = options;
-    this._cwd = process.cwd();
+    this._cwd = options.cwd || process.cwd();
     this._dependencies = {};
     this._pkg = require(path.join(this._cwd, 'package.json'));
     this._debug = options.debug || false;

@@ -46,6 +46,16 @@ describe('LicensePlugin', () => {
     expect(plugin._dependencies).toEqual({});
   });
 
+  it('should initialize instance with custom cwd', () => {
+    const cwd = path.join(__dirname, 'fixtures', 'fake-package');
+    const plugin = new LicensePlugin({
+      cwd,
+    });
+
+    expect(plugin._cwd).toBeDefined();
+    expect(plugin._cwd).toBe(cwd);
+  });
+
   it('should initialize instance with sourceMap = false', () => {
     const plugin = new LicensePlugin({
       sourceMap: false,
