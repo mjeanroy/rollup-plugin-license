@@ -126,10 +126,10 @@ describe('Dependency', () => {
     const dependency = new Dependency(pkg);
 
     expect(dependency.text()).toEqual(
-      `Name: ${pkg.name}\n` +
-      `Version: ${pkg.version}\n` +
-      `License: ${pkg.license}\n` +
-      `Private: false`
+        `Name: ${pkg.name}\n` +
+        `Version: ${pkg.version}\n` +
+        `License: ${pkg.license}\n` +
+        `Private: false`
     );
   });
 
@@ -144,11 +144,11 @@ describe('Dependency', () => {
     const dependency = new Dependency(pkg);
 
     expect(dependency.text()).toEqual(
-      `Name: ${pkg.name}\n` +
-      `Version: ${pkg.version}\n` +
-      `License: ${pkg.license}\n` +
-      `Private: false\n` +
-      `Description: ${pkg.description}`
+        `Name: ${pkg.name}\n` +
+        `Version: ${pkg.version}\n` +
+        `License: ${pkg.license}\n` +
+        `Private: false\n` +
+        `Description: ${pkg.description}`
     );
   });
 
@@ -166,11 +166,11 @@ describe('Dependency', () => {
     const dependency = new Dependency(pkg);
 
     expect(dependency.text()).toEqual(
-      `Name: ${pkg.name}\n` +
-      `Version: ${pkg.version}\n` +
-      `License: ${pkg.license}\n` +
-      `Private: false\n` +
-      `Author: ${pkg.author.name} <${pkg.author.email}>`
+        `Name: ${pkg.name}\n` +
+        `Version: ${pkg.version}\n` +
+        `License: ${pkg.license}\n` +
+        `Private: false\n` +
+        `Author: ${pkg.author.name} <${pkg.author.email}>`
     );
   });
 
@@ -188,11 +188,11 @@ describe('Dependency', () => {
     const dependency = new Dependency(pkg);
 
     expect(dependency.text()).toEqual(
-      `Name: ${pkg.name}\n` +
-      `Version: ${pkg.version}\n` +
-      `License: ${pkg.license}\n` +
-      `Private: false\n` +
-      `Repository: ${pkg.repository.url}`
+        `Name: ${pkg.name}\n` +
+        `Version: ${pkg.version}\n` +
+        `License: ${pkg.license}\n` +
+        `Private: false\n` +
+        `Repository: ${pkg.repository.url}`
     );
   });
 
@@ -207,11 +207,11 @@ describe('Dependency', () => {
     const dependency = new Dependency(pkg);
 
     expect(dependency.text()).toEqual(
-      `Name: ${pkg.name}\n` +
-      `Version: ${pkg.version}\n` +
-      `License: ${pkg.license}\n` +
-      `Private: false\n` +
-      `Homepage: ${pkg.homepage}`
+        `Name: ${pkg.name}\n` +
+        `Version: ${pkg.version}\n` +
+        `License: ${pkg.license}\n` +
+        `Private: false\n` +
+        `Homepage: ${pkg.homepage}`
     );
   });
 
@@ -229,13 +229,13 @@ describe('Dependency', () => {
     const dependency = new Dependency(pkg);
 
     expect(dependency.text()).toEqual(
-      `Name: ${pkg.name}\n` +
-      `Version: ${pkg.version}\n` +
-      `License: ${pkg.license}\n` +
-      `Private: false\n` +
-      `Contributors:\n` +
-      `  ${pkg.contributors[0].name} <${pkg.contributors[0].email}>\n` +
-      `  ${pkg.contributors[1].name}`
+        `Name: ${pkg.name}\n` +
+        `Version: ${pkg.version}\n` +
+        `License: ${pkg.license}\n` +
+        `Private: false\n` +
+        `Contributors:\n` +
+        `  ${pkg.contributors[0].name} <${pkg.contributors[0].email}>\n` +
+        `  ${pkg.contributors[1].name}`
     );
   });
 
@@ -257,17 +257,17 @@ describe('Dependency', () => {
     const dependency = new Dependency(pkg);
 
     expect(dependency.text()).toEqual(
-      `Name: ${pkg.name}\n` +
-      `Version: ${pkg.version}\n` +
-      `License: ${pkg.license}\n` +
-      `Private: false\n` +
-      `Description: ${pkg.description}\n` +
-      `Repository: ${pkg.repository.url}\n` +
-      `Homepage: ${pkg.homepage}\n` +
-      `Author: ${pkg.author.name} <${pkg.author.email}>\n` +
-      `Contributors:\n` +
-      `  ${pkg.contributors[0].name} <${pkg.contributors[0].email}>\n` +
-      `  ${pkg.contributors[1].name}`
+        `Name: ${pkg.name}\n` +
+        `Version: ${pkg.version}\n` +
+        `License: ${pkg.license}\n` +
+        `Private: false\n` +
+        `Description: ${pkg.description}\n` +
+        `Repository: ${pkg.repository.url}\n` +
+        `Homepage: ${pkg.homepage}\n` +
+        `Author: ${pkg.author.name} <${pkg.author.email}>\n` +
+        `Contributors:\n` +
+        `  ${pkg.contributors[0].name} <${pkg.contributors[0].email}>\n` +
+        `  ${pkg.contributors[1].name}`
     );
   });
 
@@ -289,17 +289,17 @@ describe('Dependency', () => {
     const dependency = new Dependency(pkg);
 
     expect(dependency.text(' * ', ' --')).toEqual(
-      ` * Name: ${pkg.name} --\n` +
-      ` * Version: ${pkg.version} --\n` +
-      ` * License: ${pkg.license} --\n` +
-      ` * Private: false --\n` +
-      ` * Description: ${pkg.description} --\n` +
-      ` * Repository: ${pkg.repository.url} --\n` +
-      ` * Homepage: ${pkg.homepage} --\n` +
-      ` * Author: ${pkg.author.name} <${pkg.author.email}> --\n` +
-      ` * Contributors: --\n` +
-      ` *   ${pkg.contributors[0].name} <${pkg.contributors[0].email}> --\n` +
-      ` *   ${pkg.contributors[1].name} --`
+        ` * Name: ${pkg.name} --\n` +
+        ` * Version: ${pkg.version} --\n` +
+        ` * License: ${pkg.license} --\n` +
+        ` * Private: false --\n` +
+        ` * Description: ${pkg.description} --\n` +
+        ` * Repository: ${pkg.repository.url} --\n` +
+        ` * Homepage: ${pkg.homepage} --\n` +
+        ` * Author: ${pkg.author.name} <${pkg.author.email}> --\n` +
+        ` * Contributors: --\n` +
+        ` *   ${pkg.contributors[0].name} <${pkg.contributors[0].email}> --\n` +
+        ` *   ${pkg.contributors[1].name} --`
     );
   });
 });

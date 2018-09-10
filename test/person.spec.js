@@ -107,7 +107,7 @@ describe('Person', () => {
     });
 
     expect(person.text()).toBe(
-      'Mickael Jeanroy <mickael.jeanroy@gmail.com> (https://mjeanroy.com)'
+        'Mickael Jeanroy <mickael.jeanroy@gmail.com> (https://mjeanroy.com)'
     );
   });
 
@@ -119,7 +119,7 @@ describe('Person', () => {
     });
 
     expect(person.text('-- ', ' --')).toBe(
-      '-- Mickael Jeanroy <mickael.jeanroy@gmail.com> (https://mjeanroy.com) --'
+        '-- Mickael Jeanroy <mickael.jeanroy@gmail.com> (https://mjeanroy.com) --'
     );
   });
 });

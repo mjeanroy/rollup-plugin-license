@@ -54,8 +54,8 @@ gulp.task('clean', () => {
 
 gulp.task('build', ['clean', 'lint'], () => {
   return gulp.src(path.join(SRC, '*.js'))
-    .pipe(babel())
-    .pipe(gulp.dest(DIST));
+      .pipe(babel())
+      .pipe(gulp.dest(DIST));
 });
 
 gulp.task('lint', () => {
@@ -66,31 +66,31 @@ gulp.task('lint', () => {
   ];
 
   return gulp.src(src)
-    .pipe(eslint())
-    .pipe(eslint.format())
-    .pipe(eslint.failAfterError());
+      .pipe(eslint())
+      .pipe(eslint.format())
+      .pipe(eslint.failAfterError());
 });
 
 gulp.task('changelog', () => {
   const changelog = path.join(ROOT, 'CHANGELOG.md');
   return gulp.src(changelog, {buffer: false})
-    .pipe(conventionalChangelog({
-      releaseCount: 0,
-    }))
-    .pipe(gulp.dest(ROOT));
+      .pipe(conventionalChangelog({
+        releaseCount: 0,
+      }))
+      .pipe(gulp.dest(ROOT));
 });
 
 gulp.task('commit:pre', () => {
   const packageJson = path.join(ROOT, 'package.json');
   return gulp.src([packageJson, DIST])
-    .pipe(git.add({args: '-f'}))
-    .pipe(git.commit('release: release version'));
+      .pipe(git.add({args: '-f'}))
+      .pipe(git.commit('release: release version'));
 });
 
 gulp.task('commit:post', () => {
   return gulp.src(DIST)
-    .pipe(git.rm({args: '-r'}))
-    .pipe(git.commit('release: prepare next release'));
+      .pipe(git.rm({args: '-r'}))
+      .pipe(git.commit('release: prepare next release'));
 });
 
 gulp.task('tag', (done) => {
@@ -102,9 +102,9 @@ gulp.task('tag', (done) => {
 ['major', 'minor', 'patch'].forEach((level) => {
   gulp.task(`bump:${level}`, () => {
     return gulp.src(path.join(ROOT, 'package.json'))
-      .pipe(bump({type: level}))
-      .on('error', (e) => log.error(e))
-      .pipe(gulp.dest(ROOT));
+        .pipe(bump({type: level}))
+        .on('error', (e) => log.error(e))
+        .pipe(gulp.dest(ROOT));
   });
 
   gulp.task('release:' + level, ['build'], () => {

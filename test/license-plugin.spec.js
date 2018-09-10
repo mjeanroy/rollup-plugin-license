@@ -375,13 +375,13 @@ describe('LicensePlugin', () => {
     expect(result).toBeDefined();
     expect(result.map).toBeDefined();
     expect(result.code).toEqual(
-      `/**\n` +
-      ` * Test banner.\n` +
-      ` *\n` +
-      ` * With a second line.\n` +
-      ` */\n` +
-      `\n` +
-      `${code}`
+        `/**\n` +
+        ` * Test banner.\n` +
+        ` *\n` +
+        ` * With a second line.\n` +
+        ` */\n` +
+        `\n` +
+        `${code}`
     );
   });
 
@@ -399,13 +399,13 @@ describe('LicensePlugin', () => {
     expect(result).toBeDefined();
     expect(result.map).toBeDefined();
     expect(result.code).toEqual(
-      `/**\n` +
-      ` * Test banner.\n` +
-      ` *\n` +
-      ` * With a second line.\n` +
-      ` */\n` +
-      `\n` +
-      `${code}`
+        `/**\n` +
+        ` * Test banner.\n` +
+        ` *\n` +
+        ` * With a second line.\n` +
+        ` */\n` +
+        `\n` +
+        `${code}`
     );
   });
 
@@ -428,13 +428,13 @@ describe('LicensePlugin', () => {
     expect(result).toBeDefined();
     expect(result.map).toBeDefined();
     expect(result.code).toEqual(
-      `/**\n` +
-      ` * Test banner.\n` +
-      ` *\n` +
-      ` * With a second line.\n` +
-      ` */\n` +
-      `\n` +
-      `${code}`
+        `/**\n` +
+        ` * Test banner.\n` +
+        ` *\n` +
+        ` * With a second line.\n` +
+        ` */\n` +
+        `\n` +
+        `${code}`
     );
   });
 
@@ -453,13 +453,13 @@ describe('LicensePlugin', () => {
     expect(result).toBeDefined();
     expect(result.map).not.toBeDefined();
     expect(result.code).toEqual(
-      `/**\n` +
-      ` * Test banner.\n` +
-      ` *\n` +
-      ` * With a second line.\n` +
-      ` */\n` +
-      `\n` +
-      `${code}`
+        `/**\n` +
+        ` * Test banner.\n` +
+        ` *\n` +
+        ` * With a second line.\n` +
+        ` */\n` +
+        `\n` +
+        `${code}`
     );
   });
 
@@ -504,13 +504,13 @@ describe('LicensePlugin', () => {
 
     expect(result).toBeDefined();
     expect(result.code).toEqual(
-      `/**\n` +
-      ` * Test banner.\n` +
-      ` *\n` +
-      ` * With a second line.\n` +
-      ` */\n` +
-      `\n` +
-      `${code}`
+        `/**\n` +
+        ` * Test banner.\n` +
+        ` *\n` +
+        ` * With a second line.\n` +
+        ` */\n` +
+        `\n` +
+        `${code}`
     );
   });
 
@@ -542,11 +542,11 @@ describe('LicensePlugin', () => {
 
     expect(result).toBeDefined();
     expect(result.code).toEqual(
-      `/**\n` +
-      ` * Date: ${moment().format('YYYY-MM-DD')}\n` +
-      ` */\n` +
-      `\n` +
-      `var foo = 0;`
+        `/**\n` +
+        ` * Date: ${moment().format('YYYY-MM-DD')}\n` +
+        ` */\n` +
+        `\n` +
+        `var foo = 0;`
     );
   });
 
@@ -567,12 +567,12 @@ describe('LicensePlugin', () => {
 
     expect(result).toBeDefined();
     expect(result.code).toEqual(
-      `/**\n` +
-      ` * Foo: bar\n` +
-      ` * Bar: baz\n` +
-      ` */\n` +
-      `\n` +
-      `var foo = 0;`
+        `/**\n` +
+        ` * Foo: bar\n` +
+        ` * Bar: baz\n` +
+        ` */\n` +
+        `\n` +
+        `var foo = 0;`
     );
   });
 
@@ -595,12 +595,12 @@ describe('LicensePlugin', () => {
 
     expect(result).toBeDefined();
     expect(result.code).toEqual(
-      `/**\n` +
-      ` * Foo: bar\n` +
-      ` * Bar: baz\n` +
-      ` */\n` +
-      `\n` +
-      `var foo = 0;`
+        `/**\n` +
+        ` * Foo: bar\n` +
+        ` * Bar: baz\n` +
+        ` */\n` +
+        `\n` +
+        `var foo = 0;`
     );
   });
 
@@ -617,11 +617,11 @@ describe('LicensePlugin', () => {
 
     expect(result).toBeDefined();
     expect(result.code).toEqual(
-      `/**\n` +
-      ` * Name: rollup-plugin-license\n` +
-      ` */\n` +
-      `\n` +
-      `var foo = 0;`
+        `/**\n` +
+        ` * Name: rollup-plugin-license\n` +
+        ` */\n` +
+        `\n` +
+        `var foo = 0;`
     );
   });
 
@@ -640,16 +640,16 @@ describe('LicensePlugin', () => {
 
     expect(result).toBeDefined();
     expect(result.code).toEqual(
-      `/**\n` +
-      ` * Name: rollup-plugin-license\n` +
-      ` *\n` +
-      ` * Dependencies:\n` +
-      ` * \n` +
-      ` *   fake-package -- MIT\n` +
-      ` * \n` +
-      ` */\n` +
-      `\n` +
-      `var foo = 0;`
+        `/**\n` +
+        ` * Name: rollup-plugin-license\n` +
+        ` *\n` +
+        ` * Dependencies:\n` +
+        ` * \n` +
+        ` *   fake-package -- MIT\n` +
+        ` * \n` +
+        ` */\n` +
+        `\n` +
+        `var foo = 0;`
     );
   });
 
@@ -686,12 +686,12 @@ describe('LicensePlugin', () => {
       const txt = content.toString();
       expect(txt).toBeDefined();
       expect(txt).toEqual(
-        `Name: foo\n` +
-        `Version: 1.0.0\n` +
-        `License: MIT\n` +
-        `Private: false\n` +
-        `Description: Foo Package\n` +
-        `Author: Mickael Jeanroy <mickael.jeanroy@gmail.com>`
+          `Name: foo\n` +
+          `Version: 1.0.0\n` +
+          `License: MIT\n` +
+          `Private: false\n` +
+          `Description: Foo Package\n` +
+          `Author: Mickael Jeanroy <mickael.jeanroy@gmail.com>`
       );
 
       done();
@@ -731,12 +731,12 @@ describe('LicensePlugin', () => {
       const txt = content.toString();
       expect(txt).toBeDefined();
       expect(txt).toEqual(
-        `Name: foo\n` +
-        `Version: 1.0.0\n` +
-        `License: MIT\n` +
-        `Private: false\n` +
-        `Description: Foo Package\n` +
-        `Author: Mickael Jeanroy <mickael.jeanroy@gmail.com>`
+          `Name: foo\n` +
+          `Version: 1.0.0\n` +
+          `License: MIT\n` +
+          `Private: false\n` +
+          `Description: Foo Package\n` +
+          `Author: Mickael Jeanroy <mickael.jeanroy@gmail.com>`
       );
 
       done();
@@ -784,20 +784,20 @@ describe('LicensePlugin', () => {
       const txt = content.toString();
       expect(txt).toBeDefined();
       expect(txt).toEqual(
-        `Name: foo\n` +
-        `Version: 1.0.0\n` +
-        `License: MIT\n` +
-        `Private: false\n` +
-        `Description: Foo Package\n` +
-        `Author: Mickael Jeanroy <mickael.jeanroy@gmail.com>\n` +
-        `\n` +
-        `---\n` +
-        `\n` +
-        `Name: bar\n` +
-        `Version: 2.0.0\n` +
-        `License: Apache 2.0\n` +
-        `Private: false\n` +
-        `Description: Bar Package`
+          `Name: foo\n` +
+          `Version: 1.0.0\n` +
+          `License: MIT\n` +
+          `Private: false\n` +
+          `Description: Foo Package\n` +
+          `Author: Mickael Jeanroy <mickael.jeanroy@gmail.com>\n` +
+          `\n` +
+          `---\n` +
+          `\n` +
+          `Name: bar\n` +
+          `Version: 2.0.0\n` +
+          `License: Apache 2.0\n` +
+          `Private: false\n` +
+          `Description: Bar Package`
       );
 
       done();
@@ -852,20 +852,20 @@ describe('LicensePlugin', () => {
       const txt = content.toString();
       expect(txt).toBeDefined();
       expect(txt).toEqual(
-        `Name: foo\n` +
-        `Version: 1.0.0\n` +
-        `License: MIT\n` +
-        `Private: false\n` +
-        `Description: Foo Package\n` +
-        `Author: Mickael Jeanroy <mickael.jeanroy@gmail.com>\n` +
-        `\n` +
-        `---\n` +
-        `\n` +
-        `Name: bar\n` +
-        `Version: 2.0.0\n` +
-        `License: Apache 2.0\n` +
-        `Private: false\n` +
-        `Description: Bar Package`
+          `Name: foo\n` +
+          `Version: 1.0.0\n` +
+          `License: MIT\n` +
+          `Private: false\n` +
+          `Description: Foo Package\n` +
+          `Author: Mickael Jeanroy <mickael.jeanroy@gmail.com>\n` +
+          `\n` +
+          `---\n` +
+          `\n` +
+          `Name: bar\n` +
+          `Version: 2.0.0\n` +
+          `License: Apache 2.0\n` +
+          `Private: false\n` +
+          `Description: Bar Package`
       );
 
       done();
@@ -940,12 +940,12 @@ describe('LicensePlugin', () => {
       const txt = content.toString();
       expect(txt).toBeDefined();
       expect(txt).toEqual(
-        `Name: foo\n` +
-        `Version: 1.0.0\n` +
-        `License: MIT\n` +
-        `Private: false\n` +
-        `Description: Foo Package\n` +
-        `Author: Mickael Jeanroy <mickael.jeanroy@gmail.com>`
+          `Name: foo\n` +
+          `Version: 1.0.0\n` +
+          `License: MIT\n` +
+          `Private: false\n` +
+          `Description: Foo Package\n` +
+          `Author: Mickael Jeanroy <mickael.jeanroy@gmail.com>`
       );
 
       done();
@@ -994,20 +994,20 @@ describe('LicensePlugin', () => {
       const txt = content.toString();
       expect(txt).toBeDefined();
       expect(txt).toEqual(
-        `Name: foo\n` +
-        `Version: 1.0.0\n` +
-        `License: MIT\n` +
-        `Private: false\n` +
-        `Description: Foo Package\n` +
-        `Author: Mickael Jeanroy <mickael.jeanroy@gmail.com>\n` +
-        `\n` +
-        `---\n` +
-        `\n` +
-        `Name: bar\n` +
-        `Version: 2.0.0\n` +
-        `License: Apache 2.0\n` +
-        `Private: true\n` +
-        `Description: Bar Package`
+          `Name: foo\n` +
+          `Version: 1.0.0\n` +
+          `License: MIT\n` +
+          `Private: false\n` +
+          `Description: Foo Package\n` +
+          `Author: Mickael Jeanroy <mickael.jeanroy@gmail.com>\n` +
+          `\n` +
+          `---\n` +
+          `\n` +
+          `Name: bar\n` +
+          `Version: 2.0.0\n` +
+          `License: Apache 2.0\n` +
+          `Private: true\n` +
+          `Description: Bar Package`
       );
 
       done();
