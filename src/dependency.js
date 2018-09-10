@@ -77,9 +77,9 @@ class Dependency {
       // Map it to a valid license field.
       // See: https://docs.npmjs.com/files/package.json#license
       dependency.license = `(${_.chain(dependency.licenses)
-        .map((license) => license.type || license)
-        .join(' OR ')
-        .value()})`;
+          .map((license) => license.type || license)
+          .join(' OR ')
+          .value()})`;
 
       // Remove it.
       delete dependency.licenses;
@@ -124,9 +124,9 @@ class Dependency {
       lines.push(`${prefix}Contributors:${suffix}`);
 
       const allContributors = _.chain(this.contributors)
-        .map((contributor) => contributor.text())
-        .map((line) => `${prefix}  ${line}${suffix}`)
-        .value();
+          .map((contributor) => contributor.text())
+          .map((line) => `${prefix}  ${line}${suffix}`)
+          .value();
 
       lines.push(...allContributors);
     }

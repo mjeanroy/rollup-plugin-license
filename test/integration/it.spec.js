@@ -70,18 +70,18 @@ describe('Dependency', () => {
     };
 
     rollup.rollup(rollupConfig)
-      .then((bundle) => bundle.write(rollupConfig.output))
-      .then(() => {
-        fs.readFile(thirdPartyOutput, 'utf8', (err, data) => {
-          if (err) {
-            done.fail(err);
-          }
+        .then((bundle) => bundle.write(rollupConfig.output))
+        .then(() => {
+          fs.readFile(thirdPartyOutput, 'utf8', (err, data) => {
+            if (err) {
+              done.fail(err);
+            }
 
-          const content = data.toString();
-          expect(content).toContain('lodash');
-          done();
+            const content = data.toString();
+            expect(content).toContain('lodash');
+            done();
+          });
         });
-      });
   });
 
   it('should generate bundle with license header', (done) => {
@@ -105,22 +105,22 @@ describe('Dependency', () => {
     };
 
     rollup.rollup(rollupConfig)
-      .then((bundle) => bundle.write(rollupConfig.output))
-      .then(() => {
-        fs.readFile(bundleOutput, 'utf8', (err, data) => {
-          if (err) {
-            done.fail(err);
-          }
+        .then((bundle) => bundle.write(rollupConfig.output))
+        .then(() => {
+          fs.readFile(bundleOutput, 'utf8', (err, data) => {
+            if (err) {
+              done.fail(err);
+            }
 
-          const content = data.toString();
-          const expectedBanner =
-            `/**${EOL}` +
-            ` * ${banner}${EOL}` +
-            ` */${EOL}`;
+            const content = data.toString();
+            const expectedBanner =
+              `/**${EOL}` +
+              ` * ${banner}${EOL}` +
+              ` */${EOL}`;
 
-          expect(content).toContain(expectedBanner);
-          done();
+            expect(content).toContain(expectedBanner);
+            done();
+          });
         });
-      });
   });
 });

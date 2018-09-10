@@ -235,12 +235,12 @@ class LicensePlugin {
 
       const includePrivate = thirdParty.includePrivate;
       const text = _.chain(this._dependencies)
-        .values()
-        .filter((dependency) => includePrivate || !dependency.private)
-        .map((dependency) => dependency.text())
-        .join(`${EOL}${EOL}---${EOL}${EOL}`)
-        .trim()
-        .value();
+          .values()
+          .filter((dependency) => includePrivate || !dependency.private)
+          .map((dependency) => dependency.text())
+          .join(`${EOL}${EOL}---${EOL}${EOL}`)
+          .trim()
+          .value();
 
       const encoding = thirdParty.encoding || 'utf-8';
       this.debug(`use encoding: ${encoding}`);

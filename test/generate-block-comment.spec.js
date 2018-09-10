@@ -34,11 +34,11 @@ describe('generateBlockComment', () => {
     const comment = generateBlockComment(text);
 
     expect(comment).toEqual(
-      `/**\n` +
-      ` * First Line\n` +
-      ` *\n` +
-      ` * Second Line\n` +
-      ` */\n`
+        `/**\n` +
+        ` * First Line\n` +
+        ` *\n` +
+        ` * Second Line\n` +
+        ` */\n`
     );
   });
 });
