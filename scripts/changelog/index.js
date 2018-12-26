@@ -22,25 +22,14 @@
  * SOFTWARE.
  */
 
+const path = require('path');
 const gulp = require('gulp');
-const clean = require('./scripts/clean');
-const lint = require('./scripts/lint');
-const build = require('./scripts/build');
-const test = require('./scripts/test');
-const release = require('./scripts/release');
-const changelog = require('./scripts/changelog');
+const conventionalChangelog = require('gulp-conventional-changelog');
+const config = require('../config');
 
-const prebuild = gulp.series(clean, lint);
-const pretest = gulp.series(prebuild, build);
-const prerelease = gulp.series(pretest, test);
-
-module.exports = {
-  'clean': clean,
-  'lint': lint,
-  'build': gulp.series(prebuild, build),
-  'test': gulp.series(pretest, test),
-  'changelog': changelog,
-  'release:patch': gulp.series(prerelease, release.patch),
-  'release:minor': gulp.series(prerelease, release.minor),
-  'release:major': gulp.series(prerelease, release.major),
+module.exports = function changelog() {
+  const changelog = path.join(config.root, 'CHANGELOG.md');
+  return gulp.src(changelog, {buffer: false})
+      .pipe(conventionalChangelog({releaseCount: 0}))
+      .pipe(gulp.dest(config.root));
 };

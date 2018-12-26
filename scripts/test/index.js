@@ -22,25 +22,16 @@
  * SOFTWARE.
  */
 
+const path = require('path');
 const gulp = require('gulp');
-const clean = require('./scripts/clean');
-const lint = require('./scripts/lint');
-const build = require('./scripts/build');
-const test = require('./scripts/test');
-const release = require('./scripts/release');
-const changelog = require('./scripts/changelog');
+const jasmine = require('gulp-jasmine');
+const config = require('../config');
 
-const prebuild = gulp.series(clean, lint);
-const pretest = gulp.series(prebuild, build);
-const prerelease = gulp.series(pretest, test);
+module.exports = function test() {
+  const src = [
+    path.join(config.test, 'base.spec.js'),
+    path.join(config.test, '**', '*.spec.js'),
+  ];
 
-module.exports = {
-  'clean': clean,
-  'lint': lint,
-  'build': gulp.series(prebuild, build),
-  'test': gulp.series(pretest, test),
-  'changelog': changelog,
-  'release:patch': gulp.series(prerelease, release.patch),
-  'release:minor': gulp.series(prerelease, release.minor),
-  'release:major': gulp.series(prerelease, release.major),
+  return gulp.src(src).pipe(jasmine());
 };
