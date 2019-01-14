@@ -8,6 +8,7 @@
     "clean": "gulp clean",
     "build": "gulp build",
     "test": "gulp test",
+    "tdd": "gulp tdd",
     "changelog": "gulp changelog",
     "release": "gulp release:minor",
     "release:patch": "gulp release:patch",

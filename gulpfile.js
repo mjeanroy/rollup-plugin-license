@@ -32,13 +32,14 @@ const changelog = require('./scripts/changelog');
 
 const prebuild = gulp.series(clean, lint);
 const pretest = gulp.series(prebuild, build);
-const prerelease = gulp.series(pretest, test);
+const prerelease = gulp.series(pretest, test.test);
 
 module.exports = {
   'clean': clean,
   'lint': lint,
   'build': gulp.series(prebuild, build),
-  'test': gulp.series(pretest, test),
+  'test': gulp.series(pretest, test.test),
+  'tdd': gulp.series(clean, build, test.tdd),
   'changelog': changelog,
   'release:patch': gulp.series(prerelease, release.patch),
   'release:minor': gulp.series(prerelease, release.minor),
