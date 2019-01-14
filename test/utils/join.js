@@ -22,26 +22,13 @@
  * SOFTWARE.
  */
 
-const join = require('./utils/join.js');
-const generateBlockComment = require('../dist/generate-block-comment.js');
-
-describe('generateBlockComment', () => {
-  it('should generate block comment from given text', () => {
-    const text = join([
-      'First Line',
-      '',
-      'Second Line',
-    ]);
-
-    const comment = generateBlockComment(text);
-
-    expect(comment).toEqual(join([
-      '/**',
-      ' * First Line',
-      ' *',
-      ' * Second Line',
-      ' */',
-      '',
-    ]));
-  });
-});
+/**
+ * Join given lines into a single line.
+ *
+ * @param {Array<string>} lines The lines to join.
+ * @param {string} separator The separator, defaults to '\n'.
+ * @return {string} The full text.
+ */
+module.exports = function join(lines, separator = '\n') {
+  return lines.join(separator);
+};

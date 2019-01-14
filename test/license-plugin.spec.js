@@ -22,15 +22,17 @@
  * SOFTWARE.
  */
 
+'use strict';
+
 const fs = require('fs');
 const path = require('path');
 const tmp = require('tmp');
 const moment = require('moment');
+const join = require('./utils/join.js');
 const LicensePlugin = require('../dist/license-plugin.js');
 
 describe('LicensePlugin', () => {
-  // eslint-disable-next-line
-  var tmpDir;
+  let tmpDir;
 
   beforeEach(() => {
     tmpDir = tmp.dirSync({
@@ -38,11 +40,15 @@ describe('LicensePlugin', () => {
     });
   });
 
+  afterEach(() => {
+    tmpDir.removeCallback();
+  });
+
   it('should initialize instance', () => {
     const plugin = new LicensePlugin();
     expect(plugin._cwd).toBeDefined();
     expect(plugin._pkg).toBeDefined();
-    expect(plugin._sourceMap).toBe(true);
+    expect(plugin._sourcemap).toBe(true);
     expect(plugin._dependencies).toEqual({});
   });
 
@@ -63,7 +69,7 @@ describe('LicensePlugin', () => {
 
     expect(plugin._cwd).toBeDefined();
     expect(plugin._pkg).toBeDefined();
-    expect(plugin._sourceMap).toBe(false);
+    expect(plugin._sourcemap).toBe(false);
     expect(plugin._dependencies).toEqual({});
   });
 
@@ -74,16 +80,16 @@ describe('LicensePlugin', () => {
 
     expect(plugin._cwd).toBeDefined();
     expect(plugin._pkg).toBeDefined();
-    expect(plugin._sourceMap).toBe(false);
+    expect(plugin._sourcemap).toBe(false);
     expect(plugin._dependencies).toEqual({});
   });
 
   it('should disable source map', () => {
     const plugin = new LicensePlugin();
-    expect(plugin._sourceMap).toBe(true);
+    expect(plugin._sourcemap).toBe(true);
 
     plugin.disableSourceMap();
-    expect(plugin._sourceMap).toBe(false);
+    expect(plugin._sourcemap).toBe(false);
   });
 
   it('should load pkg', () => {
@@ -374,15 +380,15 @@ describe('LicensePlugin', () => {
 
     expect(result).toBeDefined();
     expect(result.map).toBeDefined();
-    expect(result.code).toEqual(
-        `/**\n` +
-        ` * Test banner.\n` +
-        ` *\n` +
-        ` * With a second line.\n` +
-        ` */\n` +
-        `\n` +
-        `${code}`
-    );
+    expect(result.code).toEqual(join([
+      '/**',
+      ' * Test banner.',
+      ' *',
+      ' * With a second line.',
+      ' */',
+      '',
+      code,
+    ]));
   });
 
   it('should prepend banner to bundle with template', () => {
@@ -398,15 +404,15 @@ describe('LicensePlugin', () => {
 
     expect(result).toBeDefined();
     expect(result.map).toBeDefined();
-    expect(result.code).toEqual(
-        `/**\n` +
-        ` * Test banner.\n` +
-        ` *\n` +
-        ` * With a second line.\n` +
-        ` */\n` +
-        `\n` +
-        `${code}`
-    );
+    expect(result.code).toEqual(join([
+      '/**',
+      ' * Test banner.',
+      ' *',
+      ' * With a second line.',
+      ' */',
+      '',
+      code,
+    ]));
   });
 
   it('should prepend banner to bundle with custom encoding', () => {
@@ -427,15 +433,15 @@ describe('LicensePlugin', () => {
     expect(fs.readFileSync).toHaveBeenCalledWith(jasmine.any(String), encoding);
     expect(result).toBeDefined();
     expect(result.map).toBeDefined();
-    expect(result.code).toEqual(
-        `/**\n` +
-        ` * Test banner.\n` +
-        ` *\n` +
-        ` * With a second line.\n` +
-        ` */\n` +
-        `\n` +
-        `${code}`
-    );
+    expect(result.code).toEqual(join([
+      '/**',
+      ' * Test banner.',
+      ' *',
+      ' * With a second line.',
+      ' */',
+      '',
+      code,
+    ]));
   });
 
   it('should prepend banner to bundle without source map', () => {
@@ -452,15 +458,15 @@ describe('LicensePlugin', () => {
 
     expect(result).toBeDefined();
     expect(result.map).not.toBeDefined();
-    expect(result.code).toEqual(
-        `/**\n` +
-        ` * Test banner.\n` +
-        ` *\n` +
-        ` * With a second line.\n` +
-        ` */\n` +
-        `\n` +
-        `${code}`
-    );
+    expect(result.code).toEqual(join([
+      '/**',
+      ' * Test banner.',
+      ' *',
+      ' * With a second line.',
+      ' */',
+      '',
+      code,
+    ]));
   });
 
   it('should not prepend default banner to bundle', () => {
@@ -503,15 +509,15 @@ describe('LicensePlugin', () => {
     const result = instance.prependBanner(code);
 
     expect(result).toBeDefined();
-    expect(result.code).toEqual(
-        `/**\n` +
-        ` * Test banner.\n` +
-        ` *\n` +
-        ` * With a second line.\n` +
-        ` */\n` +
-        `\n` +
-        `${code}`
-    );
+    expect(result.code).toEqual(join([
+      '/**',
+      ' * Test banner.',
+      ' *',
+      ' * With a second line.',
+      ' */',
+      '',
+      code,
+    ]));
   });
 
   it('should prepend banner to bundle and create sourceMap', () => {
@@ -541,13 +547,13 @@ describe('LicensePlugin', () => {
     const result = instance.prependBanner(code);
 
     expect(result).toBeDefined();
-    expect(result.code).toEqual(
-        `/**\n` +
-        ` * Date: ${moment().format('YYYY-MM-DD')}\n` +
-        ` */\n` +
-        `\n` +
-        `var foo = 0;`
-    );
+    expect(result.code).toEqual(join([
+      '/**',
+      ` * Date: ${moment().format('YYYY-MM-DD')}`,
+      ' */',
+      '',
+      'var foo = 0;',
+    ]));
   });
 
   it('should prepend banner and replace custom data object', () => {
@@ -566,14 +572,14 @@ describe('LicensePlugin', () => {
     const result = instance.prependBanner(code);
 
     expect(result).toBeDefined();
-    expect(result.code).toEqual(
-        `/**\n` +
-        ` * Foo: bar\n` +
-        ` * Bar: baz\n` +
-        ` */\n` +
-        `\n` +
-        `var foo = 0;`
-    );
+    expect(result.code).toEqual(join([
+      '/**',
+      ' * Foo: bar',
+      ' * Bar: baz',
+      ' */',
+      '',
+      'var foo = 0;',
+    ]));
   });
 
   it('should prepend banner and replace custom data function', () => {
@@ -594,14 +600,14 @@ describe('LicensePlugin', () => {
     const result = instance.prependBanner(code);
 
     expect(result).toBeDefined();
-    expect(result.code).toEqual(
-        `/**\n` +
-        ` * Foo: bar\n` +
-        ` * Bar: baz\n` +
-        ` */\n` +
-        `\n` +
-        `var foo = 0;`
-    );
+    expect(result.code).toEqual(join([
+      '/**',
+      ' * Foo: bar',
+      ' * Bar: baz',
+      ' */',
+      '',
+      'var foo = 0;',
+    ]));
   });
 
   it('should prepend banner and replace package variables', () => {
@@ -616,13 +622,13 @@ describe('LicensePlugin', () => {
     const result = instance.prependBanner(code);
 
     expect(result).toBeDefined();
-    expect(result.code).toEqual(
-        `/**\n` +
-        ` * Name: rollup-plugin-license\n` +
-        ` */\n` +
-        `\n` +
-        `var foo = 0;`
-    );
+    expect(result.code).toEqual(join([
+      '/**',
+      ' * Name: rollup-plugin-license',
+      ' */',
+      '',
+      'var foo = 0;',
+    ]));
   });
 
   it('should prepend banner and replace dependencies placeholders', () => {
@@ -639,18 +645,18 @@ describe('LicensePlugin', () => {
     const result = instance.prependBanner(code);
 
     expect(result).toBeDefined();
-    expect(result.code).toEqual(
-        `/**\n` +
-        ` * Name: rollup-plugin-license\n` +
-        ` *\n` +
-        ` * Dependencies:\n` +
-        ` * \n` +
-        ` *   fake-package -- MIT\n` +
-        ` * \n` +
-        ` */\n` +
-        `\n` +
-        `var foo = 0;`
-    );
+    expect(result.code).toEqual(join([
+      '/**',
+      ' * Name: rollup-plugin-license',
+      ' *',
+      ' * Dependencies:',
+      ' * ',
+      ' *   fake-package -- MIT',
+      ' * ',
+      ' */',
+      '',
+      'var foo = 0;',
+    ]));
   });
 
   it('should display single dependency', (done) => {
@@ -685,14 +691,14 @@ describe('LicensePlugin', () => {
 
       const txt = content.toString();
       expect(txt).toBeDefined();
-      expect(txt).toEqual(
-          `Name: foo\n` +
-          `Version: 1.0.0\n` +
-          `License: MIT\n` +
-          `Private: false\n` +
-          `Description: Foo Package\n` +
-          `Author: Mickael Jeanroy <mickael.jeanroy@gmail.com>`
-      );
+      expect(txt).toEqual(join([
+        'Name: foo',
+        'Version: 1.0.0',
+        'License: MIT',
+        'Private: false',
+        'Description: Foo Package',
+        'Author: Mickael Jeanroy <mickael.jeanroy@gmail.com>',
+      ]));
 
       done();
     });
@@ -719,7 +725,6 @@ describe('LicensePlugin', () => {
     });
 
     const result = instance.exportThirdParties();
-
     expect(result).not.toBeDefined();
 
     fs.readFile(file, 'utf-8', (err, content) => {
@@ -730,14 +735,14 @@ describe('LicensePlugin', () => {
 
       const txt = content.toString();
       expect(txt).toBeDefined();
-      expect(txt).toEqual(
-          `Name: foo\n` +
-          `Version: 1.0.0\n` +
-          `License: MIT\n` +
-          `Private: false\n` +
-          `Description: Foo Package\n` +
-          `Author: Mickael Jeanroy <mickael.jeanroy@gmail.com>`
-      );
+      expect(txt).toEqual(join([
+        'Name: foo',
+        'Version: 1.0.0',
+        'License: MIT',
+        'Private: false',
+        'Description: Foo Package',
+        'Author: Mickael Jeanroy <mickael.jeanroy@gmail.com>',
+      ]));
 
       done();
     });
@@ -783,22 +788,22 @@ describe('LicensePlugin', () => {
 
       const txt = content.toString();
       expect(txt).toBeDefined();
-      expect(txt).toEqual(
-          `Name: foo\n` +
-          `Version: 1.0.0\n` +
-          `License: MIT\n` +
-          `Private: false\n` +
-          `Description: Foo Package\n` +
-          `Author: Mickael Jeanroy <mickael.jeanroy@gmail.com>\n` +
-          `\n` +
-          `---\n` +
-          `\n` +
-          `Name: bar\n` +
-          `Version: 2.0.0\n` +
-          `License: Apache 2.0\n` +
-          `Private: false\n` +
-          `Description: Bar Package`
-      );
+      expect(txt).toEqual(join([
+        'Name: foo',
+        'Version: 1.0.0',
+        'License: MIT',
+        'Private: false',
+        'Description: Foo Package',
+        'Author: Mickael Jeanroy <mickael.jeanroy@gmail.com>',
+        '',
+        '---',
+        '',
+        'Name: bar',
+        'Version: 2.0.0',
+        'License: Apache 2.0',
+        'Private: false',
+        'Description: Bar Package',
+      ]));
 
       done();
     });
@@ -851,22 +856,22 @@ describe('LicensePlugin', () => {
 
       const txt = content.toString();
       expect(txt).toBeDefined();
-      expect(txt).toEqual(
-          `Name: foo\n` +
-          `Version: 1.0.0\n` +
-          `License: MIT\n` +
-          `Private: false\n` +
-          `Description: Foo Package\n` +
-          `Author: Mickael Jeanroy <mickael.jeanroy@gmail.com>\n` +
-          `\n` +
-          `---\n` +
-          `\n` +
-          `Name: bar\n` +
-          `Version: 2.0.0\n` +
-          `License: Apache 2.0\n` +
-          `Private: false\n` +
-          `Description: Bar Package`
-      );
+      expect(txt).toEqual(join([
+        'Name: foo',
+        'Version: 1.0.0',
+        'License: MIT',
+        'Private: false',
+        'Description: Foo Package',
+        'Author: Mickael Jeanroy <mickael.jeanroy@gmail.com>',
+        '',
+        '---',
+        '',
+        'Name: bar',
+        'Version: 2.0.0',
+        'License: Apache 2.0',
+        'Private: false',
+        'Description: Bar Package',
+      ]));
 
       done();
     });
@@ -939,14 +944,14 @@ describe('LicensePlugin', () => {
 
       const txt = content.toString();
       expect(txt).toBeDefined();
-      expect(txt).toEqual(
-          `Name: foo\n` +
-          `Version: 1.0.0\n` +
-          `License: MIT\n` +
-          `Private: false\n` +
-          `Description: Foo Package\n` +
-          `Author: Mickael Jeanroy <mickael.jeanroy@gmail.com>`
-      );
+      expect(txt).toEqual(join([
+        'Name: foo',
+        'Version: 1.0.0',
+        'License: MIT',
+        'Private: false',
+        'Description: Foo Package',
+        'Author: Mickael Jeanroy <mickael.jeanroy@gmail.com>',
+      ]));
 
       done();
     });
@@ -993,22 +998,22 @@ describe('LicensePlugin', () => {
 
       const txt = content.toString();
       expect(txt).toBeDefined();
-      expect(txt).toEqual(
-          `Name: foo\n` +
-          `Version: 1.0.0\n` +
-          `License: MIT\n` +
-          `Private: false\n` +
-          `Description: Foo Package\n` +
-          `Author: Mickael Jeanroy <mickael.jeanroy@gmail.com>\n` +
-          `\n` +
-          `---\n` +
-          `\n` +
-          `Name: bar\n` +
-          `Version: 2.0.0\n` +
-          `License: Apache 2.0\n` +
-          `Private: true\n` +
-          `Description: Bar Package`
-      );
+      expect(txt).toEqual(join([
+        'Name: foo',
+        'Version: 1.0.0',
+        'License: MIT',
+        'Private: false',
+        'Description: Foo Package',
+        'Author: Mickael Jeanroy <mickael.jeanroy@gmail.com>',
+        '',
+        '---',
+        '',
+        'Name: bar',
+        'Version: 2.0.0',
+        'License: Apache 2.0',
+        'Private: true',
+        'Description: Bar Package',
+      ]));
 
       done();
     });

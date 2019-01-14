@@ -24,74 +24,9 @@
 
 'use strict';
 
-const _ = require('lodash');
-const LicensePlugin = require('./license-plugin.js');
+const rollup = require('rollup');
+const VERSION = rollup.VERSION;
+const MAJOR_VERSION = VERSION ? Number(VERSION.split('.')[0]) : 0;
+const IS_ROLLUP_LEGACY = MAJOR_VERSION === 0;
 
-module.exports = (options = {}) => {
-  const plugin = new LicensePlugin(options);
-
-  return {
-    /**
-     * Name of the plugin, used automatically by rollup.
-     * @type {string}
-     */
-    name: plugin.name,
-
-    /**
-     * Function called by rollup when a JS file is loaded: it is used to scan
-     * third-party dependencies.
-     *
-     * @param {string} id JS file path.
-     * @return {void}
-     */
-    load(id) {
-      plugin.scanDependency(id);
-    },
-
-    /**
-     * Function called by rollup to read global options: if source map parameter
-     * is truthy, enable it on the plugin.
-     *
-     * @param {object} opts Rollup options.
-     * @return {void}
-     */
-    options(opts) {
-      if (!opts) {
-        return;
-      }
-
-      if (_.has(options, 'sourceMap') || _.has(options, 'sourcemap')) {
-        // SourceMap has been set on the plugin itself.
-        return;
-      }
-
-      // Rollup >= 0.48 replace `sourceMap` with `sourcemap`.
-      // If `sourcemap` is disabled globally, disable it on the plugin.
-      if (opts.sourceMap === false || opts.sourcemap === false) {
-        plugin.disableSourceMap();
-      }
-    },
-
-    /**
-     * Function called by rollup when the final bundle is generated: it is used
-     * to prepend the banner file on the generated bundle.
-     *
-     * @param {string} code Bundle content.
-     * @return {void}
-     */
-    transformBundle(code) {
-      return plugin.prependBanner(code);
-    },
-
-    /**
-     * Function called by rollup when the final bundle will be written on disk: it
-     * is used to generate a file containing a summary of all third-party dependencies
-     * with license information.
-     *
-     * @return {void}
-     */
-    ongenerate() {
-      plugin.exportThirdParties();
-    },
-  };
-};
+module.exports = IS_ROLLUP_LEGACY ? require('./index-rollup-legacy') : require('./index-rollup-stable');

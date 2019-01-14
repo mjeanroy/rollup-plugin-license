@@ -22,6 +22,7 @@
  * SOFTWARE.
  */
 
+const join = require('./utils/join.js');
 const Dependency = require('../dist/dependency.js');
 
 describe('Dependency', () => {
@@ -125,12 +126,12 @@ describe('Dependency', () => {
 
     const dependency = new Dependency(pkg);
 
-    expect(dependency.text()).toEqual(
-        `Name: ${pkg.name}\n` +
-        `Version: ${pkg.version}\n` +
-        `License: ${pkg.license}\n` +
-        `Private: false`
-    );
+    expect(dependency.text()).toEqual(join([
+      `Name: ${pkg.name}`,
+      `Version: ${pkg.version}`,
+      `License: ${pkg.license}`,
+      `Private: false`,
+    ]));
   });
 
   it('should format dependency with optional description fied', () => {
@@ -143,13 +144,13 @@ describe('Dependency', () => {
 
     const dependency = new Dependency(pkg);
 
-    expect(dependency.text()).toEqual(
-        `Name: ${pkg.name}\n` +
-        `Version: ${pkg.version}\n` +
-        `License: ${pkg.license}\n` +
-        `Private: false\n` +
-        `Description: ${pkg.description}`
-    );
+    expect(dependency.text()).toEqual(join([
+      `Name: ${pkg.name}`,
+      `Version: ${pkg.version}`,
+      `License: ${pkg.license}`,
+      `Private: false`,
+      `Description: ${pkg.description}`,
+    ]));
   });
 
   it('should format dependency with optional author fied', () => {
@@ -165,13 +166,13 @@ describe('Dependency', () => {
 
     const dependency = new Dependency(pkg);
 
-    expect(dependency.text()).toEqual(
-        `Name: ${pkg.name}\n` +
-        `Version: ${pkg.version}\n` +
-        `License: ${pkg.license}\n` +
-        `Private: false\n` +
-        `Author: ${pkg.author.name} <${pkg.author.email}>`
-    );
+    expect(dependency.text()).toEqual(join([
+      `Name: ${pkg.name}`,
+      `Version: ${pkg.version}`,
+      `License: ${pkg.license}`,
+      `Private: false`,
+      `Author: ${pkg.author.name} <${pkg.author.email}>`,
+    ]));
   });
 
   it('should format dependency with optional repository field', () => {
@@ -187,13 +188,13 @@ describe('Dependency', () => {
 
     const dependency = new Dependency(pkg);
 
-    expect(dependency.text()).toEqual(
-        `Name: ${pkg.name}\n` +
-        `Version: ${pkg.version}\n` +
-        `License: ${pkg.license}\n` +
-        `Private: false\n` +
-        `Repository: ${pkg.repository.url}`
-    );
+    expect(dependency.text()).toEqual(join([
+      `Name: ${pkg.name}`,
+      `Version: ${pkg.version}`,
+      `License: ${pkg.license}`,
+      `Private: false`,
+      `Repository: ${pkg.repository.url}`,
+    ]));
   });
 
   it('should format dependency with optional homepage field', () => {
@@ -206,13 +207,13 @@ describe('Dependency', () => {
 
     const dependency = new Dependency(pkg);
 
-    expect(dependency.text()).toEqual(
-        `Name: ${pkg.name}\n` +
-        `Version: ${pkg.version}\n` +
-        `License: ${pkg.license}\n` +
-        `Private: false\n` +
-        `Homepage: ${pkg.homepage}`
-    );
+    expect(dependency.text()).toEqual(join([
+      `Name: ${pkg.name}`,
+      `Version: ${pkg.version}`,
+      `License: ${pkg.license}`,
+      `Private: false`,
+      `Homepage: ${pkg.homepage}`,
+    ]));
   });
 
   it('should format dependency with optional contributors field', () => {
@@ -228,15 +229,15 @@ describe('Dependency', () => {
 
     const dependency = new Dependency(pkg);
 
-    expect(dependency.text()).toEqual(
-        `Name: ${pkg.name}\n` +
-        `Version: ${pkg.version}\n` +
-        `License: ${pkg.license}\n` +
-        `Private: false\n` +
-        `Contributors:\n` +
-        `  ${pkg.contributors[0].name} <${pkg.contributors[0].email}>\n` +
-        `  ${pkg.contributors[1].name}`
-    );
+    expect(dependency.text()).toEqual(join([
+      `Name: ${pkg.name}`,
+      `Version: ${pkg.version}`,
+      `License: ${pkg.license}`,
+      `Private: false`,
+      `Contributors:`,
+      `  ${pkg.contributors[0].name} <${pkg.contributors[0].email}>`,
+      `  ${pkg.contributors[1].name}`,
+    ]));
   });
 
   it('should format dependency with all optional fields', () => {
@@ -256,19 +257,19 @@ describe('Dependency', () => {
 
     const dependency = new Dependency(pkg);
 
-    expect(dependency.text()).toEqual(
-        `Name: ${pkg.name}\n` +
-        `Version: ${pkg.version}\n` +
-        `License: ${pkg.license}\n` +
-        `Private: false\n` +
-        `Description: ${pkg.description}\n` +
-        `Repository: ${pkg.repository.url}\n` +
-        `Homepage: ${pkg.homepage}\n` +
-        `Author: ${pkg.author.name} <${pkg.author.email}>\n` +
-        `Contributors:\n` +
-        `  ${pkg.contributors[0].name} <${pkg.contributors[0].email}>\n` +
-        `  ${pkg.contributors[1].name}`
-    );
+    expect(dependency.text()).toEqual(join([
+      `Name: ${pkg.name}`,
+      `Version: ${pkg.version}`,
+      `License: ${pkg.license}`,
+      `Private: false`,
+      `Description: ${pkg.description}`,
+      `Repository: ${pkg.repository.url}`,
+      `Homepage: ${pkg.homepage}`,
+      `Author: ${pkg.author.name} <${pkg.author.email}>`,
+      `Contributors:`,
+      `  ${pkg.contributors[0].name} <${pkg.contributors[0].email}>`,
+      `  ${pkg.contributors[1].name}`,
+    ]));
   });
 
   it('should format dependency with prefix and suffix', () => {
@@ -288,18 +289,18 @@ describe('Dependency', () => {
 
     const dependency = new Dependency(pkg);
 
-    expect(dependency.text(' * ', ' --')).toEqual(
-        ` * Name: ${pkg.name} --\n` +
-        ` * Version: ${pkg.version} --\n` +
-        ` * License: ${pkg.license} --\n` +
-        ` * Private: false --\n` +
-        ` * Description: ${pkg.description} --\n` +
-        ` * Repository: ${pkg.repository.url} --\n` +
-        ` * Homepage: ${pkg.homepage} --\n` +
-        ` * Author: ${pkg.author.name} <${pkg.author.email}> --\n` +
-        ` * Contributors: --\n` +
-        ` *   ${pkg.contributors[0].name} <${pkg.contributors[0].email}> --\n` +
-        ` *   ${pkg.contributors[1].name} --`
-    );
+    expect(dependency.text(' * ', ' --')).toEqual(join([
+      ` * Name: ${pkg.name} --`,
+      ` * Version: ${pkg.version} --`,
+      ` * License: ${pkg.license} --`,
+      ` * Private: false --`,
+      ` * Description: ${pkg.description} --`,
+      ` * Repository: ${pkg.repository.url} --`,
+      ` * Homepage: ${pkg.homepage} --`,
+      ` * Author: ${pkg.author.name} <${pkg.author.email}> --`,
+      ` * Contributors: --`,
+      ` *   ${pkg.contributors[0].name} <${pkg.contributors[0].email}> --`,
+      ` *   ${pkg.contributors[1].name} --`,
+    ]));
   });
 });
