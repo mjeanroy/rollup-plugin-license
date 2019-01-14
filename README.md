@@ -23,7 +23,7 @@ const license = require('rollup-plugin-license');
 module.exports = {
   plugins: [
     license({
-      sourceMap: true,
+      sourcemap: true,
       cwd: '.', // Default is process.cwd()
 
       banner: {
@@ -101,10 +101,16 @@ license({
 
 ## Changelogs
 
-- 0.6.0
-  - Add `cwd` option to specify custom working directory (optional option).
-  - Add a way to specify custom data object when rendering banner.
+- 0.8.0
+  - Deprecate `sourceMap` option (use `sourcemap` option in lowercase) to keep it consistent with rollup.
+  - Fix deprecate call with rollup >= 1, keep compatibility with legacy versions of rollup.
   - Upgrade dependencies.
+- 0.7.0
+  - Add a way to specify custom data object when rendering banner.
+  - Add `cwd` option to specify custom working directory (optional option).
+  - Upgrade dependencies.
+- 0.6.0
+  - Upgrade `commenting` dependency.
 - 0.5.0
   - Feat: Sourcemap is now enable by default to ensure compatibility with other rollup plugins.
   - Fix: Add compatibility with rollup >= 0.48.0 (the new `sourcemap` option).
