@@ -152,6 +152,39 @@ describe('rollup-plugin-license [rollup legacy]', () => {
     expect(result.map).toBeDefined();
   });
 
+  it('should disable sourcemap (lowercase) in plugin options', () => {
+    const instance = plugin({
+      sourcemap: false,
+    });
+
+    const code = 'var foo = 0;';
+    const outputOptions = {};
+    const result = instance.transformBundle(code, outputOptions);
+
+    expect(result).toBeDefined();
+    expect(result.code).toBeDefined();
+    expect(result.map).not.toBeDefined();
+  });
+
+  it('should disable sourceMap (camelcase) in plugin options', () => {
+    spyOn(console, 'warn');
+
+    const instance = plugin({
+      sourceMap: false,
+    });
+
+    const code = 'var foo = 0;';
+    const outputOptions = {};
+    const result = instance.transformBundle(code, outputOptions);
+
+    expect(result).toBeDefined();
+    expect(result.code).toBeDefined();
+    expect(result.map).not.toBeDefined();
+    expect(console.warn).toHaveBeenCalledWith(
+        '[rollup-plugin-license] sourceMap has been deprecated, please use sourcemap instead.'
+    );
+  });
+
   it('should scan dependency on load', (done) => {
     const thirdPartyOutput = path.join(tmpDir.name, 'dependencies.txt');
     const instance = plugin({

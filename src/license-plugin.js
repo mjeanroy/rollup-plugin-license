@@ -35,6 +35,24 @@ const generateBlockComment = require('./generate-block-comment.js');
 const EOL = require('./eol.js');
 
 /**
+ * The list of avaiilable options.
+ * @type {Array<string>}
+ */
+const OPTIONS = [
+  'cwd',
+  'debug',
+  'sourcemap',
+  'banner',
+  'thirdParty',
+];
+
+/**
+ * The plugin name.
+ * @type {string}
+ */
+const PLUGIN_NAME = 'rollup-plugin-license';
+
+/**
  * Rollup Plugin.
  */
 class LicensePlugin {
@@ -44,9 +62,12 @@ class LicensePlugin {
    * @param {Object} options Plugin options.
    */
   constructor(options = {}) {
-    // Plugin name, used by rollup.
-    this.name = 'rollup-plugin-license';
+    this._validateOptions(options);
 
+    // Plugin name, used by rollup.
+    this.name = PLUGIN_NAME;
+
+    // Initialize main options.
     this._options = options;
     this._cwd = options.cwd || process.cwd();
     this._dependencies = {};
@@ -54,12 +75,30 @@ class LicensePlugin {
     this._debug = options.debug || false;
 
     // SourceMap can now be disable/enable on the plugin.
-    this._sourcemap = options.sourceMap !== false && options.sourcemap !== false;
+    this._sourcemap = options.sourcemap !== false;
 
     // This is a cache storing a directory path to associated package.
     // This is an improvement to avoid looking for package information for
     // already scanned directory.
     this._cache = {};
+  }
+
+  /**
+   * Validate option object before being used, and print for warnings if
+   * needed.
+   *
+   * @param {Object} options Option object.
+   * @return {void}
+   */
+  _validateOptions(options) {
+    const keys = _.keys(options);
+    const notSupported = _.filter(keys, (key) => (
+      _.indexOf(OPTIONS, key) < 0
+    ));
+
+    if (notSupported.length > 0) {
+      console.warn(`[${PLUGIN_NAME}] Options ${notSupported} are not supported, use following options: ${OPTIONS}`);
+    }
   }
 
   /**
@@ -263,5 +302,11 @@ class LicensePlugin {
     }
   }
 }
+
+/**
+ * Export the plugin name as static property.
+ * @type {string}
+ */
+LicensePlugin.NAME = PLUGIN_NAME;
 
 module.exports = LicensePlugin;

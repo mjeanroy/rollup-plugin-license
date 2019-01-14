@@ -62,17 +62,6 @@ describe('LicensePlugin', () => {
     expect(plugin._cwd).toBe(cwd);
   });
 
-  it('should initialize instance with sourceMap = false', () => {
-    const plugin = new LicensePlugin({
-      sourceMap: false,
-    });
-
-    expect(plugin._cwd).toBeDefined();
-    expect(plugin._pkg).toBeDefined();
-    expect(plugin._sourcemap).toBe(false);
-    expect(plugin._dependencies).toEqual({});
-  });
-
   it('should initialize instance with sourcemap = false (lowercase)', () => {
     const plugin = new LicensePlugin({
       sourcemap: false,
@@ -82,6 +71,18 @@ describe('LicensePlugin', () => {
     expect(plugin._pkg).toBeDefined();
     expect(plugin._sourcemap).toBe(false);
     expect(plugin._dependencies).toEqual({});
+  });
+
+  it('should print warning when plugin is used with sourceMap (camelcase)', () => {
+    spyOn(console, 'warn');
+
+    new LicensePlugin({
+      sourceMap: false,
+    });
+
+    expect(console.warn).toHaveBeenCalledWith(
+        '[rollup-plugin-license] Options sourceMap are not supported, use following options: cwd,debug,sourcemap,banner,thirdParty'
+    );
   });
 
   it('should disable source map', () => {
