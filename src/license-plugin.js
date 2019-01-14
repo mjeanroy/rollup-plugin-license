@@ -53,6 +53,30 @@ const OPTIONS = [
 const PLUGIN_NAME = 'rollup-plugin-license';
 
 /**
+ * Fix option object, replace `sourceMap` with `sourcemap` if needed.
+ *
+ * @param {Object} options Original option object.
+ * @return {Object} The new fixed option object.
+ */
+function fixSourceMapOptions(options) {
+  // Rollup <= 0.48 used `sourceMap` in camelcase, so this plugin used
+  // this convention at the beginning.
+  // Now, the `sourcemap` key should be used, but legacy version should still
+  // be able to use the `sourceMap` key.
+  const newOptions = _.omitBy(options, (value, key) => (
+    key === 'sourceMap'
+  ));
+
+  // If the old `sourceMap` key is used, set it to `sourcemap` key.
+  if (!_.hasIn(newOptions, 'sourcemap') && _.hasIn(options, 'sourceMap')) {
+    console.warn(`[${PLUGIN_NAME}] sourceMap has been deprecated, please use sourcemap instead.`);
+    newOptions.sourcemap = options.sourceMap;
+  }
+
+  return newOptions;
+}
+
+/**
  * Rollup Plugin.
  */
 class LicensePlugin {
@@ -62,20 +86,20 @@ class LicensePlugin {
    * @param {Object} options Plugin options.
    */
   constructor(options = {}) {
-    this._validateOptions(options);
-
     // Plugin name, used by rollup.
     this.name = PLUGIN_NAME;
 
     // Initialize main options.
-    this._options = options;
-    this._cwd = options.cwd || process.cwd();
+    this._options = fixSourceMapOptions(options);
+    this._validateOptions();
+
+    this._cwd = this._options.cwd || process.cwd();
     this._dependencies = {};
     this._pkg = require(path.join(this._cwd, 'package.json'));
-    this._debug = options.debug || false;
+    this._debug = this._options.debug || false;
 
     // SourceMap can now be disable/enable on the plugin.
-    this._sourcemap = options.sourcemap !== false;
+    this._sourcemap = this._options.sourcemap !== false;
 
     // This is a cache storing a directory path to associated package.
     // This is an improvement to avoid looking for package information for
@@ -87,11 +111,10 @@ class LicensePlugin {
    * Validate option object before being used, and print for warnings if
    * needed.
    *
-   * @param {Object} options Option object.
    * @return {void}
    */
-  _validateOptions(options) {
-    const keys = _.keys(options);
+  _validateOptions() {
+    const keys = _.keys(this._options);
     const notSupported = _.filter(keys, (key) => (
       _.indexOf(OPTIONS, key) < 0
     ));

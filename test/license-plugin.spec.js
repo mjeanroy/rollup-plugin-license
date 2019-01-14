@@ -81,7 +81,19 @@ describe('LicensePlugin', () => {
     });
 
     expect(console.warn).toHaveBeenCalledWith(
-        '[rollup-plugin-license] Options sourceMap are not supported, use following options: cwd,debug,sourcemap,banner,thirdParty'
+        '[rollup-plugin-license] sourceMap has been deprecated, please use sourcemap instead.'
+    );
+  });
+
+  it('should print warning with unknown options', () => {
+    spyOn(console, 'warn');
+
+    new LicensePlugin({
+      foobar: false,
+    });
+
+    expect(console.warn).toHaveBeenCalledWith(
+        '[rollup-plugin-license] Options foobar are not supported, use following options: cwd,debug,sourcemap,banner,thirdParty'
     );
   });
 
