@@ -326,10 +326,4 @@ class LicensePlugin {
   }
 }
 
-/**
- * Export the plugin name as static property.
- * @type {string}
- */
-LicensePlugin.NAME = PLUGIN_NAME;
-
 module.exports = LicensePlugin;

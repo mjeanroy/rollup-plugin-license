@@ -24,25 +24,10 @@
 
 'use strict';
 
-const _ = require('lodash');
 const LicensePlugin = require('./license-plugin.js');
 
 module.exports = (options = {}) => {
-  // Rollup <= 0.48 used `sourceMap` in camelcase, so this plugin used
-  // this convention at the beginning.
-  // Now, the `sourcemap` key should be used, but legacy version should still
-  // be able to use the `sourceMap` key.
-  const newOptions = _.omitBy(options, (value, key) => (
-    key === 'sourceMap'
-  ));
-
-  // If the old `sourceMap` key is used, set it to `sourcemap` key.
-  if (!_.hasIn(newOptions, 'sourcemap') && _.hasIn(options, 'sourceMap')) {
-    console.warn(`[${LicensePlugin.NAME}] sourceMap has been deprecated, please use sourcemap instead.`);
-    newOptions.sourcemap = options.sourceMap;
-  }
-
-  const plugin = new LicensePlugin(newOptions);
+  const plugin = new LicensePlugin(options);
 
   return {
     /**
