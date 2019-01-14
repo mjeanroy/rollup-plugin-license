@@ -54,7 +54,7 @@ class LicensePlugin {
     this._debug = options.debug || false;
 
     // SourceMap can now be disable/enable on the plugin.
-    this._sourceMap = options.sourceMap !== false && options.sourcemap !== false;
+    this._sourcemap = options.sourceMap !== false && options.sourcemap !== false;
 
     // This is a cache storing a directory path to associated package.
     // This is an improvement to avoid looking for package information for
@@ -68,7 +68,7 @@ class LicensePlugin {
    * @return {void}
    */
   disableSourceMap() {
-    this._sourceMap = false;
+    this._sourcemap = false;
   }
 
   /**
@@ -137,10 +137,11 @@ class LicensePlugin {
    * This hook is used here to prepend the license banner to the final bundle.
    *
    * @param {string} code The bundle content.
+   * @param {boolean} sourcemap If sourcemap must be generated.
    * @return {Object} The result containing the code and, optionnally, the source map
    *                  if it has been enabled (using `enableSourceMap` method).
    */
-  prependBanner(code) {
+  prependBanner(code, sourcemap) {
     // Create a magicString: do not manipulate the string directly since it
     // will be used to generate the sourcemap.
     const magicString = new MagicString(code);
@@ -192,7 +193,7 @@ class LicensePlugin {
       code: magicString.toString(),
     };
 
-    if (this._sourceMap) {
+    if (this._sourcemap !== false && sourcemap !== false) {
       result.map = magicString.generateMap({
         hires: true,
       });

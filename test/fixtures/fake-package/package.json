@@ -8,5 +8,8 @@
   },
   "author": "Mickael Jeanroy <mickael.jeanroy@gmail.com>",
   "license": "MIT",
-  "private": true
+  "private": true,
+  "dependencies": {
+    "lodash": "*"
+  }
 }
