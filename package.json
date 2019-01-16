@@ -29,6 +29,9 @@
     "type": "git",
     "url": "https://github.com/mjeanroy/rollup-plugin-license"
   },
+  "peerDependencies": {
+    "rollup": "1.1.0"
+  },
   "dependencies": {
     "commenting": "1.0.5",
     "lodash": "4.17.11",
