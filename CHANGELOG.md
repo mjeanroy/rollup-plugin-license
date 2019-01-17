@@ -1,3 +1,18 @@
+## <small>0.8.1 (2019-01-17)</small>
+
+* release: prepare next release ([a473afc](https://github.com/mjeanroy/rollup-plugin-license/commit/a473afc))
+* release: release version ([e74c19b](https://github.com/mjeanroy/rollup-plugin-license/commit/e74c19b))
+* chore: simplify test ([ce16c3d](https://github.com/mjeanroy/rollup-plugin-license/commit/ce16c3d))
+* chore: update rollup peer dependency ([3dc3e4e](https://github.com/mjeanroy/rollup-plugin-license/commit/3dc3e4e))
+* chore: use a set instead of an array to check for invalid options ([35bbe01](https://github.com/mjeanroy/rollup-plugin-license/commit/35bbe01))
+* chore(docs): fix readme ([5aab686](https://github.com/mjeanroy/rollup-plugin-license/commit/5aab686))
+* chore(docs): update README ([0ce1a30](https://github.com/mjeanroy/rollup-plugin-license/commit/0ce1a30))
+* chore(package): update eslint to version 5.12.0 ([4cc4366](https://github.com/mjeanroy/rollup-plugin-license/commit/4cc4366))
+* Added missing "rollup" package to the peer dependencies ([d6e9d20](https://github.com/mjeanroy/rollup-plugin-license/commit/d6e9d20))
+* docs: update changelog file ([d6f3125](https://github.com/mjeanroy/rollup-plugin-license/commit/d6f3125))
+
+
+
 ## 0.8.0 (2019-01-14)
 
 * release: prepare next release ([67d4ce6](https://github.com/mjeanroy/rollup-plugin-license/commit/67d4ce6))
