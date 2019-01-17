@@ -101,6 +101,8 @@ license({
 
 ## Changelogs
 
+- 0.9.0
+  - Add rollup as a peer dependency.
 - 0.8.0
   - Deprecate `sourceMap` option (use `sourcemap` option in lowercase) to keep it consistent with rollup.
   - Fix deprecate call with rollup >= 1, keep compatibility with legacy versions of rollup.
