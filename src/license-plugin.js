@@ -60,8 +60,8 @@ const PLUGIN_NAME = 'rollup-plugin-license';
  * @return {void}
  */
 function validateOptions(options) {
-  const notSupported = _.filter(_.keys(options), (key) => (
-    !OPTIONS.has(key)
+  const notSupported = _.reject(_.keys(options), (key) => (
+    OPTIONS.has(key)
   ));
 
   if (notSupported.length > 0) {
