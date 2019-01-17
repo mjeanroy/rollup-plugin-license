@@ -36,21 +36,38 @@ const EOL = require('./eol.js');
 
 /**
  * The list of avaiilable options.
- * @type {Array<string>}
+ * @type {Set<string>}
  */
-const OPTIONS = [
+const OPTIONS = new Set([
   'cwd',
   'debug',
   'sourcemap',
   'banner',
   'thirdParty',
-];
+]);
 
 /**
  * The plugin name.
  * @type {string}
  */
 const PLUGIN_NAME = 'rollup-plugin-license';
+
+/**
+ * Print for deprecated or unknown options according to the `OPTIONS`
+ * set defined below.
+ *
+ * @param {Object} options The initialization option.
+ * @return {void}
+ */
+function validateOptions(options) {
+  const notSupported = _.filter(_.keys(options), (key) => (
+    !OPTIONS.has(key)
+  ));
+
+  if (notSupported.length > 0) {
+    console.warn(`[${PLUGIN_NAME}] Options ${notSupported} are not supported, use following options: ${Array.from(OPTIONS)}`);
+  }
+}
 
 /**
  * Fix option object, replace `sourceMap` with `sourcemap` if needed.
@@ -68,10 +85,15 @@ function fixSourceMapOptions(options) {
   ));
 
   // If the old `sourceMap` key is used, set it to `sourcemap` key.
-  if (!_.hasIn(newOptions, 'sourcemap') && _.hasIn(options, 'sourceMap')) {
+  if (_.hasIn(options, 'sourceMap')) {
     console.warn(`[${PLUGIN_NAME}] sourceMap has been deprecated, please use sourcemap instead.`);
-    newOptions.sourcemap = options.sourceMap;
+    if (!_.hasIn(newOptions, 'sourcemap')) {
+      newOptions.sourcemap = options.sourceMap;
+    }
   }
+
+  // Validate options.
+  validateOptions(newOptions);
 
   return newOptions;
 }
@@ -79,7 +101,7 @@ function fixSourceMapOptions(options) {
 /**
  * Rollup Plugin.
  */
-class LicensePlugin {
+module.exports = class LicensePlugin {
   /**
    * Initialize plugin.
    *
@@ -91,8 +113,6 @@ class LicensePlugin {
 
     // Initialize main options.
     this._options = fixSourceMapOptions(options);
-    this._validateOptions();
-
     this._cwd = this._options.cwd || process.cwd();
     this._dependencies = {};
     this._pkg = require(path.join(this._cwd, 'package.json'));
@@ -105,23 +125,6 @@ class LicensePlugin {
     // This is an improvement to avoid looking for package information for
     // already scanned directory.
     this._cache = {};
-  }
-
-  /**
-   * Validate option object before being used, and print for warnings if
-   * needed.
-   *
-   * @return {void}
-   */
-  _validateOptions() {
-    const keys = _.keys(this._options);
-    const notSupported = _.filter(keys, (key) => (
-      _.indexOf(OPTIONS, key) < 0
-    ));
-
-    if (notSupported.length > 0) {
-      console.warn(`[${PLUGIN_NAME}] Options ${notSupported} are not supported, use following options: ${OPTIONS}`);
-    }
   }
 
   /**
@@ -324,6 +327,4 @@ class LicensePlugin {
       console.log(`[${this.name}] -- ${msg}`);
     }
   }
-}
-
-module.exports = LicensePlugin;
+};
