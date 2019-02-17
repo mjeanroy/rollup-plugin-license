@@ -37,7 +37,7 @@
     "lodash": "4.17.11",
     "magic-string": "0.25.2",
     "mkdirp": "0.5.1",
-    "moment": "2.23.0"
+    "moment": "2.24.0"
   },
   "devDependencies": {
     "@babel/core": "7.3.3",
