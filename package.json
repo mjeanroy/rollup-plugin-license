@@ -40,8 +40,8 @@
     "moment": "2.24.0"
   },
   "devDependencies": {
-    "@babel/core": "7.3.4",
-    "@babel/preset-env": "7.3.4",
+    "@babel/core": "7.4.0",
+    "@babel/preset-env": "7.4.1",
     "del": "4.0.0",
     "eslint": "5.15.3",
     "eslint-config-google": "0.12.0",
