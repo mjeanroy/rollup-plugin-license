@@ -10,40 +10,44 @@
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
  *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
  *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
  * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
- * SOFTWARE.
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
  */
 
-const path = require('path');
-const gulp = require('gulp');
-const eslint = require('gulp-eslint');
-const log = require('../log');
-const config = require('../config');
+'use strict';
 
-module.exports = function lint() {
-  const src = [
-    path.join(config.root, '*.js'),
-    path.join(config.src, '**', '*.js'),
-    path.join(config.test, '**', '*.js'),
-    path.join(config.scripts, '**', '*.js'),
-  ];
+const log = require('fancy-log');
+const colors = require('ansi-colors');
 
-  log.debug('Linting files: ');
+/**
+ * Log message to output using `DEBUG` level.
+ *
+ * @param {string} msg Message to log.
+ * @return {void}
+ */
+function debug(msg) {
+  log(colors.grey(msg));
+}
 
-  src.forEach((input) => (
-    log.debug(`  ${input}`)
-  ));
+/**
+ * Log message to output using `ERROR` level.
+ *
+ * @param {string} msg Message to log.
+ * @return {void}
+ */
+function error(msg) {
+  log(colors.red(msg));
+}
 
-  return gulp.src(src)
-      .pipe(eslint())
-      .pipe(eslint.format())
-      .pipe(eslint.failAfterError());
+module.exports = {
+  debug,
+  error,
 };

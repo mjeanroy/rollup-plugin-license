@@ -321,6 +321,7 @@ module.exports = class LicensePlugin {
    * Log debug message if debug mode is enabled.
    *
    * @param {string} msg Log message.
+   * @return {void}
    */
   debug(msg) {
     if (this._debug) {
