@@ -183,6 +183,35 @@ describe('LicensePlugin', () => {
     });
   });
 
+  it('should try to load pkg without leading NULL character ', () => {
+    const plugin = new LicensePlugin();
+    const fakePackage = path.join(__dirname, 'fixtures', 'fake-package');
+    const idNoNull = path.join(fakePackage, 'src', 'index.js');
+    const id = '\0' + idNoNull;
+    const pkg = require(path.join(fakePackage, 'package.json'));
+
+    plugin.scanDependency(id);
+
+    expect(plugin._dependencies).toEqual({
+      'fake-package': {
+        name: 'fake-package',
+        version: '1.0.0',
+        description: 'Fake package used in unit tests',
+        license: 'MIT',
+        private: true,
+        author: {
+          name: 'Mickael Jeanroy',
+          email: 'mickael.jeanroy@gmail.com',
+        },
+      },
+    });
+
+    expect(plugin._cache).toEqual({
+      [path.join(__dirname, 'fixtures', 'fake-package', 'src')]: pkg,
+      [path.join(__dirname, 'fixtures', 'fake-package')]: pkg,
+    });
+  });
+
   it('should load pkg and use the cache if available', () => {
     const plugin = new LicensePlugin();
     const fakePackage = path.join(__dirname, 'fixtures', 'fake-package');
