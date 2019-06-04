@@ -33,7 +33,7 @@
     "rollup": "< 2"
   },
   "dependencies": {
-    "commenting": "1.0.5",
+    "commenting": "1.1.0",
     "lodash": "4.17.11",
     "magic-string": "0.25.2",
     "mkdirp": "0.5.1",
