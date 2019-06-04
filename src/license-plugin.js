@@ -150,7 +150,12 @@ module.exports = class LicensePlugin {
    * @return {void}
    */
   scanDependency(id) {
-    this.debug(`scanning ${id}`);
+    if (id.startsWith('\0')) {
+      id = id.replace(/^\0/, '');
+      this.debug(`scanning internal module ${id}`);
+    } else {
+      this.debug(`scanning ${id}`);
+    }
 
     // Look for the `package.json` file
     let dir = path.parse(id).dir;
