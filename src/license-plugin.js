@@ -153,9 +153,9 @@ module.exports = class LicensePlugin {
     if (id.startsWith('\0')) {
       id = id.replace(/^\0/, '');
       this.debug(`scanning internal module ${id}`);
-    } else {
-      this.debug(`scanning ${id}`);
     }
+
+    this.debug(`scanning ${id}`);
 
     // Look for the `package.json` file
     let dir = path.parse(id).dir;
@@ -199,6 +199,20 @@ module.exports = class LicensePlugin {
     // Update the cache
     _.forEach(scannedDirs, (scannedDir) => {
       this._cache[scannedDir] = pkg;
+    });
+  }
+
+  /**
+   * Hook triggered by `rollup` to load code from given path file.
+   *
+   * @param {Object} dependencies List of modules included in the final bundle.
+   * @return {void}
+   */
+  scanDependencies(dependencies) {
+    this.debug(`Scanning: ${dependencies}`);
+
+    _.forEach(dependencies, (dependency) => {
+      this.scanDependency(dependency);
     });
   }
 

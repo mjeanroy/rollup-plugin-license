@@ -48,7 +48,7 @@ describe('rollup-plugin-license [rollup stable]', () => {
     expect(instance.name).toBe('rollup-plugin-license');
   });
 
-  it('should scan dependency on load', (done) => {
+  it('should scan dependencies when chunk is rendered', (done) => {
     const thirdPartyOutput = path.join(tmpDir.name, 'dependencies.txt');
     const instance = plugin({
       thirdParty: {
@@ -57,9 +57,21 @@ describe('rollup-plugin-license [rollup stable]', () => {
       },
     });
 
-    const id = path.join(__dirname, 'fixtures', 'fake-package', 'src', 'index.js');
+    const moduleId = path.join(__dirname, 'fixtures', 'fake-package', 'src', 'index.js');
+    const modules = {
+      [moduleId]: {
+        renderedExports: [],
+        removedExports: [],
+        renderedLength: 10,
+        originalLength: 100,
+      },
+    };
 
-    instance.load(id);
+    const code = 'var foo = 0;';
+    const chunk = {code, modules};
+    const outputOptions = {};
+
+    instance.renderChunk(code, chunk, outputOptions);
     instance.generateBundle();
 
     fs.readFile(thirdPartyOutput, 'utf8', (err, data) => {
@@ -70,6 +82,54 @@ describe('rollup-plugin-license [rollup stable]', () => {
       const content = data.toString();
       expect(content).toBeDefined();
       expect(content).toContain('fake-package');
+      done();
+    });
+  });
+
+  it('should scan dependencies when chunk is rendered and skip tree-shaken modules', (done) => {
+    const thirdPartyOutput = path.join(tmpDir.name, 'dependencies.txt');
+    const instance = plugin({
+      thirdParty: {
+        includePrivate: true,
+        output: thirdPartyOutput,
+      },
+    });
+
+    const moduleId1 = path.join(__dirname, 'fixtures', 'fake-package', 'src', 'index.js');
+    const moduleId2 = path.join(__dirname, '..', 'node_modules', 'lodash', 'index.js');
+
+    const modules = {
+      [moduleId1]: {
+        renderedExports: [],
+        removedExports: [],
+        renderedLength: 10,
+        originalLength: 100,
+      },
+
+      [moduleId2]: {
+        renderedExports: [],
+        removedExports: [],
+        renderedLength: 0,
+        originalLength: 100,
+      },
+    };
+
+    const code = 'var foo = 0;';
+    const chunk = {code, modules};
+    const outputOptions = {};
+
+    instance.renderChunk(code, chunk, outputOptions);
+    instance.generateBundle();
+
+    fs.readFile(thirdPartyOutput, 'utf8', (err, data) => {
+      if (err) {
+        done.fail(err);
+      }
+
+      const content = data.toString();
+      expect(content).toBeDefined();
+      expect(content).toContain('fake-package');
+      expect(content).not.toContain('lodash');
       done();
     });
   });
@@ -105,7 +165,21 @@ describe('rollup-plugin-license [rollup stable]', () => {
       },
     });
 
-    instance.load('lodash');
+    const moduleId = path.join(__dirname, 'fixtures', 'fake-package', 'src', 'index.js');
+    const modules = {
+      [moduleId]: {
+        renderedExports: [],
+        removedExports: [],
+        renderedLength: 10,
+        originalLength: 100,
+      },
+    };
+
+    const code = 'var foo = 0;';
+    const chunk = {code, modules};
+    const outputOptions = {};
+
+    instance.renderChunk(code, chunk, outputOptions);
     instance.generateBundle();
 
     fs.readFile(thirdPartyOutput, 'utf8', (err, data) => {
