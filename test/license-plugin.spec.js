@@ -130,6 +130,35 @@ describe('LicensePlugin', () => {
     });
   });
 
+  it('should load pkg dependencies', () => {
+    const plugin = new LicensePlugin();
+    const modules = [
+      path.join(__dirname, 'fixtures', 'fake-package', 'src', 'index.js'),
+    ];
+
+    spyOn(plugin, 'scanDependency').and.callThrough();
+    spyOn(plugin, 'addDependency').and.callThrough();
+
+    const result = plugin.scanDependencies(modules);
+
+    expect(result).not.toBeDefined();
+    expect(plugin.scanDependency).toHaveBeenCalledWith(modules[0]);
+    expect(plugin.addDependency).toHaveBeenCalled();
+    expect(plugin._dependencies).toEqual({
+      'fake-package': {
+        name: 'fake-package',
+        version: '1.0.0',
+        description: 'Fake package used in unit tests',
+        license: 'MIT',
+        private: true,
+        author: {
+          name: 'Mickael Jeanroy',
+          email: 'mickael.jeanroy@gmail.com',
+        },
+      },
+    });
+  });
+
   it('should load pkg and stop on cwd', () => {
     const plugin = new LicensePlugin();
     const id = path.join(__dirname, '..', 'src', 'index.js');

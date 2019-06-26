@@ -24,6 +24,7 @@
 
 'use strict';
 
+const _ = require('lodash');
 const LicensePlugin = require('./license-plugin.js');
 
 module.exports = (options = {}) => {
@@ -37,17 +38,6 @@ module.exports = (options = {}) => {
     name: plugin.name,
 
     /**
-     * Function called by rollup when a JS file is loaded: it is used to scan
-     * third-party dependencies.
-     *
-     * @param {string} id JS file path.
-     * @return {void}
-     */
-    load(id) {
-      plugin.scanDependency(id);
-    },
-
-    /**
      * Function called by rollup when the final bundle is generated: it is used
      * to prepend the banner file on the generated bundle.
      *
@@ -57,6 +47,15 @@ module.exports = (options = {}) => {
      * @return {void}
      */
     renderChunk(code, chunk, outputOptions = {}) {
+      plugin.scanDependencies(
+          _.chain(chunk.modules)
+              .toPairs()
+              .reject((mod) => mod[1].isAsset)
+              .filter((mod) => mod[1].renderedLength > 0)
+              .map((mod) => mod[0])
+              .value()
+      );
+
       return plugin.prependBanner(code, outputOptions.sourcemap !== false);
     },
 
