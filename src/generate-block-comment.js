@@ -30,8 +30,21 @@ const commenting = require('commenting');
  * Generate block comment from given text content.
  *
  * @param {string} text Text content.
+ * @param {Object} commentStyle The comment style setting.
  * @return {string} Block comment.
  */
-module.exports = function generateBlockComment(text) {
-  return commenting(text.trim(), {extension: '.js'});
+module.exports = function generateBlockComment(text, commentStyle) {
+  const options = {
+    extension: '.js',
+  };
+
+  if (commentStyle) {
+    options.style = new commenting.Style(
+        commentStyle.body,
+        commentStyle.start,
+        commentStyle.end
+    );
+  }
+
+  return commenting(text.trim(), options);
 };

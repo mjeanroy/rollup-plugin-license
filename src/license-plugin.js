@@ -47,6 +47,38 @@ const OPTIONS = new Set([
 ]);
 
 /**
+ * Pre-Defined comment style:
+ *
+ * - `regular` stands for "classic" block comment.
+ * - `ignored` stands for block comment starting with standard prefix ignored by minifier.
+ * - `slash` stands for "inline" style (i.e `//`).
+ * - `none` stands for no comment style at all.
+ *
+ * @type {Object<string, Object>}
+ */
+const COMMENT_STYLES = {
+  regular: {
+    start: '/**',
+    body: ' *',
+    end: ' */',
+  },
+
+  ignored: {
+    start: '/*!',
+    body: ' *',
+    end: ' */',
+  },
+
+  slash: {
+    start: '//',
+    body: '//',
+    end: '//',
+  },
+
+  none: null,
+};
+
+/**
  * The plugin name.
  * @type {string}
  */
@@ -231,46 +263,10 @@ module.exports = class LicensePlugin {
     const magicString = new MagicString(code);
 
     const banner = this._options.banner;
-
-    let content;
-    if (_.isString(banner)) {
-      this.debug('prepend banner from template');
-      content = banner;
-    } else if (banner) {
-      const file = banner.file;
-      this.debug(`prepend banner from file: ${file}`);
-
-      const filePath = path.resolve(file);
-      const exists = fs.existsSync(filePath);
-      if (exists) {
-        const encoding = banner.encoding || 'utf-8';
-        this.debug(`use encoding: ${encoding}`);
-        content = fs.readFileSync(filePath, encoding);
-      } else {
-        this.debug('template file does not exist, skip.');
-      }
-    }
-
+    const content = this._readBanner(banner);
     if (content) {
-      // Create the template function with lodash.
-      const tmpl = _.template(content);
-
-      // Generate the banner.
-      const pkg = this._pkg;
-      const dependencies = _.values(this._dependencies);
-      const data = banner.data ? _.result(banner, 'data') : {};
-
-      let text = tmpl({_, moment, pkg, dependencies, data});
-
-      // Make a block comment if needed
-      const trimmedBanner = text.trim();
-      const start = trimmedBanner.slice(0, 3);
-      if (start !== '/**' && start !== '/*!') {
-        text = generateBlockComment(text);
-      }
-
-      // Prepend the banner.
-      magicString.prepend(`${text}${EOL}`);
+      magicString.prepend(EOL);
+      magicString.prepend(this._generateBanner(content, banner));
     }
 
     const result = {
@@ -346,5 +342,84 @@ module.exports = class LicensePlugin {
     if (this._debug) {
       console.log(`[${this.name}] -- ${msg}`);
     }
+  }
+
+  /**
+   * Read banner from given options and returns it.
+   *
+   * @param {Object|string} banner Banner as a raw string, or banner options.
+   * @return {string} The banner template.
+   * @private
+   */
+  _readBanner(banner) {
+    if (!banner) {
+      return '';
+    }
+
+    if (_.isString(banner)) {
+      this.debug('prepend banner from template');
+      return banner;
+    }
+
+    const file = banner.file;
+    this.debug(`prepend banner from file: ${file}`);
+
+    const filePath = path.resolve(file);
+    const exists = fs.existsSync(filePath);
+    if (!exists) {
+      this.debug('template file does not exist, skip.');
+      return '';
+    }
+
+    const encoding = banner.encoding || 'utf-8';
+    this.debug(`use encoding: ${encoding}`);
+    return fs.readFileSync(filePath, encoding);
+  }
+
+  /**
+   * Generate banner output from given raw string and given options.
+   *
+   * Banner output will be a JavaScript comment block, comment style may be customized using
+   * the `commentStyle` option.
+   *
+   * @param {string} content Banner content, as a raw string.
+   * @param {Object} banner Banner options.
+   * @return {string} The banner output.
+   * @private
+   */
+  _generateBanner(content, banner) {
+    // Create the template function with lodash.
+    const tmpl = _.template(content);
+
+    // Generate the banner.
+    const pkg = this._pkg;
+    const dependencies = _.values(this._dependencies);
+    const data = banner.data ? _.result(banner, 'data') : {};
+    const text = tmpl({
+      _,
+      moment,
+      pkg,
+      dependencies,
+      data,
+    });
+
+    // Make a block comment if needed
+    const trimmedBanner = text.trim();
+    const start = trimmedBanner.slice(0, 3);
+    const startWithComment = start === '/**' || start === '/*!';
+
+    if (!startWithComment) {
+      const style = _.has(banner, 'commentStyle') ? banner.commentStyle : 'regular';
+      if (!_.has(COMMENT_STYLES, style)) {
+        throw new Error(`Unknown comment style ${style}, please use one of: ${_.keys(COMMENT_STYLES)}`);
+      }
+
+      const commentStyle = COMMENT_STYLES[style];
+      if (commentStyle) {
+        return generateBlockComment(text, commentStyle);
+      }
+    }
+
+    return text;
   }
 };

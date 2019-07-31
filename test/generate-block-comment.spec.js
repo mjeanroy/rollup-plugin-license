@@ -44,4 +44,29 @@ describe('generateBlockComment', () => {
       '',
     ]));
   });
+
+  it('should generate block comment from given text and override comment style', () => {
+    const text = join([
+      'First Line',
+      '',
+      'Second Line',
+    ]);
+
+    const commentStyle = {
+      body: '//',
+      start: '//',
+      end: '//',
+    };
+
+    const comment = generateBlockComment(text, commentStyle);
+
+    expect(comment).toEqual(join([
+      '//',
+      '// First Line',
+      '//',
+      '// Second Line',
+      '//',
+      '',
+    ]));
+  });
 });

@@ -591,6 +591,76 @@ describe('LicensePlugin', () => {
     ]));
   });
 
+  it('should prepend banner and create block comment with a custom style', () => {
+    const instance = new LicensePlugin({
+      banner: {
+        file: path.join(__dirname, 'fixtures', 'banner.txt'),
+        commentStyle: 'ignored',
+      },
+    });
+
+    const code = 'var foo = 0;';
+
+    const result = instance.prependBanner(code);
+
+    expect(result).toBeDefined();
+    expect(result.code).toEqual(join([
+      '/*!',
+      ' * Test banner.',
+      ' *',
+      ' * With a second line.',
+      ' */',
+      '',
+      code,
+    ]));
+  });
+
+  it('should prepend banner and create comment with slash style', () => {
+    const instance = new LicensePlugin({
+      banner: {
+        file: path.join(__dirname, 'fixtures', 'banner.txt'),
+        commentStyle: 'slash',
+      },
+    });
+
+    const code = 'var foo = 0;';
+
+    const result = instance.prependBanner(code);
+
+    expect(result).toBeDefined();
+    expect(result.code).toEqual(join([
+      '//',
+      '// Test banner.',
+      '//',
+      '// With a second line.',
+      '//',
+      '',
+      code,
+    ]));
+  });
+
+  it('should prepend banner and create block comment without any style at all', () => {
+    const instance = new LicensePlugin({
+      banner: {
+        file: path.join(__dirname, 'fixtures', 'banner.txt'),
+        commentStyle: 'none',
+      },
+    });
+
+    const code = 'var foo = 0;';
+
+    const result = instance.prependBanner(code);
+
+    expect(result).toBeDefined();
+    expect(result.code).toEqual(join([
+      'Test banner.',
+      '',
+      'With a second line.',
+      '',
+      code,
+    ]));
+  });
+
   it('should prepend banner to bundle and create sourceMap', () => {
     const instance = new LicensePlugin({
       banner: {
