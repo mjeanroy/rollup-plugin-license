@@ -142,6 +142,13 @@ Following options are available:
 
 ## Changelogs
 
+- 0.10.0
+  - Support different comment style for banner (see [#308](https://github.com/mjeanroy/rollup-plugin-license/issues/308)).
+  - Do not include tree shaken dependencies (see [#380](https://github.com/mjeanroy/rollup-plugin-license/issues/380))
+  - Various dependency updates.
+- 0.9.0
+  - Fix for `NULL` character (see [#1](https://github.com/mjeanroy/rollup-plugin-license/issues/1)).
+  - Various dependency updates.
 - 0.8.1
   - Add rollup as a peer dependency.
 - 0.8.0
