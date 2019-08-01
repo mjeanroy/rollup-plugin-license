@@ -99,6 +99,47 @@ license({
 })
 ```
 
+## Comment style
+
+Since version 0.10.0, it is possible to customize banner style using the `commentStyle` option:
+
+```javascript
+license({
+  banner: {
+    file: path.join(__dirname, 'LICENSE'),
+    commentStyle: 'regular', // The default
+  },
+})
+```
+
+Following options are available:
+
+- `regular`: "classic" comment block is used (this is the default), for example:
+
+```javascript
+/**
+ * This is the `regular` style.
+ */
+```
+
+- `ignored`: a comment block with prefix ignored by minifiers, for example:
+
+```javascript
+/*!
+ * This is the `ignored` style.
+ */
+```
+
+- `slash`: banner is prepended using "slash" comments, for example:
+
+```javascript
+//
+// This is the `slash` style.
+//
+```
+
+- `none`: nothing done, be careful to prepenbd a banner already "commented".
+
 ## Changelogs
 
 - 0.8.1
