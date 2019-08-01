@@ -79,6 +79,21 @@ const COMMENT_STYLES = {
 };
 
 /**
+ * Compute the comment style to use for given text:
+ * - If text starts with a block comment, nothing is done (i.e use `none`).
+ * - Otherwise, use the `regular` style.
+ *
+ * @param {string} text The text to comment.
+ * @return {string} The comment style name.
+ */
+function computeDefaultCommentStyle(text) {
+  const trimmedText = text.trim();
+  const start = trimmedText.slice(0, 3);
+  const startWithComment = start === '/**' || start === '/*!';
+  return startWithComment ? 'none' : 'regular';
+}
+
+/**
  * The plugin name.
  * @type {string}
  */
@@ -403,23 +418,16 @@ module.exports = class LicensePlugin {
       data,
     });
 
-    // Make a block comment if needed
-    const trimmedBanner = text.trim();
-    const start = trimmedBanner.slice(0, 3);
-    const startWithComment = start === '/**' || start === '/*!';
+    // Compute comment style to use.
+    const style = _.has(banner, 'commentStyle') ? banner.commentStyle : computeDefaultCommentStyle(text);
 
-    if (!startWithComment) {
-      const style = _.has(banner, 'commentStyle') ? banner.commentStyle : 'regular';
-      if (!_.has(COMMENT_STYLES, style)) {
-        throw new Error(`Unknown comment style ${style}, please use one of: ${_.keys(COMMENT_STYLES)}`);
-      }
-
-      const commentStyle = COMMENT_STYLES[style];
-      if (commentStyle) {
-        return generateBlockComment(text, commentStyle);
-      }
+    // Ensure given style name is valid.
+    if (!_.has(COMMENT_STYLES, style)) {
+      throw new Error(`Unknown comment style ${style}, please use one of: ${_.keys(COMMENT_STYLES)}`);
     }
 
-    return text;
+    this.debug(`generate banner using comment style: ${style}`);
+
+    return COMMENT_STYLES[style] ? generateBlockComment(text, COMMENT_STYLES[style]) : text;
   }
 };
