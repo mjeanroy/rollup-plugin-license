@@ -661,6 +661,19 @@ describe('LicensePlugin', () => {
     ]));
   });
 
+  it('should fail to prepend banner if comment style option is unknown', () => {
+    const instance = new LicensePlugin({
+      banner: {
+        file: path.join(__dirname, 'fixtures', 'banner.txt'),
+        commentStyle: 'foobar',
+      },
+    });
+
+    expect(() => instance.prependBanner('var foo = 0;')).toThrow(new Error(
+        'Unknown comment style foobar, please use one of: regular,ignored,slash,none'
+    ));
+  });
+
   it('should prepend banner to bundle and create sourceMap', () => {
     const instance = new LicensePlugin({
       banner: {
