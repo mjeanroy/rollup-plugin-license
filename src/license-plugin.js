@@ -360,34 +360,69 @@ module.exports = class LicensePlugin {
   }
 
   /**
+   * Log a warning to the console.
+   *
+   * @param {string} msg Message to log.
+   * @return {void}
+   */
+  warn(msg) {
+    console.warn(`[${this.name}] -- ${msg}`);
+  }
+
+  /**
    * Read banner from given options and returns it.
    *
    * @param {Object|string} banner Banner as a raw string, or banner options.
-   * @return {string} The banner template.
+   * @return {string|null} The banner template.
    * @private
    */
   _readBanner(banner) {
-    if (!banner) {
-      return '';
+    if (_.isNil(banner)) {
+      return null;
     }
 
+    // Banner can be defined as a simple inline string.
     if (_.isString(banner)) {
-      this.debug('prepend banner from template');
+      this.debug('prepend banner from raw string');
       return banner;
     }
 
-    const file = banner.file;
+    // Warn about deprecated option.
+    if (_.has(banner, 'file') || _.has(banner, 'encoding')) {
+      this.warn(
+          'option `"banner.file"` and  `"banner.encoding"` are deprecated and will be removed in a future version, ' +
+          'please use `"banner.content": {file, encoding}` option instead'
+      );
+    }
+
+    // Extract banner content.
+    const content = _.has(banner, 'content') ? _.result(banner, 'content') : {file: banner.file, encoding: banner.encoding};
+
+    // Content can be an inline string.
+    if (_.isString(content)) {
+      this.debug('prepend banner from content raw string');
+      return content;
+    }
+
+    // Otherwise, file must be defined (if not, that's an error).
+    if (!_.has(content, 'file')) {
+      throw new Error(`[${this.name}] -- Cannot find banner content, please specify an inline content, or a path to a file`);
+    }
+
+    const file = content.file;
+    const encoding = content.encoding || 'utf-8';
+
     this.debug(`prepend banner from file: ${file}`);
+    this.debug(`use encoding: ${encoding}`);
 
     const filePath = path.resolve(file);
     const exists = fs.existsSync(filePath);
+
+    // Fail fast if file does not exist.
     if (!exists) {
-      this.debug('template file does not exist, skip.');
-      return '';
+      throw new Error(`[${this.name}] -- Template file ${filePath} does not exist, or cannot be read`);
     }
 
-    const encoding = banner.encoding || 'utf-8';
-    this.debug(`use encoding: ${encoding}`);
     return fs.readFileSync(filePath, encoding);
   }
 

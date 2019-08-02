@@ -441,6 +441,65 @@ describe('LicensePlugin', () => {
   it('should prepend banner to bundle from a file', () => {
     const instance = new LicensePlugin({
       banner: {
+        content: {
+          file: path.join(__dirname, 'fixtures', 'banner.js'),
+        },
+      },
+    });
+
+    const code = 'var foo = 0;';
+
+    const result = instance.prependBanner(code);
+
+    expect(result).toBeDefined();
+    expect(result.map).toBeDefined();
+    expect(result.code).toEqual(join([
+      '/**',
+      ' * Test banner.',
+      ' *',
+      ' * With a second line.',
+      ' */',
+      '',
+      code,
+    ]));
+  });
+
+  it('should prepend banner to bundle with custom encoding', () => {
+    spyOn(fs, 'readFileSync').and.callThrough();
+
+    const encoding = 'ascii';
+    const instance = new LicensePlugin({
+      banner: {
+        content: {
+          file: path.join(__dirname, 'fixtures', 'banner.js'),
+          encoding,
+        },
+      },
+    });
+
+    const code = 'var foo = 0;';
+
+    const result = instance.prependBanner(code);
+
+    expect(fs.readFileSync).toHaveBeenCalledWith(jasmine.any(String), encoding);
+    expect(result).toBeDefined();
+    expect(result.map).toBeDefined();
+    expect(result.code).toEqual(join([
+      '/**',
+      ' * Test banner.',
+      ' *',
+      ' * With a second line.',
+      ' */',
+      '',
+      code,
+    ]));
+  });
+
+  it('should prepend banner to bundle from (deprecated) file option', () => {
+    spyOn(console, 'warn');
+
+    const instance = new LicensePlugin({
+      banner: {
         file: path.join(__dirname, 'fixtures', 'banner.js'),
       },
     });
@@ -460,6 +519,60 @@ describe('LicensePlugin', () => {
       '',
       code,
     ]));
+
+    expect(console.warn).toHaveBeenCalledWith(
+        '[rollup-plugin-license] -- option `"banner.file"` and  `"banner.encoding"` are deprecated and will be removed in ' +
+        'a future version, please use `"banner.content": {file, encoding}` option instead'
+    );
+  });
+
+  it('should prepend banner to bundle with (deprecated) custom encoding option', () => {
+    spyOn(fs, 'readFileSync').and.callThrough();
+    spyOn(console, 'warn');
+
+    const encoding = 'ascii';
+    const instance = new LicensePlugin({
+      banner: {
+        file: path.join(__dirname, 'fixtures', 'banner.js'),
+        encoding,
+      },
+    });
+
+    const code = 'var foo = 0;';
+
+    const result = instance.prependBanner(code);
+
+    expect(fs.readFileSync).toHaveBeenCalledWith(jasmine.any(String), encoding);
+    expect(result).toBeDefined();
+    expect(result.map).toBeDefined();
+    expect(result.code).toEqual(join([
+      '/**',
+      ' * Test banner.',
+      ' *',
+      ' * With a second line.',
+      ' */',
+      '',
+      code,
+    ]));
+
+    expect(console.warn).toHaveBeenCalledWith(
+        '[rollup-plugin-license] -- option `"banner.file"` and  `"banner.encoding"` are deprecated and will be removed in ' +
+        'a future version, please use `"banner.content": {file, encoding}` option instead'
+    );
+  });
+
+  it('should fail to prepend banner without any content', () => {
+    const instance = new LicensePlugin({
+      banner: {
+        content: {
+          commentStyle: 'regular',
+        },
+      },
+    });
+
+    expect(() => instance.prependBanner('var foo = 0;')).toThrow(new Error(
+        '[rollup-plugin-license] -- Cannot find banner content, please specify an inline content, or a path to a file'
+    ));
   });
 
   it('should prepend banner to bundle with template', () => {
@@ -486,39 +599,12 @@ describe('LicensePlugin', () => {
     ]));
   });
 
-  it('should prepend banner to bundle with custom encoding', () => {
-    spyOn(fs, 'readFileSync').and.callThrough();
-
-    const encoding = 'ascii';
-    const instance = new LicensePlugin({
-      banner: {
-        file: path.join(__dirname, 'fixtures', 'banner.js'),
-        encoding,
-      },
-    });
-
-    const code = 'var foo = 0;';
-
-    const result = instance.prependBanner(code);
-
-    expect(fs.readFileSync).toHaveBeenCalledWith(jasmine.any(String), encoding);
-    expect(result).toBeDefined();
-    expect(result.map).toBeDefined();
-    expect(result.code).toEqual(join([
-      '/**',
-      ' * Test banner.',
-      ' *',
-      ' * With a second line.',
-      ' */',
-      '',
-      code,
-    ]));
-  });
-
   it('should prepend banner to bundle without source map', () => {
     const instance = new LicensePlugin({
       banner: {
-        file: path.join(__dirname, 'fixtures', 'banner.js'),
+        content: {
+          file: path.join(__dirname, 'fixtures', 'banner.js'),
+        },
       },
     });
 
@@ -552,26 +638,27 @@ describe('LicensePlugin', () => {
     expect(result.code).toBe(code);
   });
 
-  it('should not fail if banner file does not exist', () => {
+  it('should fail if banner file does not exist', () => {
+    const file = path.join(__dirname, 'fixtures', 'dummy');
     const instance = new LicensePlugin({
       banner: {
-        file: path.join(__dirname, 'fixtures', 'dummy'),
+        content: {
+          file,
+        },
       },
     });
 
-    const code = 'var foo = 0;';
-    const result = instance.prependBanner(code);
-
-    expect(result).toBeDefined();
-    expect(result.code).toBeDefined();
-    expect(result.map).toBeDefined();
-    expect(result.code).toBe(code);
+    expect(() => instance.prependBanner('var foo = 0;')).toThrow(new Error(
+        `[rollup-plugin-license] -- Template file ${file} does not exist, or cannot be read`
+    ));
   });
 
   it('should prepend banner and create block comment', () => {
     const instance = new LicensePlugin({
       banner: {
-        file: path.join(__dirname, 'fixtures', 'banner.txt'),
+        content: {
+          file: path.join(__dirname, 'fixtures', 'banner.txt'),
+        },
       },
     });
 
@@ -594,8 +681,10 @@ describe('LicensePlugin', () => {
   it('should prepend banner and create block comment with a custom style', () => {
     const instance = new LicensePlugin({
       banner: {
-        file: path.join(__dirname, 'fixtures', 'banner.txt'),
         commentStyle: 'ignored',
+        content: {
+          file: path.join(__dirname, 'fixtures', 'banner.txt'),
+        },
       },
     });
 
@@ -618,8 +707,10 @@ describe('LicensePlugin', () => {
   it('should prepend banner and create comment with slash style', () => {
     const instance = new LicensePlugin({
       banner: {
-        file: path.join(__dirname, 'fixtures', 'banner.txt'),
         commentStyle: 'slash',
+        content: {
+          file: path.join(__dirname, 'fixtures', 'banner.txt'),
+        },
       },
     });
 
@@ -642,8 +733,10 @@ describe('LicensePlugin', () => {
   it('should prepend banner and create block comment without any style at all', () => {
     const instance = new LicensePlugin({
       banner: {
-        file: path.join(__dirname, 'fixtures', 'banner.txt'),
         commentStyle: 'none',
+        content: {
+          file: path.join(__dirname, 'fixtures', 'banner.txt'),
+        },
       },
     });
 
@@ -664,8 +757,10 @@ describe('LicensePlugin', () => {
   it('should fail to prepend banner if comment style option is unknown', () => {
     const instance = new LicensePlugin({
       banner: {
-        file: path.join(__dirname, 'fixtures', 'banner.txt'),
         commentStyle: 'foobar',
+        content: {
+          file: path.join(__dirname, 'fixtures', 'banner.txt'),
+        },
       },
     });
 
@@ -677,7 +772,9 @@ describe('LicensePlugin', () => {
   it('should prepend banner to bundle and create sourceMap', () => {
     const instance = new LicensePlugin({
       banner: {
-        file: path.join(__dirname, 'fixtures', 'banner.js'),
+        content: {
+          file: path.join(__dirname, 'fixtures', 'banner.js'),
+        },
       },
     });
 
@@ -692,7 +789,9 @@ describe('LicensePlugin', () => {
   it('should prepend banner and replace moment variables', () => {
     const instance = new LicensePlugin({
       banner: {
-        file: path.join(__dirname, 'fixtures', 'banner-with-moment.js'),
+        content: {
+          file: path.join(__dirname, 'fixtures', 'banner-with-moment.js'),
+        },
       },
     });
 
@@ -713,7 +812,9 @@ describe('LicensePlugin', () => {
   it('should prepend banner and replace custom data object', () => {
     const instance = new LicensePlugin({
       banner: {
-        file: path.join(__dirname, 'fixtures', 'banner-with-data.js'),
+        content: {
+          file: path.join(__dirname, 'fixtures', 'banner-with-data.js'),
+        },
         data: {
           foo: 'bar',
           bar: 'baz',
@@ -739,7 +840,9 @@ describe('LicensePlugin', () => {
   it('should prepend banner and replace custom data function', () => {
     const instance = new LicensePlugin({
       banner: {
-        file: path.join(__dirname, 'fixtures', 'banner-with-data.js'),
+        content: {
+          file: path.join(__dirname, 'fixtures', 'banner-with-data.js'),
+        },
         data() {
           return {
             foo: 'bar',
@@ -767,7 +870,9 @@ describe('LicensePlugin', () => {
   it('should prepend banner and replace package variables', () => {
     const instance = new LicensePlugin({
       banner: {
-        file: path.join(__dirname, 'fixtures', 'banner-with-pkg.js'),
+        content: {
+          file: path.join(__dirname, 'fixtures', 'banner-with-pkg.js'),
+        },
       },
     });
 
@@ -788,7 +893,9 @@ describe('LicensePlugin', () => {
   it('should prepend banner and replace dependencies placeholders', () => {
     const instance = new LicensePlugin({
       banner: {
-        file: path.join(__dirname, 'fixtures', 'banner-with-dependencies.js'),
+        content: {
+          file: path.join(__dirname, 'fixtures', 'banner-with-dependencies.js'),
+        },
       },
     });
 

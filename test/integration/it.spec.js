@@ -30,6 +30,7 @@ const fs = require('fs');
 const rollup = require('rollup');
 const nodeResolve = require('rollup-plugin-node-resolve');
 const commonjs = require('rollup-plugin-commonjs');
+const join = require('../utils/join.js');
 const licensePlugin = require('../../dist/index.js');
 
 describe('Dependency', () => {
@@ -77,8 +78,7 @@ describe('Dependency', () => {
               done.fail(err);
             }
 
-            const content = data.toString();
-            expect(content).toContain('lodash');
+            expect(data.toString()).toContain('lodash');
             done();
           });
         });
@@ -87,7 +87,6 @@ describe('Dependency', () => {
   it('should generate bundle with license header', (done) => {
     const bundleOutput = path.join(tmpDir.name, 'bundle.js');
     const banner = 'test banner';
-    const EOL = '\n';
 
     const rollupConfig = {
       input: path.join(__dirname, 'bundle.js'),
@@ -112,13 +111,211 @@ describe('Dependency', () => {
               done.fail(err);
             }
 
-            const content = data.toString();
-            const expectedBanner =
-              `/**${EOL}` +
-              ` * ${banner}${EOL}` +
-              ` */${EOL}`;
+            expect(data.toString()).toContain(join([
+              `/**`,
+              ` * ${banner}`,
+              ` */`,
+            ]));
 
-            expect(content).toContain(expectedBanner);
+            done();
+          });
+        });
+  });
+
+  it('should generate bundle with license header from given file', (done) => {
+    spyOn(console, 'warn');
+
+    const bundleOutput = path.join(tmpDir.name, 'bundle.js');
+    const banner = {
+      file: path.join(__dirname, '..', 'fixtures', 'banner.txt'),
+      encoding: 'utf-8',
+    };
+
+    const rollupConfig = {
+      input: path.join(__dirname, 'bundle.js'),
+
+      output: {
+        file: bundleOutput,
+        format: 'es',
+      },
+
+      plugins: [
+        nodeResolve(),
+        commonjs(),
+        licensePlugin({
+          banner,
+        }),
+      ],
+    };
+
+    rollup.rollup(rollupConfig)
+        .then((bundle) => bundle.write(rollupConfig.output))
+        .then(() => {
+          fs.readFile(bundleOutput, 'utf8', (err, data) => {
+            if (err) {
+              done.fail(err);
+            }
+
+            expect(data.toString()).toContain(join([
+              '/**',
+              ' * Test banner.',
+              ' *',
+              ' * With a second line.',
+              ' */',
+            ]));
+
+            expect(console.warn).toHaveBeenCalledWith(
+                '[rollup-plugin-license] -- option `"banner.file"` and  `"banner.encoding"` are deprecated and will be ' +
+                'removed in a future version, please use `"banner.content": {file, encoding}` option instead'
+            );
+
+            done();
+          });
+        });
+  });
+
+  it('should generate bundle with license header from content as a raw string', (done) => {
+    spyOn(console, 'warn');
+
+    const bundleOutput = path.join(tmpDir.name, 'bundle.js');
+    const content = 'Banner from inline content';
+    const banner = {
+      content,
+    };
+
+    const rollupConfig = {
+      input: path.join(__dirname, 'bundle.js'),
+
+      output: {
+        file: bundleOutput,
+        format: 'es',
+      },
+
+      plugins: [
+        nodeResolve(),
+        commonjs(),
+        licensePlugin({
+          banner,
+        }),
+      ],
+    };
+
+    rollup.rollup(rollupConfig)
+        .then((bundle) => bundle.write(rollupConfig.output))
+        .then(() => {
+          fs.readFile(bundleOutput, 'utf8', (err, data) => {
+            if (err) {
+              done.fail(err);
+            }
+
+            expect(data.toString()).toContain(join([
+              `/**`,
+              ` * ${content}`,
+              ` */`,
+            ]));
+
+            expect(console.warn).not.toHaveBeenCalled();
+
+            done();
+          });
+        });
+  });
+
+  it('should generate bundle with license header from content as a string returned from function', (done) => {
+    spyOn(console, 'warn');
+
+    const bundleOutput = path.join(tmpDir.name, 'bundle.js');
+    const content = 'Banner from inline content';
+    const banner = {
+      content() {
+        return content;
+      },
+    };
+
+    const rollupConfig = {
+      input: path.join(__dirname, 'bundle.js'),
+
+      output: {
+        file: bundleOutput,
+        format: 'es',
+      },
+
+      plugins: [
+        nodeResolve(),
+        commonjs(),
+        licensePlugin({
+          banner,
+        }),
+      ],
+    };
+
+    rollup.rollup(rollupConfig)
+        .then((bundle) => bundle.write(rollupConfig.output))
+        .then(() => {
+          fs.readFile(bundleOutput, 'utf8', (err, data) => {
+            if (err) {
+              done.fail(err);
+            }
+
+            expect(data.toString()).toContain(join([
+              `/**`,
+              ` * ${content}`,
+              ` */`,
+            ]));
+
+            expect(console.warn).not.toHaveBeenCalled();
+
+            done();
+          });
+        });
+  });
+
+  it('should generate bundle with license header from given content file', (done) => {
+    spyOn(console, 'warn');
+
+    const bundleOutput = path.join(tmpDir.name, 'bundle.js');
+    const banner = {
+      content: {
+        file: path.join(__dirname, '..', 'fixtures', 'banner.txt'),
+        encoding: 'utf-8',
+      },
+    };
+
+    const rollupConfig = {
+      input: path.join(__dirname, 'bundle.js'),
+
+      output: {
+        file: bundleOutput,
+        format: 'es',
+      },
+
+      plugins: [
+        nodeResolve(),
+        commonjs(),
+        licensePlugin({
+          banner,
+        }),
+      ],
+    };
+
+    rollup.rollup(rollupConfig)
+        .then((bundle) => bundle.write(rollupConfig.output))
+        .then(() => {
+          fs.readFile(bundleOutput, 'utf8', (err, data) => {
+            if (err) {
+              done.fail(err);
+            }
+
+            expect(data.toString()).toContain(join([
+              '/**',
+              ' * Test banner.',
+              ' *',
+              ' * With a second line.',
+              ' */',
+            ]));
+
+            expect(console.warn).not.toHaveBeenCalled();
+
             done();
           });
         });
