@@ -27,6 +27,8 @@ module.exports = {
       cwd: '.', // Default is process.cwd()
 
       banner: {
+        commentStyle: 'regular', // The default
+
         content: {
           file: path.join(__dirname, 'LICENSE'),
           encoding: 'utf-8', // Default is utf-8
@@ -82,9 +84,9 @@ Since version 0.10.0, it is possible to customize banner style using the `commen
 ```javascript
 license({
   banner: {
+    commentStyle: 'regular', // The default
     content: {
       file: path.join(__dirname, 'LICENSE'),
-      commentStyle: 'regular', // The default
     },
   },
 })
@@ -172,7 +174,25 @@ module.exports = {
 };
 ```
 
-This format has been deprecated with version 0.11.0 (still works but will be removed in a future version), and the banner file should be defined inside `banner.content` entry.
+This format has been deprecated with version 0.11.0 (still works but will be removed in a future version), and the banner file should be defined inside `banner.content` entry:
+
+```javascript
+const path = require('path');
+const license = require('rollup-plugin-license');
+
+module.exports = {
+  plugins: [
+    license({
+      banner: {
+        content: {
+          file: path.join(__dirname, 'LICENSE'),
+          encoding: 'utf-8',
+        },
+      },
+    }),
+  ],
+};
+```
 
 ## Dependencies output
 
