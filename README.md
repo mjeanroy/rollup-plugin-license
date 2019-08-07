@@ -191,8 +191,8 @@ license({
 
 - 0.11.0
   - Fail if the banner file does not exist (breaking change).
-  - Deprecate `banner.file` / `banner.encoding` entries, use `banner.content.file` / `banner.content.encoding` instead.
-  - Allow comment style to be defined with a "string" banner.
+  - Deprecate `banner.file` / `banner.encoding` entries, use `banner.content.file` / `banner.content.encoding` instead (see [#428](https://github.com/mjeanroy/rollup-plugin-license/issues/428)).
+  - Allow comment style to be defined with a "string" banner (see [#308](https://github.com/mjeanroy/rollup-plugin-license/issues/308) and [#428](https://github.com/mjeanroy/rollup-plugin-license/issues/428)).
   - Dev dependencies updates.
 - 0.10.0
   - Support different comment style for banner (see [#308](https://github.com/mjeanroy/rollup-plugin-license/issues/308)).
