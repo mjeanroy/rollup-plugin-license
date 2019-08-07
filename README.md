@@ -27,8 +27,10 @@ module.exports = {
       cwd: '.', // Default is process.cwd()
 
       banner: {
-        file: path.join(__dirname, 'LICENSE'),
-        encoding: 'utf-8', // Default is utf-8
+        content: {
+          file: path.join(__dirname, 'LICENSE'),
+          encoding: 'utf-8', // Default is utf-8
+        },
 
         // Optional, may be an object or a function returning an object.
         data() {
@@ -48,22 +50,9 @@ module.exports = {
 }
 ```
 
-Since version 0.3.0, `banner` can be a simple string that will be used directly:
+## Banner
 
-```javascript
-const path = require('path');
-const license = require('rollup-plugin-license');
-
-module.exports = {
-  plugins: [
-    license({
-      banner: `Copyright <%= moment().format('YYYY') %>`,
-    }),
-  ],
-}
-```
-
-## Banner file
+### Banner file
 
 The banner file can be a text file and it will be converted to a block comment automatically if needed.
 
@@ -86,28 +75,17 @@ Dependencies:
 <% }) %>
 ```
 
-## Dependencies output
-
-A file containing a summary of all dependencies can be generated automatically using the following options:
-
-```javascript
-license({
-  thirdParty: {
-    output: path.join(__dirname, 'dist', 'dependencies.txt'),
-    includePrivate: true, // Default is false.
-  },
-})
-```
-
-## Comment style
+### Comment style
 
 Since version 0.10.0, it is possible to customize banner style using the `commentStyle` option:
 
 ```javascript
 license({
   banner: {
-    file: path.join(__dirname, 'LICENSE'),
-    commentStyle: 'regular', // The default
+    content: {
+      file: path.join(__dirname, 'LICENSE'),
+      commentStyle: 'regular', // The default
+    },
   },
 })
 ```
@@ -140,8 +118,82 @@ Following options are available:
 
 - `none`: nothing done, be careful to prepenbd a banner already "commented".
 
+### Banner as a "simple" string
+
+Since version 0.3.0, `banner` can be a simple string that will be used directly:
+
+```javascript
+const license = require('rollup-plugin-license');
+
+module.exports = {
+  plugins: [
+    license({
+      banner: `Copyright <%= moment().format('YYYY') %>`,
+    }),
+  ],
+}
+```
+
+If you want to add some options to banner (such as the comment style to use), and still define it as a `string` (insead of pointing to a file), you can also define the banner like this (since version `0.11.0`):
+
+```javascript
+const license = require('rollup-plugin-license');
+
+module.exports = {
+  plugins: [
+    license({
+      banner: {
+        content: `Copyright <%= moment().format('YYYY') %>`,
+        commentStyle: 'ignored',
+      },
+    }),
+  ],
+}
+```
+
+### Deprecated format
+
+Until version 0.10.0, banner file was defined as:
+
+
+```javascript
+const path = require('path');
+const license = require('rollup-plugin-license');
+
+module.exports = {
+  plugins: [
+    license({
+      banner: {
+        file: path.join(__dirname, 'LICENSE'),
+        encoding: 'utf-8',
+      },
+    }),
+  ],
+};
+```
+
+This format has been deprecated with version 0.11.0 (still works but will be removed in a future version), and the banner file should be defined inside `banner.content` entry.
+
+## Dependencies output
+
+A file containing a summary of all dependencies can be generated automatically using the following options:
+
+```javascript
+license({
+  thirdParty: {
+    output: path.join(__dirname, 'dist', 'dependencies.txt'),
+    includePrivate: true, // Default is false.
+  },
+})
+```
+
 ## Changelogs
 
+- 0.11.0
+  - Fail if the banner file does not exist (breaking change).
+  - Deprecate `banner.file` / `banner.encoding` entries, use `banner.content.file` / `banner.content.encoding` instead.
+  - Allow comment style to be defined with a "string" banner.
+  - Dev dependencies updates.
 - 0.10.0
   - Support different comment style for banner (see [#308](https://github.com/mjeanroy/rollup-plugin-license/issues/308)).
   - Do not include tree shaken dependencies (see [#380](https://github.com/mjeanroy/rollup-plugin-license/issues/380))
