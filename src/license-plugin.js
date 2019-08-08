@@ -323,23 +323,33 @@ module.exports = class LicensePlugin {
     }
 
     const output = thirdParty.output;
+
     if (output) {
-      this.debug(`exporting third-party summary to ${output}`);
-
-      // Create directory if it does not already exist.
-      mkdirp.sync(path.parse(output).dir);
-
       const includePrivate = thirdParty.includePrivate;
-      const text = _.chain(this._dependencies)
+      const dependencies = _.chain(this._dependencies)
           .values()
           .filter((dependency) => includePrivate || !dependency.private)
+          .value();
+
+      if (_.isFunction(output)) {
+        output(dependencies);
+        return;
+      }
+
+      // Default is to export to given file.
+      const text = _.chain(dependencies)
           .map((dependency) => dependency.text())
           .join(`${EOL}${EOL}---${EOL}${EOL}`)
           .trim()
           .value();
 
       const encoding = thirdParty.encoding || 'utf-8';
+
+      this.debug(`exporting third-party summary to ${output}`);
       this.debug(`use encoding: ${encoding}`);
+
+      // Create directory if it does not already exist.
+      mkdirp.sync(path.parse(output).dir);
 
       fs.writeFileSync(output, text || 'No third parties dependencies', {
         encoding,

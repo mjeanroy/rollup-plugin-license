@@ -990,6 +990,7 @@ describe('LicensePlugin', () => {
 
     fs.readFile(file, 'utf-8', (err, content) => {
       if (err) {
+        console.log('Error reading file');
         done.fail(err);
         return;
       }
@@ -1009,7 +1010,7 @@ describe('LicensePlugin', () => {
     });
   });
 
-  it('should display list of dependencies', (done) => {
+  it('should export list of dependencies to given file', (done) => {
     const file = path.join(tmpDir.name, 'third-party.txt');
     const instance = new LicensePlugin({
       thirdParty: {
@@ -1070,7 +1071,7 @@ describe('LicensePlugin', () => {
     });
   });
 
-  it('should display list of dependencies with custom encoding', (done) => {
+  it('should export list of dependencies with custom encoding to given file', (done) => {
     const file = path.join(tmpDir.name, 'third-party.txt');
     const encoding = 'ascii';
     const instance = new LicensePlugin({
@@ -1138,7 +1139,7 @@ describe('LicensePlugin', () => {
     });
   });
 
-  it('should display default message without dependencies', (done) => {
+  it('should export default message without ant dependencies', (done) => {
     const file = path.join(tmpDir.name, 'third-party.txt');
     const instance = new LicensePlugin({
       thirdParty: {
@@ -1165,7 +1166,7 @@ describe('LicensePlugin', () => {
     });
   });
 
-  it('should not display private dependencies by default', (done) => {
+  it('should not export private dependencies by default', (done) => {
     const file = path.join(tmpDir.name, 'third-party.txt');
     const instance = new LicensePlugin({
       thirdParty: {
@@ -1218,7 +1219,7 @@ describe('LicensePlugin', () => {
     });
   });
 
-  it('should display private dependencies if enabled', (done) => {
+  it('should export dependencies to output file if enabled', (done) => {
     const file = path.join(tmpDir.name, 'third-party.txt');
     const instance = new LicensePlugin({
       thirdParty: {
@@ -1309,5 +1310,106 @@ describe('LicensePlugin', () => {
 
     expect(result).not.toBeDefined();
     expect(fs.writeFileSync).not.toHaveBeenCalled();
+  });
+
+  it('should export list of non-private dependencies to output function', () => {
+    const output = jasmine.createSpy('output');
+    const instance = new LicensePlugin({
+      thirdParty: {
+        output,
+      },
+    });
+
+    instance.addDependency({
+      name: 'foo',
+      version: '1.0.0',
+      description: 'Foo Package',
+      license: 'MIT',
+      private: false,
+      author: {
+        name: 'Mickael Jeanroy',
+        email: 'mickael.jeanroy@gmail.com',
+      },
+    });
+
+    instance.addDependency({
+      name: 'bar',
+      version: '2.0.0',
+      description: 'Bar Package',
+      license: 'Apache 2.0',
+      private: true,
+    });
+
+    const result = instance.exportThirdParties();
+
+    expect(result).not.toBeDefined();
+    expect(output).toHaveBeenCalledWith([
+      {
+        name: 'foo',
+        author: {
+          name: 'Mickael Jeanroy',
+          email: 'mickael.jeanroy@gmail.com',
+        },
+        version: '1.0.0',
+        description: 'Foo Package',
+        license: 'MIT',
+        private: false,
+      },
+    ]);
+  });
+
+  it('should export list of dependencies to output function including private if enabled', () => {
+    const output = jasmine.createSpy('output');
+    const includePrivate = true;
+    const instance = new LicensePlugin({
+      thirdParty: {
+        output,
+        includePrivate,
+      },
+    });
+
+    instance.addDependency({
+      name: 'foo',
+      version: '1.0.0',
+      description: 'Foo Package',
+      license: 'MIT',
+      private: false,
+      author: {
+        name: 'Mickael Jeanroy',
+        email: 'mickael.jeanroy@gmail.com',
+      },
+    });
+
+    instance.addDependency({
+      name: 'bar',
+      version: '2.0.0',
+      description: 'Bar Package',
+      license: 'Apache 2.0',
+      private: true,
+    });
+
+    const result = instance.exportThirdParties();
+
+    expect(result).not.toBeDefined();
+    expect(output).toHaveBeenCalledWith([
+      {
+        name: 'foo',
+        author: {
+          name: 'Mickael Jeanroy',
+          email: 'mickael.jeanroy@gmail.com',
+        },
+        version: '1.0.0',
+        description: 'Foo Package',
+        license: 'MIT',
+        private: false,
+      },
+      {
+        name: 'bar',
+        version: '2.0.0',
+        description: 'Bar Package',
+        license: 'Apache 2.0',
+        private: true,
+      },
+    ]);
   });
 });

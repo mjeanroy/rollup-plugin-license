@@ -84,6 +84,43 @@ describe('Dependency', () => {
         });
   });
 
+  it('should generate bundle and export dependencies to given function', (done) => {
+    const bundleOutput = path.join(tmpDir.name, 'bundle.js');
+    const thirdPartyOutput = jasmine.createSpy('thirdPartyOutput');
+
+    const rollupConfig = {
+      input: path.join(__dirname, 'bundle.js'),
+
+      output: {
+        file: bundleOutput,
+        format: 'es',
+      },
+
+      plugins: [
+        nodeResolve(),
+        commonjs(),
+
+        licensePlugin({
+          thirdParty: {
+            output: thirdPartyOutput,
+          },
+        }),
+      ],
+    };
+
+    rollup.rollup(rollupConfig)
+        .then((bundle) => bundle.write(rollupConfig.output))
+        .then(() => {
+          expect(thirdPartyOutput).toHaveBeenCalledWith([
+            jasmine.objectContaining({
+              name: 'lodash',
+            }),
+          ]);
+
+          done();
+        });
+  });
+
   it('should generate bundle with license header', (done) => {
     const bundleOutput = path.join(tmpDir.name, 'bundle.js');
     const banner = 'test banner';
