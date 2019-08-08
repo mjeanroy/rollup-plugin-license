@@ -327,7 +327,7 @@ module.exports = class LicensePlugin {
       this.debug(`exporting third-party summary to ${output}`);
 
       // Create directory if it does not already exist.
-      mkdirp(path.parse(output).dir);
+      mkdirp.sync(path.parse(output).dir);
 
       const includePrivate = thirdParty.includePrivate;
       const text = _.chain(this._dependencies)
