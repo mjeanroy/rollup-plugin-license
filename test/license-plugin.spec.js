@@ -29,7 +29,7 @@ const path = require('path');
 const tmp = require('tmp');
 const moment = require('moment');
 const join = require('./utils/join.js');
-const LicensePlugin = require('../dist/license-plugin.js');
+const licensePlugin = require('../dist/license-plugin.js');
 
 describe('LicensePlugin', () => {
   let tmpDir;
@@ -45,7 +45,7 @@ describe('LicensePlugin', () => {
   });
 
   it('should initialize instance', () => {
-    const plugin = new LicensePlugin();
+    const plugin = licensePlugin();
     expect(plugin._cwd).toBeDefined();
     expect(plugin._pkg).toBeDefined();
     expect(plugin._sourcemap).toBe(true);
@@ -54,7 +54,7 @@ describe('LicensePlugin', () => {
 
   it('should initialize instance with custom cwd', () => {
     const cwd = path.join(__dirname, 'fixtures', 'fake-package');
-    const plugin = new LicensePlugin({
+    const plugin = licensePlugin({
       cwd,
     });
 
@@ -63,7 +63,7 @@ describe('LicensePlugin', () => {
   });
 
   it('should initialize instance with sourcemap = false (lowercase)', () => {
-    const plugin = new LicensePlugin({
+    const plugin = licensePlugin({
       sourcemap: false,
     });
 
@@ -76,7 +76,7 @@ describe('LicensePlugin', () => {
   it('should print warning when plugin is used with sourceMap (camelcase)', () => {
     spyOn(console, 'warn');
 
-    new LicensePlugin({
+    licensePlugin({
       sourceMap: false,
     });
 
@@ -88,7 +88,7 @@ describe('LicensePlugin', () => {
   it('should print warning with unknown options', () => {
     spyOn(console, 'warn');
 
-    new LicensePlugin({
+    licensePlugin({
       foobar: false,
     });
 
@@ -98,7 +98,7 @@ describe('LicensePlugin', () => {
   });
 
   it('should disable source map', () => {
-    const plugin = new LicensePlugin();
+    const plugin = licensePlugin();
     expect(plugin._sourcemap).toBe(true);
 
     plugin.disableSourceMap();
@@ -106,7 +106,7 @@ describe('LicensePlugin', () => {
   });
 
   it('should load pkg', () => {
-    const plugin = new LicensePlugin();
+    const plugin = licensePlugin();
     const id = path.join(__dirname, 'fixtures', 'fake-package', 'src', 'index.js');
 
     spyOn(plugin, 'addDependency').and.callThrough();
@@ -131,7 +131,7 @@ describe('LicensePlugin', () => {
   });
 
   it('should load pkg dependencies', () => {
-    const plugin = new LicensePlugin();
+    const plugin = licensePlugin();
     const modules = [
       path.join(__dirname, 'fixtures', 'fake-package', 'src', 'index.js'),
     ];
@@ -160,7 +160,7 @@ describe('LicensePlugin', () => {
   });
 
   it('should load pkg and stop on cwd', () => {
-    const plugin = new LicensePlugin();
+    const plugin = licensePlugin();
     const id = path.join(__dirname, '..', 'src', 'index.js');
 
     spyOn(plugin, 'addDependency').and.callThrough();
@@ -173,7 +173,7 @@ describe('LicensePlugin', () => {
   });
 
   it('should load pkg and update cache', () => {
-    const plugin = new LicensePlugin();
+    const plugin = licensePlugin();
     const fakePackage = path.join(__dirname, 'fixtures', 'fake-package');
     const id = path.join(fakePackage, 'src', 'index.js');
     const pkg = require(path.join(fakePackage, 'package.json'));
@@ -201,7 +201,7 @@ describe('LicensePlugin', () => {
   });
 
   it('should load pkg and put null without package', () => {
-    const plugin = new LicensePlugin();
+    const plugin = licensePlugin();
     const id = path.join(__dirname, '..', 'src', 'index.js');
 
     plugin.scanDependency(id);
@@ -213,7 +213,7 @@ describe('LicensePlugin', () => {
   });
 
   it('should try to load pkg without leading NULL character ', () => {
-    const plugin = new LicensePlugin();
+    const plugin = licensePlugin();
     const fakePackage = path.join(__dirname, 'fixtures', 'fake-package');
     const idNoNull = path.join(fakePackage, 'src', 'index.js');
     const id = '\0' + idNoNull;
@@ -242,7 +242,7 @@ describe('LicensePlugin', () => {
   });
 
   it('should load pkg and use the cache if available', () => {
-    const plugin = new LicensePlugin();
+    const plugin = licensePlugin();
     const fakePackage = path.join(__dirname, 'fixtures', 'fake-package');
     const id = path.join(fakePackage, 'src', 'index.js');
 
@@ -258,7 +258,7 @@ describe('LicensePlugin', () => {
   });
 
   it('should add dependency', () => {
-    const plugin = new LicensePlugin();
+    const plugin = licensePlugin();
     const pkg = {
       name: 'foo',
       version: '0.0.0',
@@ -295,7 +295,7 @@ describe('LicensePlugin', () => {
   });
 
   it('should add dependency and parse author field', () => {
-    const plugin = new LicensePlugin();
+    const plugin = licensePlugin();
     const pkg = {
       name: 'foo',
       version: '0.0.0',
@@ -320,7 +320,7 @@ describe('LicensePlugin', () => {
   });
 
   it('should add dependency and parse contributors field as a string', () => {
-    const plugin = new LicensePlugin();
+    const plugin = licensePlugin();
     const pkg = {
       name: 'foo',
       version: '0.0.0',
@@ -347,7 +347,7 @@ describe('LicensePlugin', () => {
   });
 
   it('should add dependency and parse contributors field', () => {
-    const plugin = new LicensePlugin();
+    const plugin = licensePlugin();
     const pkg = {
       name: 'foo',
       version: '0.0.0',
@@ -383,7 +383,7 @@ describe('LicensePlugin', () => {
   });
 
   it('should add dependency and parse licenses field', () => {
-    const plugin = new LicensePlugin();
+    const plugin = licensePlugin();
     const pkg = {
       name: 'foo',
       version: '0.0.0',
@@ -407,7 +407,7 @@ describe('LicensePlugin', () => {
   });
 
   it('should not add dependency twice', () => {
-    const plugin = new LicensePlugin();
+    const plugin = licensePlugin();
     const pkg = {
       name: 'foo',
       version: '0.0.0',
@@ -439,7 +439,7 @@ describe('LicensePlugin', () => {
   });
 
   it('should prepend banner to bundle from a file', () => {
-    const instance = new LicensePlugin({
+    const instance = licensePlugin({
       banner: {
         content: {
           file: path.join(__dirname, 'fixtures', 'banner.js'),
@@ -468,7 +468,7 @@ describe('LicensePlugin', () => {
     spyOn(fs, 'readFileSync').and.callThrough();
 
     const encoding = 'ascii';
-    const instance = new LicensePlugin({
+    const instance = licensePlugin({
       banner: {
         content: {
           file: path.join(__dirname, 'fixtures', 'banner.js'),
@@ -498,7 +498,7 @@ describe('LicensePlugin', () => {
   it('should prepend banner to bundle from (deprecated) file option', () => {
     spyOn(console, 'warn');
 
-    const instance = new LicensePlugin({
+    const instance = licensePlugin({
       banner: {
         file: path.join(__dirname, 'fixtures', 'banner.js'),
       },
@@ -531,7 +531,7 @@ describe('LicensePlugin', () => {
     spyOn(console, 'warn');
 
     const encoding = 'ascii';
-    const instance = new LicensePlugin({
+    const instance = licensePlugin({
       banner: {
         file: path.join(__dirname, 'fixtures', 'banner.js'),
         encoding,
@@ -562,7 +562,7 @@ describe('LicensePlugin', () => {
   });
 
   it('should fail to prepend banner without any content', () => {
-    const instance = new LicensePlugin({
+    const instance = licensePlugin({
       banner: {
         content: {
           commentStyle: 'regular',
@@ -578,7 +578,7 @@ describe('LicensePlugin', () => {
   it('should prepend banner to bundle with template', () => {
     const file = path.join(__dirname, 'fixtures', 'banner.js');
     const tmpl = fs.readFileSync(file, 'utf-8');
-    const instance = new LicensePlugin({
+    const instance = licensePlugin({
       banner: tmpl,
     });
 
@@ -600,7 +600,7 @@ describe('LicensePlugin', () => {
   });
 
   it('should prepend banner to bundle without source map', () => {
-    const instance = new LicensePlugin({
+    const instance = licensePlugin({
       banner: {
         content: {
           file: path.join(__dirname, 'fixtures', 'banner.js'),
@@ -627,7 +627,7 @@ describe('LicensePlugin', () => {
   });
 
   it('should not prepend default banner to bundle', () => {
-    const instance = new LicensePlugin();
+    const instance = licensePlugin();
 
     const code = 'var foo = 0;';
     const result = instance.prependBanner(code);
@@ -640,7 +640,7 @@ describe('LicensePlugin', () => {
 
   it('should fail if banner file does not exist', () => {
     const file = path.join(__dirname, 'fixtures', 'dummy');
-    const instance = new LicensePlugin({
+    const instance = licensePlugin({
       banner: {
         content: {
           file,
@@ -654,7 +654,7 @@ describe('LicensePlugin', () => {
   });
 
   it('should prepend banner and create block comment', () => {
-    const instance = new LicensePlugin({
+    const instance = licensePlugin({
       banner: {
         content: {
           file: path.join(__dirname, 'fixtures', 'banner.txt'),
@@ -679,7 +679,7 @@ describe('LicensePlugin', () => {
   });
 
   it('should prepend banner and create block comment with a custom style', () => {
-    const instance = new LicensePlugin({
+    const instance = licensePlugin({
       banner: {
         commentStyle: 'ignored',
         content: {
@@ -705,7 +705,7 @@ describe('LicensePlugin', () => {
   });
 
   it('should prepend banner and create comment with slash style', () => {
-    const instance = new LicensePlugin({
+    const instance = licensePlugin({
       banner: {
         commentStyle: 'slash',
         content: {
@@ -731,7 +731,7 @@ describe('LicensePlugin', () => {
   });
 
   it('should prepend banner and create block comment without any style at all', () => {
-    const instance = new LicensePlugin({
+    const instance = licensePlugin({
       banner: {
         commentStyle: 'none',
         content: {
@@ -755,7 +755,7 @@ describe('LicensePlugin', () => {
   });
 
   it('should fail to prepend banner if comment style option is unknown', () => {
-    const instance = new LicensePlugin({
+    const instance = licensePlugin({
       banner: {
         commentStyle: 'foobar',
         content: {
@@ -770,7 +770,7 @@ describe('LicensePlugin', () => {
   });
 
   it('should prepend banner to bundle and create sourceMap', () => {
-    const instance = new LicensePlugin({
+    const instance = licensePlugin({
       banner: {
         content: {
           file: path.join(__dirname, 'fixtures', 'banner.js'),
@@ -787,7 +787,7 @@ describe('LicensePlugin', () => {
   });
 
   it('should prepend banner and replace moment variables', () => {
-    const instance = new LicensePlugin({
+    const instance = licensePlugin({
       banner: {
         content: {
           file: path.join(__dirname, 'fixtures', 'banner-with-moment.js'),
@@ -810,7 +810,7 @@ describe('LicensePlugin', () => {
   });
 
   it('should prepend banner and replace custom data object', () => {
-    const instance = new LicensePlugin({
+    const instance = licensePlugin({
       banner: {
         content: {
           file: path.join(__dirname, 'fixtures', 'banner-with-data.js'),
@@ -838,7 +838,7 @@ describe('LicensePlugin', () => {
   });
 
   it('should prepend banner and replace custom data function', () => {
-    const instance = new LicensePlugin({
+    const instance = licensePlugin({
       banner: {
         content: {
           file: path.join(__dirname, 'fixtures', 'banner-with-data.js'),
@@ -868,7 +868,7 @@ describe('LicensePlugin', () => {
   });
 
   it('should prepend banner and replace package variables', () => {
-    const instance = new LicensePlugin({
+    const instance = licensePlugin({
       banner: {
         content: {
           file: path.join(__dirname, 'fixtures', 'banner-with-pkg.js'),
@@ -891,7 +891,7 @@ describe('LicensePlugin', () => {
   });
 
   it('should prepend banner and replace dependencies placeholders', () => {
-    const instance = new LicensePlugin({
+    const instance = licensePlugin({
       banner: {
         content: {
           file: path.join(__dirname, 'fixtures', 'banner-with-dependencies.js'),
@@ -922,7 +922,7 @@ describe('LicensePlugin', () => {
 
   it('should display single dependency', (done) => {
     const file = path.join(tmpDir.name, 'third-party.txt');
-    const instance = new LicensePlugin({
+    const instance = licensePlugin({
       thirdParty: {
         output: file,
       },
@@ -967,7 +967,7 @@ describe('LicensePlugin', () => {
 
   it('should display single dependency and create directory if needed', (done) => {
     const file = path.join(tmpDir.name, 'output', 'third-party.txt');
-    const instance = new LicensePlugin({
+    const instance = licensePlugin({
       thirdParty: {
         output: file,
       },
@@ -1012,7 +1012,7 @@ describe('LicensePlugin', () => {
 
   it('should export list of dependencies to given file', (done) => {
     const file = path.join(tmpDir.name, 'third-party.txt');
-    const instance = new LicensePlugin({
+    const instance = licensePlugin({
       thirdParty: {
         output: file,
       },
@@ -1074,7 +1074,7 @@ describe('LicensePlugin', () => {
   it('should export list of dependencies with custom encoding to given file', (done) => {
     const file = path.join(tmpDir.name, 'third-party.txt');
     const encoding = 'ascii';
-    const instance = new LicensePlugin({
+    const instance = licensePlugin({
       thirdParty: {
         output: file,
         encoding,
@@ -1141,7 +1141,7 @@ describe('LicensePlugin', () => {
 
   it('should export default message without ant dependencies', (done) => {
     const file = path.join(tmpDir.name, 'third-party.txt');
-    const instance = new LicensePlugin({
+    const instance = licensePlugin({
       thirdParty: {
         output: file,
       },
@@ -1168,7 +1168,7 @@ describe('LicensePlugin', () => {
 
   it('should not export private dependencies by default', (done) => {
     const file = path.join(tmpDir.name, 'third-party.txt');
-    const instance = new LicensePlugin({
+    const instance = licensePlugin({
       thirdParty: {
         output: file,
       },
@@ -1221,7 +1221,7 @@ describe('LicensePlugin', () => {
 
   it('should export dependencies to output file if enabled', (done) => {
     const file = path.join(tmpDir.name, 'third-party.txt');
-    const instance = new LicensePlugin({
+    const instance = licensePlugin({
       thirdParty: {
         output: file,
         includePrivate: true,
@@ -1282,7 +1282,7 @@ describe('LicensePlugin', () => {
   });
 
   it('should not try to display dependencies without output file', () => {
-    const instance = new LicensePlugin();
+    const instance = licensePlugin();
 
     instance.addDependency({
       name: 'foo',
@@ -1314,7 +1314,7 @@ describe('LicensePlugin', () => {
 
   it('should export list of non-private dependencies to output function', () => {
     const output = jasmine.createSpy('output');
-    const instance = new LicensePlugin({
+    const instance = licensePlugin({
       thirdParty: {
         output,
       },
@@ -1361,7 +1361,7 @@ describe('LicensePlugin', () => {
   it('should export list of dependencies to output function including private if enabled', () => {
     const output = jasmine.createSpy('output');
     const includePrivate = true;
-    const instance = new LicensePlugin({
+    const instance = licensePlugin({
       thirdParty: {
         output,
         includePrivate,

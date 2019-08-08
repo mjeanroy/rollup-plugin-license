@@ -147,8 +147,9 @@ function fixSourceMapOptions(options) {
 
 /**
  * Rollup Plugin.
+ * @class
  */
-module.exports = class LicensePlugin {
+class LicensePlugin {
   /**
    * Initialize plugin.
    *
@@ -475,4 +476,15 @@ module.exports = class LicensePlugin {
 
     return COMMENT_STYLES[style] ? generateBlockComment(text, COMMENT_STYLES[style]) : text;
   }
+}
+
+/**
+ * Create new `rollup-plugin-license` instance with given
+ * options.
+ *
+ * @param {Object} options Option object.
+ * @return {LicensePlugin} The new instance.
+ */
+module.exports = function licensePlugin(options) {
+  return new LicensePlugin(options);
 };

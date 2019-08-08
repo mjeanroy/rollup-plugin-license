@@ -25,10 +25,10 @@
 'use strict';
 
 const _ = require('lodash');
-const LicensePlugin = require('./license-plugin.js');
+const licensePlugin = require('./license-plugin.js');
 
 module.exports = (options = {}) => {
-  const plugin = new LicensePlugin(options);
+  const plugin = licensePlugin(options);
 
   return {
     /**
