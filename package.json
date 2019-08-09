@@ -33,6 +33,7 @@
     "rollup": "< 2"
   },
   "dependencies": {
+    "@hapi/joi": "15.1.0",
     "commenting": "1.1.0",
     "lodash": "4.17.15",
     "magic-string": "0.25.3",

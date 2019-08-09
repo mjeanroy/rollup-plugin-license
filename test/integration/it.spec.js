@@ -160,8 +160,7 @@ describe('Dependency', () => {
   });
 
   it('should generate bundle with license header from given file', (done) => {
-    spyOn(console, 'warn');
-
+    const warn = spyOn(console, 'warn');
     const bundleOutput = path.join(tmpDir.name, 'bundle.js');
     const banner = {
       file: path.join(__dirname, '..', 'fixtures', 'banner.txt'),
@@ -201,9 +200,9 @@ describe('Dependency', () => {
               ' */',
             ]));
 
-            expect(console.warn).toHaveBeenCalledWith(
-                '[rollup-plugin-license] -- option `"banner.file"` and  `"banner.encoding"` are deprecated and will be ' +
-                'removed in a future version, please use `"banner.content": {file, encoding}` option instead'
+            expect(warn).toHaveBeenCalledWith(
+                '[rollup-plugin-license] -- "banner.file" has been deprecated and will be removed in a future version, ' +
+                'please use "banner.content.file" instead.'
             );
 
             done();
@@ -212,8 +211,7 @@ describe('Dependency', () => {
   });
 
   it('should generate bundle with license header from content as a raw string', (done) => {
-    spyOn(console, 'warn');
-
+    const warn = spyOn(console, 'warn');
     const bundleOutput = path.join(tmpDir.name, 'bundle.js');
     const content = 'Banner from inline content';
     const banner = {
@@ -251,7 +249,7 @@ describe('Dependency', () => {
               ` */`,
             ]));
 
-            expect(console.warn).not.toHaveBeenCalled();
+            expect(warn).not.toHaveBeenCalled();
 
             done();
           });
@@ -259,8 +257,7 @@ describe('Dependency', () => {
   });
 
   it('should generate bundle with license header from content as a string returned from function', (done) => {
-    spyOn(console, 'warn');
-
+    const warn = spyOn(console, 'warn');
     const bundleOutput = path.join(tmpDir.name, 'bundle.js');
     const content = 'Banner from inline content';
     const banner = {
@@ -300,7 +297,7 @@ describe('Dependency', () => {
               ` */`,
             ]));
 
-            expect(console.warn).not.toHaveBeenCalled();
+            expect(warn).not.toHaveBeenCalled();
 
             done();
           });
@@ -308,8 +305,7 @@ describe('Dependency', () => {
   });
 
   it('should generate bundle with license header from given content file', (done) => {
-    spyOn(console, 'warn');
-
+    const warn = spyOn(console, 'warn');
     const bundleOutput = path.join(tmpDir.name, 'bundle.js');
     const banner = {
       content: {
@@ -351,7 +347,7 @@ describe('Dependency', () => {
               ' */',
             ]));
 
-            expect(console.warn).not.toHaveBeenCalled();
+            expect(warn).not.toHaveBeenCalled();
 
             done();
           });

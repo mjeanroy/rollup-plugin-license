@@ -241,8 +241,7 @@ describe('rollup-plugin-license [rollup stable]', () => {
   });
 
   it('should disable sourceMap (camelcase) in plugin options', () => {
-    spyOn(console, 'warn');
-
+    const warn = spyOn(console, 'warn');
     const instance = plugin({
       sourceMap: false,
     });
@@ -255,8 +254,9 @@ describe('rollup-plugin-license [rollup stable]', () => {
     expect(result).toBeDefined();
     expect(result.code).toBeDefined();
     expect(result.map).not.toBeDefined();
-    expect(console.warn).toHaveBeenCalledWith(
-        '[rollup-plugin-license] sourceMap has been deprecated, please use sourcemap instead.'
+    expect(warn).toHaveBeenCalledWith(
+        '[rollup-plugin-license] -- "sourceMap" has been deprecated and will be removed in a future version, ' +
+        'please use "sourcemap" instead.'
     );
   });
 

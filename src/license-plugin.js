@@ -32,19 +32,9 @@ const moment = require('moment');
 const MagicString = require('magic-string');
 const Dependency = require('./dependency.js');
 const generateBlockComment = require('./generate-block-comment.js');
+const licensePluginOptions = require('./license-plugin-option.js');
+const PLUGIN_NAME = require('./license-plugin-name.js');
 const EOL = require('./eol.js');
-
-/**
- * The list of avaiilable options.
- * @type {Set<string>}
- */
-const OPTIONS = new Set([
-  'cwd',
-  'debug',
-  'sourcemap',
-  'banner',
-  'thirdParty',
-]);
 
 /**
  * Pre-Defined comment style:
@@ -94,58 +84,6 @@ function computeDefaultCommentStyle(text) {
 }
 
 /**
- * The plugin name.
- * @type {string}
- */
-const PLUGIN_NAME = 'rollup-plugin-license';
-
-/**
- * Print for deprecated or unknown options according to the `OPTIONS`
- * set defined below.
- *
- * @param {Object} options The initialization option.
- * @return {void}
- */
-function validateOptions(options) {
-  const notSupported = _.reject(_.keys(options), (key) => (
-    OPTIONS.has(key)
-  ));
-
-  if (notSupported.length > 0) {
-    console.warn(`[${PLUGIN_NAME}] Options ${notSupported} are not supported, use following options: ${Array.from(OPTIONS)}`);
-  }
-}
-
-/**
- * Fix option object, replace `sourceMap` with `sourcemap` if needed.
- *
- * @param {Object} options Original option object.
- * @return {Object} The new fixed option object.
- */
-function fixSourceMapOptions(options) {
-  // Rollup <= 0.48 used `sourceMap` in camelcase, so this plugin used
-  // this convention at the beginning.
-  // Now, the `sourcemap` key should be used, but legacy version should still
-  // be able to use the `sourceMap` key.
-  const newOptions = _.omitBy(options, (value, key) => (
-    key === 'sourceMap'
-  ));
-
-  // If the old `sourceMap` key is used, set it to `sourcemap` key.
-  if (_.hasIn(options, 'sourceMap')) {
-    console.warn(`[${PLUGIN_NAME}] sourceMap has been deprecated, please use sourcemap instead.`);
-    if (!_.hasIn(newOptions, 'sourcemap')) {
-      newOptions.sourcemap = options.sourceMap;
-    }
-  }
-
-  // Validate options.
-  validateOptions(newOptions);
-
-  return newOptions;
-}
-
-/**
  * Rollup Plugin.
  * @class
  */
@@ -160,7 +98,7 @@ class LicensePlugin {
     this.name = PLUGIN_NAME;
 
     // Initialize main options.
-    this._options = fixSourceMapOptions(options);
+    this._options = options;
     this._cwd = this._options.cwd || process.cwd();
     this._dependencies = {};
     this._pkg = require(path.join(this._cwd, 'package.json'));
@@ -371,16 +309,6 @@ class LicensePlugin {
   }
 
   /**
-   * Log a warning to the console.
-   *
-   * @param {string} msg Message to log.
-   * @return {void}
-   */
-  warn(msg) {
-    console.warn(`[${this.name}] -- ${msg}`);
-  }
-
-  /**
    * Read banner from given options and returns it.
    *
    * @param {Object|string} banner Banner as a raw string, or banner options.
@@ -398,16 +326,8 @@ class LicensePlugin {
       return banner;
     }
 
-    // Warn about deprecated option.
-    if (_.has(banner, 'file') || _.has(banner, 'encoding')) {
-      this.warn(
-          'option `"banner.file"` and  `"banner.encoding"` are deprecated and will be removed in a future version, ' +
-          'please use `"banner.content": {file, encoding}` option instead'
-      );
-    }
-
     // Extract banner content.
-    const content = _.has(banner, 'content') ? _.result(banner, 'content') : {file: banner.file, encoding: banner.encoding};
+    const content = _.result(banner, 'content');
 
     // Content can be an inline string.
     if (_.isString(content)) {
@@ -456,13 +376,7 @@ class LicensePlugin {
     const pkg = this._pkg;
     const dependencies = _.values(this._dependencies);
     const data = banner.data ? _.result(banner, 'data') : {};
-    const text = tmpl({
-      _,
-      moment,
-      pkg,
-      dependencies,
-      data,
-    });
+    const text = tmpl({_, moment, pkg, dependencies, data});
 
     // Compute comment style to use.
     const style = _.has(banner, 'commentStyle') ? banner.commentStyle : computeDefaultCommentStyle(text);
@@ -486,5 +400,7 @@ class LicensePlugin {
  * @return {LicensePlugin} The new instance.
  */
 module.exports = function licensePlugin(options) {
-  return new LicensePlugin(options);
+  return new LicensePlugin(
+      licensePluginOptions(options)
+  );
 };
