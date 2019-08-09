@@ -56,10 +56,13 @@ const SCHEMA = {
 
   thirdParty: Joi.object().keys({
     includePrivate: Joi.boolean(),
-    encoding: Joi.string(),
     output: [
       Joi.func(),
       Joi.string(),
+      Joi.object().keys({
+        file: Joi.string(),
+        encoding: Joi.string(),
+      }),
     ],
   }),
 };
@@ -154,13 +157,50 @@ function fixBannerOptions(options) {
 }
 
 /**
+ * Fix option object, replace `thirdParty.encoding` with `thirdParty.output.encoding`.
+ *
+ * @param {Object} options Original option object.
+ * @return {Object} The new fixed option object.
+ */
+function fixThirdPartyOptions(options) {
+  if (!_.hasIn(options, 'thirdParty')) {
+    return options;
+  }
+
+  const thirdParty = options.thirdParty;
+  if (!_.hasIn(thirdParty, 'encoding')) {
+    return options;
+  }
+
+  warn(
+      '"thirdParty.encoding" has been deprecated and will be removed in a future version, ' +
+      'please use "thirdParty.output.encoding" instead.'
+  );
+
+  const newThirdParty = _.omitBy(thirdParty, (value, key) => (
+    key === 'encoding'
+  ));
+
+  if (_.isString(thirdParty.output)) {
+    newThirdParty.output = {
+      file: thirdParty.output,
+      encoding: thirdParty.encoding,
+    };
+  }
+
+  return _.extend({}, options, {
+    thirdParty: newThirdParty,
+  });
+}
+
+/**
  * Normalize option object by removing deprecated options and migrate these to the new version.
  *
  * @param {Object} options Option object.
  * @return {Object} Normalized option object.
  */
 function normalizeOptions(options) {
-  return _.reduce([fixSourceMapOptions, fixBannerOptions], (acc, fn) => fn(acc), options);
+  return _.reduce([fixSourceMapOptions, fixBannerOptions, fixThirdPartyOptions], (acc, fn) => fn(acc), options);
 }
 
 /**

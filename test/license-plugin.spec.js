@@ -466,9 +466,9 @@ describe('LicensePlugin', () => {
   });
 
   it('should prepend banner to bundle with custom encoding', () => {
-    spyOn(fs, 'readFileSync').and.callThrough();
-
+    const readFileSync = spyOn(fs, 'readFileSync').and.callThrough();
     const encoding = 'ascii';
+    const code = 'var foo = 0;';
     const instance = licensePlugin({
       banner: {
         content: {
@@ -478,11 +478,9 @@ describe('LicensePlugin', () => {
       },
     });
 
-    const code = 'var foo = 0;';
-
     const result = instance.prependBanner(code);
 
-    expect(fs.readFileSync).toHaveBeenCalledWith(jasmine.any(String), encoding);
+    expect(readFileSync).toHaveBeenCalledWith(jasmine.any(String), encoding);
     expect(result).toBeDefined();
     expect(result.map).toBeDefined();
     expect(result.code).toEqual(join([
@@ -498,13 +496,13 @@ describe('LicensePlugin', () => {
 
   it('should prepend banner to bundle from (deprecated) file option', () => {
     const warn = spyOn(console, 'warn');
+    const code = 'var foo = 0;';
     const instance = licensePlugin({
       banner: {
         file: path.join(__dirname, 'fixtures', 'banner.js'),
       },
     });
 
-    const code = 'var foo = 0;';
 
     const result = instance.prependBanner(code);
 
@@ -654,6 +652,7 @@ describe('LicensePlugin', () => {
   });
 
   it('should prepend banner and create block comment', () => {
+    const code = 'var foo = 0;';
     const instance = licensePlugin({
       banner: {
         content: {
@@ -661,8 +660,6 @@ describe('LicensePlugin', () => {
         },
       },
     });
-
-    const code = 'var foo = 0;';
 
     const result = instance.prependBanner(code);
 
@@ -1073,10 +1070,47 @@ describe('LicensePlugin', () => {
 
   it('should export list of dependencies with custom encoding to given file', (done) => {
     const file = path.join(tmpDir.name, 'third-party.txt');
-    const encoding = 'ascii';
+    const encoding = 'base64';
     const instance = licensePlugin({
       thirdParty: {
-        output: file,
+        output: {
+          file,
+          encoding,
+        },
+      },
+    });
+
+    instance.addDependency({
+      name: 'foo',
+      version: '1.0.0',
+      description: 'Foo Package',
+      license: 'MIT',
+    });
+
+    const result = instance.exportThirdParties();
+
+    expect(result).not.toBeDefined();
+
+    fs.readFile(file, encoding, (err, content) => {
+      if (err) {
+        done.fail(err);
+        return;
+      }
+
+      expect(content).toBeDefined();
+      expect(content).toContain('foo');
+
+      done();
+    });
+  });
+
+  it('should export list of dependencies with (deprecated) custom encoding to given file', (done) => {
+    const warn = spyOn(console, 'warn');
+    const output = path.join(tmpDir.name, 'third-party.txt');
+    const encoding = 'base64';
+    const instance = licensePlugin({
+      thirdParty: {
+        output,
         encoding,
       },
     });
@@ -1086,54 +1120,24 @@ describe('LicensePlugin', () => {
       version: '1.0.0',
       description: 'Foo Package',
       license: 'MIT',
-      private: false,
-      author: {
-        name: 'Mickael Jeanroy',
-        email: 'mickael.jeanroy@gmail.com',
-      },
     });
-
-    instance.addDependency({
-      name: 'bar',
-      version: '2.0.0',
-      description: 'Bar Package',
-      license: 'Apache 2.0',
-      private: false,
-    });
-
-    spyOn(fs, 'writeFileSync').and.callThrough();
 
     const result = instance.exportThirdParties();
 
     expect(result).not.toBeDefined();
-    expect(fs.writeFileSync).toHaveBeenCalledWith(jasmine.any(String), jasmine.any(String), {
-      encoding,
-    });
 
-    fs.readFile(file, encoding, (err, content) => {
+    fs.readFile(output, encoding, (err, content) => {
       if (err) {
         done.fail(err);
         return;
       }
 
-      const txt = content.toString();
-      expect(txt).toBeDefined();
-      expect(txt).toEqual(join([
-        'Name: foo',
-        'Version: 1.0.0',
-        'License: MIT',
-        'Private: false',
-        'Description: Foo Package',
-        'Author: Mickael Jeanroy <mickael.jeanroy@gmail.com>',
-        '',
-        '---',
-        '',
-        'Name: bar',
-        'Version: 2.0.0',
-        'License: Apache 2.0',
-        'Private: false',
-        'Description: Bar Package',
-      ]));
+      expect(content).toBeDefined();
+      expect(content).toContain('foo');
+      expect(warn).toHaveBeenCalledWith(
+          '[rollup-plugin-license] -- "thirdParty.encoding" has been deprecated and will be removed in a future version, ' +
+          'please use "thirdParty.output.encoding" instead.'
+      );
 
       done();
     });

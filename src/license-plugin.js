@@ -282,15 +282,17 @@ class LicensePlugin {
           .trim()
           .value();
 
-      const encoding = thirdParty.encoding || 'utf-8';
+      const isOutputFile = _.isString(output);
+      const file = isOutputFile ? output : output.file;
+      const encoding = isOutputFile ? 'utf-8' : (output.encoding || 'utf-8');
 
-      this.debug(`exporting third-party summary to ${output}`);
+      this.debug(`exporting third-party summary to ${file}`);
       this.debug(`use encoding: ${encoding}`);
 
       // Create directory if it does not already exist.
-      mkdirp.sync(path.parse(output).dir);
+      mkdirp.sync(path.parse(file).dir);
 
-      fs.writeFileSync(output, text || 'No third parties dependencies', {
+      fs.writeFileSync(file, text || 'No third parties dependencies', {
         encoding,
       });
     }

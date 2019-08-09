@@ -148,6 +148,40 @@ describe('licensePluginOptions', () => {
     });
   });
 
+  it('should normalize option object and fix deprecated "thirdParty.encoding" entry', () => {
+    const warn = spyOn(console, 'warn');
+    const options = {
+      thirdParty: {
+        output: 'ThirdParty.txt',
+        encoding: 'utf-16',
+      },
+    };
+
+    const result = licensePluginOptions(options);
+
+    expect(warn).toHaveBeenCalledWith(
+        '[rollup-plugin-license] -- "thirdParty.encoding" has been deprecated and will be removed in a future version, ' +
+        'please use "thirdParty.output.encoding" instead.'
+    );
+
+    expect(result).toEqual({
+      thirdParty: {
+        output: {
+          file: 'ThirdParty.txt',
+          encoding: 'utf-16',
+        },
+      },
+    });
+
+    // Ensure original option object has not changed
+    expect(options).toEqual({
+      thirdParty: {
+        output: 'ThirdParty.txt',
+        encoding: 'utf-16',
+      },
+    });
+  });
+
   it('should normalize option object and fix deprecated "banner.encoding" entry', () => {
     const warn = spyOn(console, 'warn');
     const options = {
@@ -185,10 +219,16 @@ describe('licensePluginOptions', () => {
       sourceMap: true,
       cwd: '.',
       debug: true,
+
       banner: {
         file: 'LICENSE.md',
         encoding: 'utf-16',
         commentStyle: 'regular',
+      },
+
+      thirdParty: {
+        output: 'ThirdParty.txt',
+        encoding: 'utf-8',
       },
     };
 
@@ -209,15 +249,28 @@ describe('licensePluginOptions', () => {
         'please use "banner.content.encoding" instead.'
     );
 
+    expect(warn).toHaveBeenCalledWith(
+        '[rollup-plugin-license] -- "thirdParty.encoding" has been deprecated and will be removed in a future version, ' +
+        'please use "thirdParty.output.encoding" instead.'
+    );
+
     expect(result).toEqual({
       sourcemap: true,
       cwd: '.',
       debug: true,
+
       banner: {
         commentStyle: 'regular',
         content: {
           file: 'LICENSE.md',
           encoding: 'utf-16',
+        },
+      },
+
+      thirdParty: {
+        output: {
+          file: 'ThirdParty.txt',
+          encoding: 'utf-8',
         },
       },
     });
@@ -231,6 +284,10 @@ describe('licensePluginOptions', () => {
         file: 'LICENSE.md',
         encoding: 'utf-16',
         commentStyle: 'regular',
+      },
+      thirdParty: {
+        output: 'ThirdParty.txt',
+        encoding: 'utf-8',
       },
     });
   });
