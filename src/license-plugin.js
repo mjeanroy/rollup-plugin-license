@@ -290,12 +290,18 @@ class LicensePlugin {
     }
 
     // Default is to export to given file.
-    const text = _.chain(dependencies)
-        .map((dependency) => dependency.text())
-        .join(`${EOL}${EOL}---${EOL}${EOL}`)
-        .trim()
-        .value();
 
+    // Allow custom formatting of output using given template option.
+    const template = _.isString(output.template) ? (dependencies) => _.template(output.template)({dependencies}) : output.template;
+    const defaultTemplate = (dependencies) => {
+      if (_.isEmpty(dependencies)) {
+        return 'No third parties dependencies';
+      }
+
+      return _.chain(dependencies).map((dependency) => dependency.text()).join(`${EOL}${EOL}---${EOL}${EOL}`).value();
+    };
+
+    const text = _.isFunction(template) ? template(dependencies) : defaultTemplate(dependencies);
     const isOutputFile = _.isString(output);
     const file = isOutputFile ? output : output.file;
     const encoding = isOutputFile ? 'utf-8' : (output.encoding || 'utf-8');
@@ -306,7 +312,7 @@ class LicensePlugin {
     // Create directory if it does not already exist.
     mkdirp.sync(path.parse(file).dir);
 
-    fs.writeFileSync(file, text || 'No third parties dependencies', {
+    fs.writeFileSync(file, text.trim(), {
       encoding,
     });
   }

@@ -1458,6 +1458,143 @@ describe('LicensePlugin', () => {
     });
   });
 
+  it('should export list of dependencies to output file using given template', (done) => {
+    const file = path.join(tmpDir.name, 'third-party.txt');
+    const template =
+      '<% _.forEach(dependencies, function (dependency) {%>' +
+        '<%= dependency.name %> => <%= dependency.version %> (<%= dependency.license %>)' +
+      '<% }) %>';
+
+    const instance = licensePlugin({
+      thirdParty: {
+        output: {
+          template,
+          file,
+        },
+      },
+    });
+
+    instance.addDependency({
+      name: 'foo',
+      version: '1.0.0',
+      description: 'Foo Package',
+      license: 'MIT',
+      private: false,
+      author: {
+        name: 'Mickael Jeanroy',
+        email: 'mickael.jeanroy@gmail.com',
+      },
+    });
+
+    const result = instance.exportThirdParties();
+
+    expect(result).not.toBeDefined();
+
+    fs.readFile(file, 'utf-8', (err, content) => {
+      if (err) {
+        done.fail(err);
+        return;
+      }
+
+      const txt = content.toString();
+      expect(txt).toBeDefined();
+      expect(txt).toEqual('foo => 1.0.0 (MIT)');
+
+      done();
+    });
+  });
+
+  it('should export list of dependencies to output JSON file using given template', (done) => {
+    const file = path.join(tmpDir.name, 'third-party.json');
+    const template = jasmine.createSpy('template').and.callFake((dependencies) => JSON.stringify(dependencies));
+    const instance = licensePlugin({
+      thirdParty: {
+        output: {
+          template,
+          file,
+        },
+      },
+    });
+
+    instance.addDependency({
+      name: 'foo',
+      version: '1.0.0',
+      description: 'Foo Package',
+      license: 'MIT',
+      private: false,
+      author: {
+        name: 'Mickael Jeanroy',
+        email: 'mickael.jeanroy@gmail.com',
+      },
+    });
+
+    const result = instance.exportThirdParties();
+
+    expect(result).not.toBeDefined();
+
+    fs.readFile(file, 'utf-8', (err, content) => {
+      if (err) {
+        done.fail(err);
+        return;
+      }
+
+      const txt = content.toString();
+      const json = JSON.parse(txt);
+
+      expect(json).toBeDefined();
+      expect(json.length).toBe(1);
+      expect(json[0].name).toBe('foo');
+
+      done();
+    });
+  });
+
+  it('should export list of dependencies to output file using given template function', (done) => {
+    const file = path.join(tmpDir.name, 'third-party.txt');
+    const template = jasmine.createSpy('template').and.callFake((dependencies) => (
+      dependencies.map((dependency) => `${dependency.name} => ${dependency.version} (${dependency.license})`).join('\n')
+    ));
+
+    const instance = licensePlugin({
+      thirdParty: {
+        output: {
+          template,
+          file,
+        },
+      },
+    });
+
+    instance.addDependency({
+      name: 'foo',
+      version: '1.0.0',
+      description: 'Foo Package',
+      license: 'MIT',
+      private: false,
+      author: {
+        name: 'Mickael Jeanroy',
+        email: 'mickael.jeanroy@gmail.com',
+      },
+    });
+
+    const result = instance.exportThirdParties();
+
+    expect(result).not.toBeDefined();
+
+    fs.readFile(file, 'utf-8', (err, content) => {
+      if (err) {
+        done.fail(err);
+        return;
+      }
+
+      const txt = content.toString();
+      expect(txt).toBeDefined();
+      expect(txt).toEqual('foo => 1.0.0 (MIT)');
+      expect(template).toHaveBeenCalled();
+
+      done();
+    });
+  });
+
   it('should not try to export dependencies without output configuration', () => {
     const instance = licensePlugin();
 

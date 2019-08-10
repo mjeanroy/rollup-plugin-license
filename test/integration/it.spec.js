@@ -124,6 +124,53 @@ describe('Dependency', () => {
         });
   });
 
+  it('should generate bundle with dependency output as a JSON file', (done) => {
+    const bundleOutput = path.join(tmpDir.name, 'bundle.js');
+    const thirdPartyOutput = path.join(tmpDir.name, 'dependencies.json');
+    const rollupConfig = {
+      input: path.join(__dirname, 'bundle.js'),
+
+      output: {
+        file: bundleOutput,
+        format: 'es',
+      },
+
+      plugins: [
+        nodeResolve(),
+        commonjs(),
+
+        licensePlugin({
+          thirdParty: {
+            output: {
+              file: thirdPartyOutput,
+              template(dependencies) {
+                return JSON.stringify(dependencies);
+              },
+            },
+          },
+        }),
+      ],
+    };
+
+    rollup.rollup(rollupConfig)
+        .then((bundle) => bundle.write(rollupConfig.output))
+        .then(() => {
+          fs.readFile(thirdPartyOutput, 'utf8', (err, data) => {
+            if (err) {
+              done.fail(err);
+            }
+
+            const content = data.toString();
+            const json = JSON.parse(content);
+            expect(json).toBeDefined();
+            expect(json.length).toBe(1);
+            expect(json[0].name).toBe('lodash');
+
+            done();
+          });
+        });
+  });
+
   it('should generate bundle and export dependencies to given function', (done) => {
     const bundleOutput = path.join(tmpDir.name, 'bundle.js');
     const thirdPartyOutput = jasmine.createSpy('thirdPartyOutput');

@@ -64,6 +64,10 @@ const SCHEMA = {
         Joi.object().keys({
           file: Joi.string(),
           encoding: Joi.string(),
+          template: [
+            Joi.string(),
+            Joi.func(),
+          ],
         }),
       ],
     }),
