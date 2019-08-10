@@ -31,7 +31,7 @@ const Person = require('./person.js');
 /**
  * Dependency structure.
  */
-class Dependency {
+module.exports = class Dependency {
   /**
    * Create new dependency from package description.
    *
@@ -39,53 +39,34 @@ class Dependency {
    * @constructor
    */
   constructor(pkg) {
-    const dependency = _.pick(pkg, [
-      'name',
-      'author',
-      'contributors',
-      'maintainers',
-      'version',
-      'description',
-      'license',
-      'licenses',
-      'repository',
-      'homepage',
-      'private',
-    ]);
+    this.name = pkg.name || null;
+    this.maintainers = pkg.maintainers || [];
+    this.version = pkg.version || null;
+    this.description = pkg.description || null;
+    this.repository = pkg.repository || null;
+    this.homepage = pkg.homepage || null;
+    this.private = pkg.private || false;
+    this.license = pkg.license || null;
+    this.licenseText = pkg.licenseText || null;
 
     // Parse the author field to get an object.
-    if (dependency.author) {
-      dependency.author = new Person(dependency.author);
-    }
+    this.author = pkg.author ? new Person(pkg.author) : null;
 
     // Parse the contributor array.
-    if (dependency.contributors) {
-      // Translate to an array if it is not already.
-      if (_.isString(dependency.contributors)) {
-        dependency.contributors = [dependency.contributors];
-      }
-
-      // Parse each contributor to produce a single object for each person.
-      dependency.contributors = _.map(dependency.contributors, (contributor) => {
-        return new Person(contributor);
-      });
-    }
+    this.contributors = _.map(_.castArray(pkg.contributors || []), (contributor) => (
+      new Person(contributor)
+    ));
 
     // The `licenses` field is deprecated but may be used in some packages.
     // Map it to a standard license field.
-    if (!dependency.license && dependency.licenses) {
+    if (!this.license && pkg.licenses) {
       // Map it to a valid license field.
       // See: https://docs.npmjs.com/files/package.json#license
-      dependency.license = `(${_.chain(dependency.licenses)
+      this.license = `(${_.chain(pkg.licenses)
           .map((license) => license.type || license)
           .join(' OR ')
           .value()})`;
-
-      // Remove it.
-      delete dependency.licenses;
     }
-
-    _.extend(this, dependency);
   }
 
   /**
@@ -102,7 +83,7 @@ class Dependency {
     lines.push(`${prefix}Name: ${this.name}${suffix}`);
     lines.push(`${prefix}Version: ${this.version}${suffix}`);
     lines.push(`${prefix}License: ${this.license}${suffix}`);
-    lines.push(`${prefix}Private: ${this.private || false}${suffix}`);
+    lines.push(`${prefix}Private: ${this.private}${suffix}`);
 
     if (this.description) {
       lines.push(`${prefix}Description: ${this.description || false}${suffix}`);
@@ -120,7 +101,7 @@ class Dependency {
       lines.push(`${prefix}Author: ${this.author.text()}${suffix}`);
     }
 
-    if (this.contributors) {
+    if (!_.isEmpty(this.contributors)) {
       lines.push(`${prefix}Contributors:${suffix}`);
 
       const allContributors = _.chain(this.contributors)
@@ -133,6 +114,4 @@ class Dependency {
 
     return lines.join(joiner);
   }
-}
-
-module.exports = Dependency;
+};

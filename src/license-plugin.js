@@ -30,6 +30,7 @@ const mkdirp = require('mkdirp');
 const _ = require('lodash');
 const moment = require('moment');
 const MagicString = require('magic-string');
+const glob = require('glob');
 const Dependency = require('./dependency.js');
 const generateBlockComment = require('./generate-block-comment.js');
 const licensePluginOptions = require('./license-plugin-option.js');
@@ -169,7 +170,15 @@ class LicensePlugin {
         this.debug(`found package.json at: ${pkgPath}, read it`);
 
         // Read `package.json` file
-        pkg = require(pkgPath);
+        pkg = JSON.parse(
+            fs.readFileSync(pkgPath, 'utf-8')
+        );
+
+        // Read license file, if it exists.
+        const licenseFile = glob.sync(path.join(dir, 'LICENSE*'))[0];
+        if (licenseFile) {
+          pkg.licenseText = fs.readFileSync(licenseFile, 'utf-8');
+        }
 
         // Add the new dependency to the set of third-party dependencies.
         this.addDependency(pkg);

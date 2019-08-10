@@ -35,11 +35,20 @@ describe('Dependency', () => {
       private: false,
       description: 'Desc',
       homepage: 'https://github.com/mjeanroy',
-      repository: {type: 'GIT', url: 'git@github.com/mjeanroy'},
-      author: {name: 'Mickael Jeanroy'},
+      repository: {
+        type: 'GIT',
+        url: 'git@github.com/mjeanroy',
+      },
+      author: {
+        name: 'Mickael Jeanroy',
+      },
       contributors: [
-        {name: 'Mickael Jeanroy'},
-        {name: 'John Doe'},
+        {
+          name: 'Mickael Jeanroy',
+        },
+        {
+          name: 'John Doe',
+        },
       ],
     };
 
@@ -49,14 +58,31 @@ describe('Dependency', () => {
       name: 'foo',
       version: '1.0.0',
       license: 'MIT',
+      licenseText: null,
       description: 'Desc',
       private: false,
       homepage: 'https://github.com/mjeanroy',
-      repository: {type: 'GIT', url: 'git@github.com/mjeanroy'},
-      author: {name: 'Mickael Jeanroy'},
+      maintainers: [],
+      repository: {
+        type: 'GIT',
+        url: 'git@github.com/mjeanroy',
+      },
+      author: {
+        name: 'Mickael Jeanroy',
+        email: null,
+        url: null,
+      },
       contributors: [
-        {name: 'Mickael Jeanroy'},
-        {name: 'John Doe'},
+        {
+          name: 'Mickael Jeanroy',
+          email: null,
+          url: null,
+        },
+        {
+          name: 'John Doe',
+          email: null,
+          url: null,
+        },
       ],
     });
   });
@@ -153,7 +179,7 @@ describe('Dependency', () => {
     ]));
   });
 
-  it('should format dependency with optional author fied', () => {
+  it('should format dependency with optional author field', () => {
     const pkg = {
       name: 'foo',
       version: '1.0.0',

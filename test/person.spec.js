@@ -30,6 +30,8 @@ describe('Person', () => {
     const person = new Person(str);
     expect(person).toEqual({
       name: 'Mickael Jeanroy',
+      email: null,
+      url: null,
     });
   });
 
@@ -39,6 +41,7 @@ describe('Person', () => {
     expect(person).toEqual({
       name: 'Mickael Jeanroy',
       email: 'mickael.jeanroy@gmail.com',
+      url: null,
     });
   });
 
@@ -47,6 +50,7 @@ describe('Person', () => {
     const person = new Person(str);
     expect(person).toEqual({
       name: 'Mickael Jeanroy',
+      email: null,
       url: 'https://mjeanroy.com',
     });
   });
@@ -70,6 +74,7 @@ describe('Person', () => {
     expect(person).toEqual({
       name: 'Mickael Jeanroy',
       email: 'mickael.jeanroy@gmail.com',
+      url: null,
     });
   });
 

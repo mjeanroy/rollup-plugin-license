@@ -53,7 +53,7 @@ describe('LicensePlugin', () => {
   });
 
   it('should initialize instance with custom cwd', () => {
-    const cwd = path.join(__dirname, 'fixtures', 'fake-package');
+    const cwd = path.join(__dirname, 'fixtures', 'fake-package-1');
     const plugin = licensePlugin({
       cwd,
     });
@@ -108,7 +108,7 @@ describe('LicensePlugin', () => {
 
   it('should load pkg', () => {
     const plugin = licensePlugin();
-    const id = path.join(__dirname, 'fixtures', 'fake-package', 'src', 'index.js');
+    const id = path.join(__dirname, 'fixtures', 'fake-package-1', 'src', 'index.js');
 
     spyOn(plugin, 'addDependency').and.callThrough();
 
@@ -122,10 +122,109 @@ describe('LicensePlugin', () => {
         version: '1.0.0',
         description: 'Fake package used in unit tests',
         license: 'MIT',
+        licenseText: null,
         private: true,
+        homepage: null,
+        repository: null,
+        maintainers: [],
+        contributors: [],
         author: {
           name: 'Mickael Jeanroy',
           email: 'mickael.jeanroy@gmail.com',
+          url: null,
+        },
+      },
+    });
+  });
+
+  it('should load pkg including license text from LICENSE.md file', () => {
+    const plugin = licensePlugin();
+    const id = path.join(__dirname, 'fixtures', 'fake-package-2', 'src', 'index.js');
+
+    spyOn(plugin, 'addDependency').and.callThrough();
+
+    const result = plugin.scanDependency(id);
+
+    expect(result).not.toBeDefined();
+    expect(plugin.addDependency).toHaveBeenCalled();
+    expect(plugin._dependencies).toEqual({
+      'fake-package': {
+        name: 'fake-package',
+        version: '1.0.0',
+        description: 'Fake package used in unit tests',
+        license: 'MIT',
+        licenseText: 'LICENSE.md file',
+        private: true,
+        homepage: null,
+        repository: null,
+        maintainers: [],
+        contributors: [],
+        author: {
+          name: 'Mickael Jeanroy',
+          email: 'mickael.jeanroy@gmail.com',
+          url: null,
+        },
+      },
+    });
+  });
+
+  it('should load pkg including license text from LICENSE.txt file', () => {
+    const plugin = licensePlugin();
+    const id = path.join(__dirname, 'fixtures', 'fake-package-3', 'src', 'index.js');
+
+    spyOn(plugin, 'addDependency').and.callThrough();
+
+    const result = plugin.scanDependency(id);
+
+    expect(result).not.toBeDefined();
+    expect(plugin.addDependency).toHaveBeenCalled();
+    expect(plugin._dependencies).toEqual({
+      'fake-package': {
+        name: 'fake-package',
+        version: '1.0.0',
+        description: 'Fake package used in unit tests',
+        license: 'MIT',
+        licenseText: 'LICENSE.txt file',
+        private: true,
+        homepage: null,
+        repository: null,
+        maintainers: [],
+        contributors: [],
+        author: {
+          name: 'Mickael Jeanroy',
+          email: 'mickael.jeanroy@gmail.com',
+          url: null,
+        },
+      },
+    });
+  });
+
+  it('should load pkg including license text from LICENSE file', () => {
+    const plugin = licensePlugin();
+    const id = path.join(__dirname, 'fixtures', 'fake-package-4', 'src', 'index.js');
+
+    spyOn(plugin, 'addDependency').and.callThrough();
+
+    const result = plugin.scanDependency(id);
+
+    expect(result).not.toBeDefined();
+    expect(plugin.addDependency).toHaveBeenCalled();
+    expect(plugin._dependencies).toEqual({
+      'fake-package': {
+        name: 'fake-package',
+        version: '1.0.0',
+        description: 'Fake package used in unit tests',
+        license: 'MIT',
+        licenseText: 'LICENSE file',
+        private: true,
+        homepage: null,
+        repository: null,
+        maintainers: [],
+        contributors: [],
+        author: {
+          name: 'Mickael Jeanroy',
+          email: 'mickael.jeanroy@gmail.com',
+          url: null,
         },
       },
     });
@@ -134,7 +233,7 @@ describe('LicensePlugin', () => {
   it('should load pkg dependencies', () => {
     const plugin = licensePlugin();
     const modules = [
-      path.join(__dirname, 'fixtures', 'fake-package', 'src', 'index.js'),
+      path.join(__dirname, 'fixtures', 'fake-package-1', 'src', 'index.js'),
     ];
 
     spyOn(plugin, 'scanDependency').and.callThrough();
@@ -151,10 +250,16 @@ describe('LicensePlugin', () => {
         version: '1.0.0',
         description: 'Fake package used in unit tests',
         license: 'MIT',
+        licenseText: null,
         private: true,
+        repository: null,
+        homepage: null,
+        maintainers: [],
+        contributors: [],
         author: {
           name: 'Mickael Jeanroy',
           email: 'mickael.jeanroy@gmail.com',
+          url: null,
         },
       },
     });
@@ -175,7 +280,7 @@ describe('LicensePlugin', () => {
 
   it('should load pkg and update cache', () => {
     const plugin = licensePlugin();
-    const fakePackage = path.join(__dirname, 'fixtures', 'fake-package');
+    const fakePackage = path.join(__dirname, 'fixtures', 'fake-package-1');
     const id = path.join(fakePackage, 'src', 'index.js');
     const pkg = require(path.join(fakePackage, 'package.json'));
 
@@ -187,17 +292,23 @@ describe('LicensePlugin', () => {
         version: '1.0.0',
         description: 'Fake package used in unit tests',
         license: 'MIT',
+        licenseText: null,
         private: true,
+        homepage: null,
+        repository: null,
+        maintainers: [],
+        contributors: [],
         author: {
           name: 'Mickael Jeanroy',
           email: 'mickael.jeanroy@gmail.com',
+          url: null,
         },
       },
     });
 
     expect(plugin._cache).toEqual({
-      [path.join(__dirname, 'fixtures', 'fake-package', 'src')]: pkg,
-      [path.join(__dirname, 'fixtures', 'fake-package')]: pkg,
+      [path.join(__dirname, 'fixtures', 'fake-package-1', 'src')]: pkg,
+      [path.join(__dirname, 'fixtures', 'fake-package-1')]: pkg,
     });
   });
 
@@ -215,7 +326,7 @@ describe('LicensePlugin', () => {
 
   it('should try to load pkg without leading NULL character ', () => {
     const plugin = licensePlugin();
-    const fakePackage = path.join(__dirname, 'fixtures', 'fake-package');
+    const fakePackage = path.join(__dirname, 'fixtures', 'fake-package-1');
     const idNoNull = path.join(fakePackage, 'src', 'index.js');
     const id = '\0' + idNoNull;
     const pkg = require(path.join(fakePackage, 'package.json'));
@@ -228,23 +339,29 @@ describe('LicensePlugin', () => {
         version: '1.0.0',
         description: 'Fake package used in unit tests',
         license: 'MIT',
+        licenseText: null,
         private: true,
+        homepage: null,
+        repository: null,
+        maintainers: [],
+        contributors: [],
         author: {
           name: 'Mickael Jeanroy',
           email: 'mickael.jeanroy@gmail.com',
+          url: null,
         },
       },
     });
 
     expect(plugin._cache).toEqual({
-      [path.join(__dirname, 'fixtures', 'fake-package', 'src')]: pkg,
-      [path.join(__dirname, 'fixtures', 'fake-package')]: pkg,
+      [path.join(__dirname, 'fixtures', 'fake-package-1', 'src')]: pkg,
+      [path.join(__dirname, 'fixtures', 'fake-package-1')]: pkg,
     });
   });
 
   it('should load pkg and use the cache if available', () => {
     const plugin = licensePlugin();
-    const fakePackage = path.join(__dirname, 'fixtures', 'fake-package');
+    const fakePackage = path.join(__dirname, 'fixtures', 'fake-package-1');
     const id = path.join(fakePackage, 'src', 'index.js');
 
     plugin._cache[path.join(fakePackage, 'src')] = null;
@@ -263,14 +380,25 @@ describe('LicensePlugin', () => {
     const pkg = {
       name: 'foo',
       version: '0.0.0',
-      author: {name: 'Mickael Jeanroy', email: 'mickael.jeanroy@gmail.com'},
-      contributors: [{name: 'Mickael Jeanroy', email: 'mickael.jeanroy@gmail.com'}],
       description: 'Fake Description',
       main: 'src/index.js',
       license: 'MIT',
       homepage: 'https://www.google.fr',
       private: true,
-      repository: {type: 'GIT', url: 'https://github.com/npm/npm.git'},
+      repository: {
+        type: 'GIT',
+        url: 'https://github.com/npm/npm.git',
+      },
+      author: {
+        name: 'Mickael Jeanroy',
+        email: 'mickael.jeanroy@gmail.com',
+      },
+      contributors: [
+        {
+          name: 'Mickael Jeanroy',
+          email: 'mickael.jeanroy@gmail.com',
+        },
+      ],
     };
 
     plugin.addDependency(pkg);
@@ -281,16 +409,28 @@ describe('LicensePlugin', () => {
       foo: {
         name: 'foo',
         version: '0.0.0',
-        author: {name: 'Mickael Jeanroy', email: 'mickael.jeanroy@gmail.com'},
-        contributors: [{name: 'Mickael Jeanroy', email: 'mickael.jeanroy@gmail.com'}],
         description: 'Fake Description',
         license: 'MIT',
+        licenseText: null,
         homepage: 'https://www.google.fr',
         private: true,
+        maintainers: [],
         repository: {
           type: 'GIT',
           url: 'https://github.com/npm/npm.git',
         },
+        author: {
+          name: 'Mickael Jeanroy',
+          email: 'mickael.jeanroy@gmail.com',
+          url: null,
+        },
+        contributors: [
+          {
+            name: 'Mickael Jeanroy',
+            email: 'mickael.jeanroy@gmail.com',
+            url: null,
+          },
+        ],
       },
     });
   });
@@ -307,7 +447,10 @@ describe('LicensePlugin', () => {
       license: 'MIT',
       homepage: 'https://www.google.fr',
       private: true,
-      repository: {type: 'GIT', url: 'https://github.com/npm/npm.git'},
+      repository: {
+        type: 'GIT',
+        url: 'https://github.com/npm/npm.git',
+      },
     };
 
     plugin.addDependency(pkg);
@@ -332,7 +475,10 @@ describe('LicensePlugin', () => {
       license: 'MIT',
       homepage: 'https://www.google.fr',
       private: true,
-      repository: {type: 'GIT', url: 'https://github.com/npm/npm.git'},
+      repository: {
+        type: 'GIT',
+        url: 'https://github.com/npm/npm.git',
+      },
     };
 
     plugin.addDependency(pkg);
@@ -353,16 +499,22 @@ describe('LicensePlugin', () => {
       name: 'foo',
       version: '0.0.0',
       author: 'Mickael Jeanroy <mickael.jeanroy@gmail.com> (https://mjeanroy.com)',
-      contributors: [
-        'Mickael Jeanroy <mickael.jeanroy@gmail.com> (https://mjeanroy.com)',
-        {name: 'John Doe', email: 'johndoe@doe.com'},
-      ],
       description: 'Fake Description',
       main: 'src/index.js',
       license: 'MIT',
       homepage: 'https://www.google.fr',
       private: true,
-      repository: {type: 'GIT', url: 'https://github.com/npm/npm.git'},
+      repository: {
+        type: 'GIT',
+        url: 'https://github.com/npm/npm.git',
+      },
+      contributors: [
+        'Mickael Jeanroy <mickael.jeanroy@gmail.com> (https://mjeanroy.com)',
+        {
+          name: 'John Doe',
+          email: 'johndoe@doe.com',
+        },
+      ],
     };
 
     plugin.addDependency(pkg);
@@ -380,6 +532,7 @@ describe('LicensePlugin', () => {
     expect(plugin._dependencies.foo.contributors[1]).toEqual({
       name: 'John Doe',
       email: 'johndoe@doe.com',
+      url: null,
     });
   });
 
@@ -391,13 +544,22 @@ describe('LicensePlugin', () => {
       author: 'Mickael Jeanroy <mickael.jeanroy@gmail.com> (https://mjeanroy.com)',
       description: 'Fake Description',
       main: 'src/index.js',
-      licenses: [
-        {type: 'MIT', url: 'http://www.opensource.org/licenses/mit-license.php'},
-        {type: 'Apache-2.0', url: 'http://opensource.org/licenses/apache2.0.php'},
-      ],
       homepage: 'https://www.google.fr',
       private: true,
-      repository: {type: 'GIT', url: 'https://github.com/npm/npm.git'},
+      repository: {
+        type: 'GIT',
+        url: 'https://github.com/npm/npm.git',
+      },
+      licenses: [
+        {
+          type: 'MIT',
+          url: 'http://www.opensource.org/licenses/mit-license.php',
+        },
+        {
+          type: 'Apache-2.0',
+          url: 'http://opensource.org/licenses/apache2.0.php',
+        },
+      ],
     };
 
     plugin.addDependency(pkg);
@@ -412,14 +574,25 @@ describe('LicensePlugin', () => {
     const pkg = {
       name: 'foo',
       version: '0.0.0',
-      author: {name: 'Mickael Jeanroy', email: 'mickael.jeanroy@gmail.com'},
-      contributors: [{name: 'Mickael Jeanroy', email: 'mickael.jeanroy@gmail.com'}],
       description: 'Fake Description',
       main: 'src/index.js',
       license: 'MIT',
       homepage: 'https://www.google.fr',
       private: true,
-      repository: {type: 'GIT', url: 'https://github.com/npm/npm.git'},
+      author: {
+        name: 'Mickael Jeanroy',
+        email: 'mickael.jeanroy@gmail.com',
+      },
+      contributors: [
+        {
+          name: 'Mickael Jeanroy',
+          email: 'mickael.jeanroy@gmail.com',
+        },
+      ],
+      repository: {
+        type: 'GIT',
+        url: 'https://github.com/npm/npm.git',
+      },
     };
 
     plugin.addDependency(pkg);
@@ -897,7 +1070,7 @@ describe('LicensePlugin', () => {
     });
 
     // Load a dependency
-    instance.scanDependency(path.join(__dirname, 'fixtures', 'fake-package', 'src', 'index.js'));
+    instance.scanDependency(path.join(__dirname, 'fixtures', 'fake-package-1', 'src', 'index.js'));
 
     const code = 'var foo = 0;';
     const result = instance.prependBanner(code);
@@ -1350,14 +1523,20 @@ describe('LicensePlugin', () => {
     expect(output).toHaveBeenCalledWith([
       {
         name: 'foo',
-        author: {
-          name: 'Mickael Jeanroy',
-          email: 'mickael.jeanroy@gmail.com',
-        },
         version: '1.0.0',
         description: 'Foo Package',
         license: 'MIT',
+        licenseText: null,
         private: false,
+        homepage: null,
+        repository: null,
+        maintainers: [],
+        contributors: [],
+        author: {
+          name: 'Mickael Jeanroy',
+          email: 'mickael.jeanroy@gmail.com',
+          url: null,
+        },
       },
     ]);
   });
@@ -1398,20 +1577,32 @@ describe('LicensePlugin', () => {
     expect(output).toHaveBeenCalledWith([
       {
         name: 'foo',
-        author: {
-          name: 'Mickael Jeanroy',
-          email: 'mickael.jeanroy@gmail.com',
-        },
         version: '1.0.0',
         description: 'Foo Package',
         license: 'MIT',
+        licenseText: null,
         private: false,
+        maintainers: [],
+        contributors: [],
+        repository: null,
+        homepage: null,
+        author: {
+          name: 'Mickael Jeanroy',
+          email: 'mickael.jeanroy@gmail.com',
+          url: null,
+        },
       },
       {
         name: 'bar',
         version: '2.0.0',
         description: 'Bar Package',
         license: 'Apache 2.0',
+        licenseText: null,
+        maintainers: [],
+        contributors: [],
+        author: null,
+        repository: null,
+        homepage: null,
         private: true,
       },
     ]);

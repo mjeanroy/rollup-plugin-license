@@ -32,7 +32,7 @@ const _ = require('lodash');
  * - An email (optional).
  * - An URL (optional).
  */
-class Person {
+module.exports = class Person {
   /**
    * Create the person.
    *
@@ -68,7 +68,9 @@ class Person {
       person = o;
     }
 
-    _.extend(this, person);
+    this.name = person.name || null;
+    this.email = person.email || null;
+    this.url = person.url || null;
   }
 
   /**
@@ -92,6 +94,4 @@ class Person {
 
     return `${prefix}${text}${suffix}`;
   }
-}
-
-module.exports = Person;
+};

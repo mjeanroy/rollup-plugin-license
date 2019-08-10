@@ -194,7 +194,7 @@ describe('rollup-plugin-license [rollup legacy]', () => {
       },
     });
 
-    const id = path.join(__dirname, 'fixtures', 'fake-package', 'src', 'index.js');
+    const id = path.join(__dirname, 'fixtures', 'fake-package-1', 'src', 'index.js');
 
     instance.load(id);
     instance.ongenerate();

@@ -57,7 +57,7 @@ describe('rollup-plugin-license [rollup stable]', () => {
       },
     });
 
-    const moduleId = path.join(__dirname, 'fixtures', 'fake-package', 'src', 'index.js');
+    const moduleId = path.join(__dirname, 'fixtures', 'fake-package-1', 'src', 'index.js');
     const modules = {
       [moduleId]: {
         renderedExports: [],
@@ -95,7 +95,7 @@ describe('rollup-plugin-license [rollup stable]', () => {
       },
     });
 
-    const moduleId1 = path.join(__dirname, 'fixtures', 'fake-package', 'src', 'index.js');
+    const moduleId1 = path.join(__dirname, 'fixtures', 'fake-package-1', 'src', 'index.js');
     const moduleId2 = path.join(__dirname, '..', 'node_modules', 'lodash', 'index.js');
 
     const modules = {
@@ -165,7 +165,7 @@ describe('rollup-plugin-license [rollup stable]', () => {
       },
     });
 
-    const moduleId = path.join(__dirname, 'fixtures', 'fake-package', 'src', 'index.js');
+    const moduleId = path.join(__dirname, 'fixtures', 'fake-package-1', 'src', 'index.js');
     const modules = {
       [moduleId]: {
         renderedExports: [],
