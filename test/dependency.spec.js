@@ -297,36 +297,4 @@ describe('Dependency', () => {
       `  ${pkg.contributors[1].name}`,
     ]));
   });
-
-  it('should format dependency with prefix and suffix', () => {
-    const pkg = {
-      name: 'foo',
-      version: '1.0.0',
-      license: 'MIT',
-      description: 'Desc',
-      homepage: 'https://github.com/mjeanroy',
-      repository: {type: 'GIT', url: 'git@github.com/mjeanroy'},
-      author: {name: 'Mickael Jeanroy', email: 'mickael.jeanroy@gmail.com'},
-      contributors: [
-        {name: 'Mickael Jeanroy', email: 'mickael.jeanroy@gmail.com'},
-        {name: 'John Doe'},
-      ],
-    };
-
-    const dependency = new Dependency(pkg);
-
-    expect(dependency.text(' * ', ' --')).toEqual(join([
-      ` * Name: ${pkg.name} --`,
-      ` * Version: ${pkg.version} --`,
-      ` * License: ${pkg.license} --`,
-      ` * Private: false --`,
-      ` * Description: ${pkg.description} --`,
-      ` * Repository: ${pkg.repository.url} --`,
-      ` * Homepage: ${pkg.homepage} --`,
-      ` * Author: ${pkg.author.name} <${pkg.author.email}> --`,
-      ` * Contributors: --`,
-      ` *   ${pkg.contributors[0].name} <${pkg.contributors[0].email}> --`,
-      ` *   ${pkg.contributors[1].name} --`,
-    ]));
-  });
 });

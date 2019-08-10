@@ -81,7 +81,7 @@ module.exports = class Person {
    * @param {string} suffix Optional suffix appended to the output string.
    * @return {string} The person as a string.
    */
-  text(prefix = '', suffix = '') {
+  text() {
     let text = `${this.name}`;
 
     if (this.email) {
@@ -92,6 +92,6 @@ module.exports = class Person {
       text += ` (${this.url})`;
     }
 
-    return `${prefix}${text}${suffix}`;
+    return text;
   }
 };

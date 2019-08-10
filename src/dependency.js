@@ -72,46 +72,43 @@ module.exports = class Dependency {
   /**
    * Serialize dependency as a string.
    *
-   * @param {string} prefix Optional prefix prepended to the output string.
-   * @param {suffix} suffix Optional suffix appended to the output string.
-   * @param {string} joiner Optional character used to join all the lines.
    * @return {string} The dependency correctly formatted.
    */
-  text(prefix = '', suffix = '', joiner = EOL) {
+  text() {
     const lines = [];
 
-    lines.push(`${prefix}Name: ${this.name}${suffix}`);
-    lines.push(`${prefix}Version: ${this.version}${suffix}`);
-    lines.push(`${prefix}License: ${this.license}${suffix}`);
-    lines.push(`${prefix}Private: ${this.private}${suffix}`);
+    lines.push(`Name: ${this.name}`);
+    lines.push(`Version: ${this.version}`);
+    lines.push(`License: ${this.license}`);
+    lines.push(`Private: ${this.private}`);
 
     if (this.description) {
-      lines.push(`${prefix}Description: ${this.description || false}${suffix}`);
+      lines.push(`Description: ${this.description || false}`);
     }
 
     if (this.repository) {
-      lines.push(`${prefix}Repository: ${this.repository.url}${suffix}`);
+      lines.push(`Repository: ${this.repository.url}`);
     }
 
     if (this.homepage) {
-      lines.push(`${prefix}Homepage: ${this.homepage}${suffix}`);
+      lines.push(`Homepage: ${this.homepage}`);
     }
 
     if (this.author) {
-      lines.push(`${prefix}Author: ${this.author.text()}${suffix}`);
+      lines.push(`Author: ${this.author.text()}`);
     }
 
     if (!_.isEmpty(this.contributors)) {
-      lines.push(`${prefix}Contributors:${suffix}`);
+      lines.push(`Contributors:`);
 
       const allContributors = _.chain(this.contributors)
           .map((contributor) => contributor.text())
-          .map((line) => `${prefix}  ${line}${suffix}`)
+          .map((line) => `  ${line}`)
           .value();
 
       lines.push(...allContributors);
     }
 
-    return lines.join(joiner);
+    return lines.join(EOL);
   }
 };
