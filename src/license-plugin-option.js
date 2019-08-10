@@ -54,17 +54,20 @@ const SCHEMA = {
     }),
   ],
 
-  thirdParty: Joi.object().keys({
-    includePrivate: Joi.boolean(),
-    output: [
-      Joi.func(),
-      Joi.string(),
-      Joi.object().keys({
-        file: Joi.string(),
-        encoding: Joi.string(),
-      }),
-    ],
-  }),
+  thirdParty: [
+    Joi.func(),
+    Joi.object().keys({
+      includePrivate: Joi.boolean(),
+      output: [
+        Joi.func(),
+        Joi.string(),
+        Joi.object().keys({
+          file: Joi.string(),
+          encoding: Joi.string(),
+        }),
+      ],
+    }),
+  ],
 };
 
 /**

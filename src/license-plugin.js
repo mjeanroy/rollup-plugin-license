@@ -270,41 +270,45 @@ class LicensePlugin {
       return;
     }
 
-    const output = thirdParty.output;
+    const includePrivate = thirdParty.includePrivate || false;
+    const dependencies = _.chain(this._dependencies)
+        .values()
+        .filter((dependency) => includePrivate || !dependency.private)
+        .value();
 
-    if (output) {
-      const includePrivate = thirdParty.includePrivate;
-      const dependencies = _.chain(this._dependencies)
-          .values()
-          .filter((dependency) => includePrivate || !dependency.private)
-          .value();
-
-      if (_.isFunction(output)) {
-        output(dependencies);
-        return;
-      }
-
-      // Default is to export to given file.
-      const text = _.chain(dependencies)
-          .map((dependency) => dependency.text())
-          .join(`${EOL}${EOL}---${EOL}${EOL}`)
-          .trim()
-          .value();
-
-      const isOutputFile = _.isString(output);
-      const file = isOutputFile ? output : output.file;
-      const encoding = isOutputFile ? 'utf-8' : (output.encoding || 'utf-8');
-
-      this.debug(`exporting third-party summary to ${file}`);
-      this.debug(`use encoding: ${encoding}`);
-
-      // Create directory if it does not already exist.
-      mkdirp.sync(path.parse(file).dir);
-
-      fs.writeFileSync(file, text || 'No third parties dependencies', {
-        encoding,
-      });
+    if (_.isFunction(thirdParty)) {
+      return thirdParty(dependencies);
     }
+
+    const output = thirdParty.output;
+    if (!output) {
+      return;
+    }
+
+    if (_.isFunction(output)) {
+      return output(dependencies);
+    }
+
+    // Default is to export to given file.
+    const text = _.chain(dependencies)
+        .map((dependency) => dependency.text())
+        .join(`${EOL}${EOL}---${EOL}${EOL}`)
+        .trim()
+        .value();
+
+    const isOutputFile = _.isString(output);
+    const file = isOutputFile ? output : output.file;
+    const encoding = isOutputFile ? 'utf-8' : (output.encoding || 'utf-8');
+
+    this.debug(`exporting third-party summary to ${file}`);
+    this.debug(`use encoding: ${encoding}`);
+
+    // Create directory if it does not already exist.
+    mkdirp.sync(path.parse(file).dir);
+
+    fs.writeFileSync(file, text || 'No third parties dependencies', {
+      encoding,
+    });
   }
 
   /**

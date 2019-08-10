@@ -1090,7 +1090,7 @@ describe('LicensePlugin', () => {
     ]));
   });
 
-  it('should display single dependency', (done) => {
+  it('should export single dependency', (done) => {
     const file = path.join(tmpDir.name, 'third-party.txt');
     const instance = licensePlugin({
       thirdParty: {
@@ -1135,7 +1135,7 @@ describe('LicensePlugin', () => {
     });
   });
 
-  it('should display single dependency and create directory if needed', (done) => {
+  it('should export single dependency and create directory if needed', (done) => {
     const file = path.join(tmpDir.name, 'output', 'third-party.txt');
     const instance = licensePlugin({
       thirdParty: {
@@ -1316,7 +1316,7 @@ describe('LicensePlugin', () => {
     });
   });
 
-  it('should export default message without ant dependencies', (done) => {
+  it('should export default message without any dependencies', (done) => {
     const file = path.join(tmpDir.name, 'third-party.txt');
     const instance = licensePlugin({
       thirdParty: {
@@ -1458,7 +1458,7 @@ describe('LicensePlugin', () => {
     });
   });
 
-  it('should not try to display dependencies without output file', () => {
+  it('should not try to export dependencies without output configuration', () => {
     const instance = licensePlugin();
 
     instance.addDependency({
@@ -1487,6 +1487,56 @@ describe('LicensePlugin', () => {
 
     expect(result).not.toBeDefined();
     expect(fs.writeFileSync).not.toHaveBeenCalled();
+  });
+
+  it('should export list of non-private dependencies to thirdParty function', () => {
+    const thirdParty = jasmine.createSpy('output');
+    const instance = licensePlugin({
+      thirdParty,
+    });
+
+    instance.addDependency({
+      name: 'foo',
+      version: '1.0.0',
+      description: 'Foo Package',
+      license: 'MIT',
+      private: false,
+      author: {
+        name: 'Mickael Jeanroy',
+        email: 'mickael.jeanroy@gmail.com',
+      },
+    });
+
+    instance.addDependency({
+      name: 'bar',
+      version: '2.0.0',
+      description: 'Bar Package',
+      license: 'Apache 2.0',
+      private: true,
+    });
+
+    const result = instance.exportThirdParties();
+
+    expect(result).not.toBeDefined();
+    expect(thirdParty).toHaveBeenCalledWith([
+      {
+        name: 'foo',
+        version: '1.0.0',
+        description: 'Foo Package',
+        license: 'MIT',
+        licenseText: null,
+        private: false,
+        homepage: null,
+        repository: null,
+        maintainers: [],
+        contributors: [],
+        author: {
+          name: 'Mickael Jeanroy',
+          email: 'mickael.jeanroy@gmail.com',
+          url: null,
+        },
+      },
+    ]);
   });
 
   it('should export list of non-private dependencies to output function', () => {
