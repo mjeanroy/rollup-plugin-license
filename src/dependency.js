@@ -109,6 +109,13 @@ module.exports = class Dependency {
       lines.push(...allContributors);
     }
 
+    if (this.licenseText) {
+      lines.push('License Copyright:');
+      lines.push('===');
+      lines.push('');
+      lines.push(this.licenseText);
+    }
+
     return lines.join(EOL);
   }
 };

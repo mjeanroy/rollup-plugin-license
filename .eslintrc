@@ -11,7 +11,7 @@
     "node": true
   },
   "rules": {
-    "max-len": [2, 140, 2],
+    "max-len": [2, 150, 2],
     "no-console": [0],
     "valid-jsdoc": [2, {
       "requireReturn": true,

@@ -85,6 +85,19 @@ function warn(msg) {
 }
 
 /**
+ * Print a warning related to deprecated property.
+ *
+ * @param {string} deprecatedName The deprecated property name.
+ * @param {*} name The new, non deprecated, name.
+ * @return {void}
+ */
+function warnDeprecated(deprecatedName, name) {
+  warn(
+      `"${deprecatedName}" has been deprecated and will be removed in a future version, please use "${name}" instead.`
+  );
+}
+
+/**
  * Fix option object, replace `sourceMap` with `sourcemap` if needed.
  *
  * Rollup <= 0.48 used `sourceMap` in camelcase, so this plugin used
@@ -101,7 +114,7 @@ function fixSourceMapOptions(options) {
   }
 
   // Print a warning to inform consumers that this option has been deprecated.
-  warn(`"sourceMap" has been deprecated and will be removed in a future version, please use "sourcemap" instead.`);
+  warnDeprecated('sourceMap', 'sourcemap');
 
   // Create new options object without the deprecated `sourceMap` entry.
   const newOptions = _.omitBy(options, (value, key) => (
@@ -140,12 +153,12 @@ function fixBannerOptions(options) {
 
   // Print a warning to inform consumers that this option has been deprecated.
   if (containsDeprecatedFile) {
-    warn(`"banner.file" has been deprecated and will be removed in a future version, please use "banner.content.file" instead.`);
+    warnDeprecated('banner.file', 'banner.content.file');
   }
 
   // Print a warning to inform consumers that this option has been deprecated.
   if (containsDeprecatedEncoding) {
-    warn(`"banner.encoding" has been deprecated and will be removed in a future version, please use "banner.content.encoding" instead.`);
+    warnDeprecated('banner.encoding', 'banner.content.encoding');
   }
 
   // Create new banner object without deprecated entries.
@@ -179,10 +192,7 @@ function fixThirdPartyOptions(options) {
     return options;
   }
 
-  warn(
-      '"thirdParty.encoding" has been deprecated and will be removed in a future version, ' +
-      'please use "thirdParty.output.encoding" instead.'
-  );
+  warnDeprecated('thirdParty.encoding', 'thirdParty.output.encoding');
 
   const newThirdParty = _.omitBy(thirdParty, (value, key) => (
     key === 'encoding'
@@ -224,12 +234,7 @@ function doValidation(options, allowUnknown) {
     allowUnknown,
   });
 
-  const err = result.error;
-  if (!err) {
-    return [];
-  }
-
-  return err.details;
+  return result.error ? result.error.details : [];
 }
 
 /**
@@ -240,7 +245,7 @@ function doValidation(options, allowUnknown) {
  */
 function printForUnknownProperties(options) {
   const errors = doValidation(options, false);
-  if (errors.length === 0) {
+  if (_.isEmpty(errors)) {
     return;
   }
 
@@ -260,7 +265,7 @@ function printForUnknownProperties(options) {
  */
 function validateOptions(options) {
   const errors = doValidation(options, true);
-  if (errors.length === 0) {
+  if (_.isEmpty(errors)) {
     return;
   }
 
