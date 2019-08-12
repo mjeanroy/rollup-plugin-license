@@ -1,3 +1,22 @@
+## 0.12.0 (2019-08-12)
+
+* release: prepare next release ([9a4f76e](https://github.com/mjeanroy/rollup-plugin-license/commit/9a4f76e))
+* release: release version ([3291565](https://github.com/mjeanroy/rollup-plugin-license/commit/3291565))
+* docs: update changelog file ([0a1eba9](https://github.com/mjeanroy/rollup-plugin-license/commit/0a1eba9))
+* docs: update README ([b145f5f](https://github.com/mjeanroy/rollup-plugin-license/commit/b145f5f))
+* refactor: cleaning code ([ff4db0b](https://github.com/mjeanroy/rollup-plugin-license/commit/ff4db0b))
+* refactor: deprecate thirdParty.encoding property ([d2d9c96](https://github.com/mjeanroy/rollup-plugin-license/commit/d2d9c96))
+* refactor: remove useless prefix/suffix parameters ([6f40a18](https://github.com/mjeanroy/rollup-plugin-license/commit/6f40a18))
+* refactor: use function factory instead of class instantiation ([98888e0](https://github.com/mjeanroy/rollup-plugin-license/commit/98888e0))
+* feat: allow 3rd parties output to be customized with a template/function ([ac1758b](https://github.com/mjeanroy/rollup-plugin-license/commit/ac1758b))
+* feat: allow dependency output to be a callback function ([e549ed8](https://github.com/mjeanroy/rollup-plugin-license/commit/e549ed8))
+* feat: improve option object validation ([59cf1e7](https://github.com/mjeanroy/rollup-plugin-license/commit/59cf1e7))
+* feat: include license text to scanned dependencies ([5af12a6](https://github.com/mjeanroy/rollup-plugin-license/commit/5af12a6))
+* feat: thirdParty option can be a function ([3699f8a](https://github.com/mjeanroy/rollup-plugin-license/commit/3699f8a))
+* fix: ensure directory is created synchronously when exporting 3rd parties ([7e98ede](https://github.com/mjeanroy/rollup-plugin-license/commit/7e98ede))
+
+
+
 ## 0.11.0 (2019-08-07)
 
 * release: prepare next release ([4d46360](https://github.com/mjeanroy/rollup-plugin-license/commit/4d46360))
