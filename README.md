@@ -207,8 +207,68 @@ license({
 })
 ```
 
+Starting with version `0.12.0`, you can have more control by defining `output` as an object, for example:
+
+```javascript
+license({
+  thirdParty: {
+    includePrivate: false,
+    output: {
+      file: path.join(__dirname, 'dist', 'dependencies.txt'), // Path of the license report
+      encoding: 'utf-8', // default is UTF-8
+
+      // Template function that can be defined to customize report output
+      template(dependencies) {
+        return dependencies.map((dependency) => `${dependency.name}:${dependency.version} -- ${dependency.license}`).join('\n');
+      },
+    },
+  },
+})
+```
+
+Note that the template option can also be a lodash template:
+
+```javascript
+license({
+  thirdParty: {
+    includePrivate: false,
+    output: {
+      file: path.join(__dirname, 'dist', 'dependencies.txt'),
+
+      // Lodash template that can be defined to customize report output
+      template: `
+        <% _.forEach(dependencies, function (dependency) { %>
+          <%= dependency.name %>:<%= dependency.version%> -- <%= dependency.license %>
+        <% }) %>
+      `,
+    },
+  },
+})
+```
+
+For example, it can be relatively easy to produce a JSON output instead of a text file:
+
+```javascript
+license({
+  thirdParty: {
+    includePrivate: false,
+    output: {
+      file: path.join(__dirname, 'dist', 'dependencies.json'),
+      template(dependencies) {
+        return JSON.stringify(dependencies);
+      }
+    },
+  },
+})
+```
+
 ## Changelogs
 
+- 0.12.0
+  - Improve `output` configuration (see [#379](https://github.com/mjeanroy/rollup-plugin-license/issues/379)).
+  - Improve option object validation and warning.
+  - Deprecate `thirdParty.encoding` option.
+  - Dev dependencies updates.
 - 0.11.0
   - Fail if the banner file does not exist (breaking change).
   - Deprecate `banner.file` / `banner.encoding` entries, use `banner.content.file` / `banner.content.encoding` instead (see [#428](https://github.com/mjeanroy/rollup-plugin-license/issues/428)).
