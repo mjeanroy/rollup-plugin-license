@@ -43,9 +43,11 @@ module.exports = {
       },
 
       thirdParty: {
-        output: path.join(__dirname, 'dist', 'dependencies.txt'),
         includePrivate: true, // Default is false.
-        encoding: 'utf-8', // Default is utf-8.
+        output: {
+          file: path.join(__dirname, 'dist', 'dependencies.txt'),
+          encoding: 'utf-8', // Default is utf-8.
+        },
       },
     }),
   ],
