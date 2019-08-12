@@ -67,7 +67,7 @@ module.exports = (options = {}) => {
      * @return {void}
      */
     generateBundle() {
-      plugin.exportThirdParties();
+      plugin.scanThirdParties();
     },
   };
 };

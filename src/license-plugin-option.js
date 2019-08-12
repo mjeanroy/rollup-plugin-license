@@ -58,6 +58,7 @@ const SCHEMA = {
     Joi.func(),
     Joi.object().keys({
       includePrivate: Joi.boolean(),
+      allow: Joi.string(),
       output: [
         Joi.func(),
         Joi.string(),

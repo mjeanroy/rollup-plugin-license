@@ -1110,7 +1110,7 @@ describe('LicensePlugin', () => {
       },
     });
 
-    const result = instance.exportThirdParties();
+    const result = instance.scanThirdParties();
 
     expect(result).not.toBeDefined();
 
@@ -1155,7 +1155,7 @@ describe('LicensePlugin', () => {
       },
     });
 
-    const result = instance.exportThirdParties();
+    const result = instance.scanThirdParties();
     expect(result).not.toBeDefined();
 
     fs.readFile(file, 'utf-8', (err, content) => {
@@ -1208,7 +1208,7 @@ describe('LicensePlugin', () => {
       private: false,
     });
 
-    const result = instance.exportThirdParties();
+    const result = instance.scanThirdParties();
 
     expect(result).not.toBeDefined();
 
@@ -1260,7 +1260,7 @@ describe('LicensePlugin', () => {
       license: 'MIT',
     });
 
-    const result = instance.exportThirdParties();
+    const result = instance.scanThirdParties();
 
     expect(result).not.toBeDefined();
 
@@ -1295,7 +1295,7 @@ describe('LicensePlugin', () => {
       license: 'MIT',
     });
 
-    const result = instance.exportThirdParties();
+    const result = instance.scanThirdParties();
 
     expect(result).not.toBeDefined();
 
@@ -1326,7 +1326,7 @@ describe('LicensePlugin', () => {
 
     instance._dependencies = {};
 
-    const result = instance.exportThirdParties();
+    const result = instance.scanThirdParties();
 
     expect(result).not.toBeDefined();
 
@@ -1371,7 +1371,7 @@ describe('LicensePlugin', () => {
       private: true,
     });
 
-    const result = instance.exportThirdParties();
+    const result = instance.scanThirdParties();
 
     expect(result).not.toBeDefined();
 
@@ -1425,7 +1425,7 @@ describe('LicensePlugin', () => {
       private: true,
     });
 
-    const result = instance.exportThirdParties();
+    const result = instance.scanThirdParties();
 
     expect(result).not.toBeDefined();
 
@@ -1486,7 +1486,7 @@ describe('LicensePlugin', () => {
       },
     });
 
-    const result = instance.exportThirdParties();
+    const result = instance.scanThirdParties();
 
     expect(result).not.toBeDefined();
 
@@ -1528,7 +1528,7 @@ describe('LicensePlugin', () => {
       },
     });
 
-    const result = instance.exportThirdParties();
+    const result = instance.scanThirdParties();
 
     expect(result).not.toBeDefined();
 
@@ -1576,7 +1576,7 @@ describe('LicensePlugin', () => {
       },
     });
 
-    const result = instance.exportThirdParties();
+    const result = instance.scanThirdParties();
 
     expect(result).not.toBeDefined();
 
@@ -1620,7 +1620,7 @@ describe('LicensePlugin', () => {
 
     spyOn(fs, 'writeFileSync').and.callThrough();
 
-    const result = instance.exportThirdParties();
+    const result = instance.scanThirdParties();
 
     expect(result).not.toBeDefined();
     expect(fs.writeFileSync).not.toHaveBeenCalled();
@@ -1652,7 +1652,7 @@ describe('LicensePlugin', () => {
       private: true,
     });
 
-    const result = instance.exportThirdParties();
+    const result = instance.scanThirdParties();
 
     expect(result).not.toBeDefined();
     expect(thirdParty).toHaveBeenCalledWith([
@@ -1704,7 +1704,7 @@ describe('LicensePlugin', () => {
       private: true,
     });
 
-    const result = instance.exportThirdParties();
+    const result = instance.scanThirdParties();
 
     expect(result).not.toBeDefined();
     expect(output).toHaveBeenCalledWith([
@@ -1758,7 +1758,7 @@ describe('LicensePlugin', () => {
       private: true,
     });
 
-    const result = instance.exportThirdParties();
+    const result = instance.scanThirdParties();
 
     expect(result).not.toBeDefined();
     expect(output).toHaveBeenCalledWith([
@@ -1793,5 +1793,87 @@ describe('LicensePlugin', () => {
         private: true,
       },
     ]);
+  });
+
+  it('should not warn without any license violations', () => {
+    const warn = spyOn(console, 'warn');
+    const allow = '(Apache-2.0 OR MIT)';
+    const instance = licensePlugin({
+      thirdParty: {
+        allow,
+      },
+    });
+
+    instance.addDependency({
+      name: 'foo',
+      version: '1.0.0',
+      description: 'Foo Package',
+      license: 'Apache-2.0',
+    });
+
+    instance.addDependency({
+      name: 'bar',
+      version: '2.0.0',
+      description: 'Bar Package',
+      license: 'MIT',
+    });
+
+    instance.scanThirdParties();
+
+    expect(warn).not.toHaveBeenCalled();
+  });
+
+  it('should warn for license violations', () => {
+    const warn = spyOn(console, 'warn');
+    const allow = 'MIT';
+    const instance = licensePlugin({
+      thirdParty: {
+        allow,
+      },
+    });
+
+    instance.addDependency({
+      name: 'foo',
+      version: '1.0.0',
+      description: 'Foo Package',
+      license: 'Apache-2.0',
+    });
+
+    instance.addDependency({
+      name: 'bar',
+      version: '2.0.0',
+      description: 'Bar Package',
+      license: 'MIT',
+    });
+
+    instance.scanThirdParties();
+
+    expect(warn).toHaveBeenCalledWith(
+        '[rollup-plugin-license] -- ' +
+        'Dependency "foo" has a license (Apache-2.0) which is not compatible with requirement (MIT), ' +
+        'looks like a license violation to fix.'
+    );
+  });
+
+  it('should warn for unlicensed dependencies', () => {
+    const warn = spyOn(console, 'warn');
+    const allow = '(Apache-2.0 OR MIT)';
+    const instance = licensePlugin({
+      thirdParty: {
+        allow,
+      },
+    });
+
+    instance.addDependency({
+      name: 'baz',
+      version: '3.0.0',
+      description: 'Baz Package',
+    });
+
+    instance.scanThirdParties();
+
+    expect(warn).toHaveBeenCalledWith(
+        '[rollup-plugin-license] -- Dependency "baz" does not specify any license.'
+    );
   });
 });

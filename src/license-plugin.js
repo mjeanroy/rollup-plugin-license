@@ -31,6 +31,9 @@ const _ = require('lodash');
 const moment = require('moment');
 const MagicString = require('magic-string');
 const glob = require('glob');
+const spdxExpressionValidate = require('spdx-expression-validate');
+const spdxSatisfies = require('spdx-satisfies');
+
 const Dependency = require('./dependency.js');
 const generateBlockComment = require('./generate-block-comment.js');
 const licensePluginOptions = require('./license-plugin-option.js');
@@ -259,12 +262,14 @@ class LicensePlugin {
   }
 
   /**
-   * Generate third-party dependencies summary.
+   * Scan third-party dependencies, and:
+   * - Warn for license violations.
+   * - Generate summary.
    *
    * @param {boolean} includePrivate Flag that can be used to include / exclude private dependencies.
    * @return {void}
    */
-  exportThirdParties() {
+  scanThirdParties() {
     const thirdParty = this._options.thirdParty;
     if (!thirdParty) {
       return;
@@ -280,37 +285,15 @@ class LicensePlugin {
       return thirdParty(outputDependencies);
     }
 
+    const allow = thirdParty.allow;
+    if (allow) {
+      this._scanLicenseViolations(outputDependencies, allow);
+    }
+
     const output = thirdParty.output;
-    if (!output) {
-      return;
+    if (output) {
+      return this._exportThirdParties(outputDependencies, output);
     }
-
-    if (_.isFunction(output)) {
-      return output(outputDependencies);
-    }
-
-    // Default is to export to given file.
-
-    // Allow custom formatting of output using given template option.
-    const template = _.isString(output.template) ? (dependencies) => _.template(output.template)({dependencies, _, moment}) : output.template;
-    const defaultTemplate = (dependencies) => (
-      _.isEmpty(dependencies) ? 'No third parties dependencies' : _.map(dependencies, (d) => d.text()).join(`${EOL}${EOL}---${EOL}${EOL}`)
-    );
-
-    const text = _.isFunction(template) ? template(outputDependencies) : defaultTemplate(outputDependencies);
-    const isOutputFile = _.isString(output);
-    const file = isOutputFile ? output : output.file;
-    const encoding = isOutputFile ? 'utf-8' : (output.encoding || 'utf-8');
-
-    this.debug(`exporting third-party summary to ${file}`);
-    this.debug(`use encoding: ${encoding}`);
-
-    // Create directory if it does not already exist.
-    mkdirp.sync(path.parse(file).dir);
-
-    fs.writeFileSync(file, (text || '').trim(), {
-      encoding,
-    });
   }
 
   /**
@@ -321,8 +304,18 @@ class LicensePlugin {
    */
   debug(msg) {
     if (this._debug) {
-      console.log(`[${this.name}] -- ${msg}`);
+      console.debug(`[${this.name}] -- ${msg}`);
     }
+  }
+
+  /**
+   * Log warn message.
+   *
+   * @param {string} msg Log message.
+   * @return {void}
+   */
+  warn(msg) {
+    console.warn(`[${this.name}] -- ${msg}`);
   }
 
   /**
@@ -406,6 +399,75 @@ class LicensePlugin {
     this.debug(`generate banner using comment style: ${style}`);
 
     return COMMENT_STYLES[style] ? generateBlockComment(text, COMMENT_STYLES[style]) : text;
+  }
+
+  /**
+   * Scan for dependency violations and print a warning if some violations are found.
+   *
+   * @param {Array<Object>} outputDependencies The dependencies to scan.
+   * @param {string} allow The allowed licenses as a SPDX pattern.
+   * @return {void}
+   */
+  _scanLicenseViolations(outputDependencies, allow) {
+    _.forEach(outputDependencies, (dependency) => {
+      this._scanLicenseViolation(dependency, allow);
+    });
+  }
+
+  /**
+   * Scan dependency for a dependency violation.
+   *
+   * @param {Object} dependency The dependency to scan.
+   * @param {string} allow The allowed licenses as a SPDX pattern.
+   * @return {void}
+   */
+  _scanLicenseViolation(dependency, allow) {
+    const license = dependency.license || 'UNLICENSED';
+    if (license === 'UNLICENSED') {
+      this.warn(`Dependency "${dependency.name}" does not specify any license.`);
+    } else if (!spdxExpressionValidate(license) || !spdxSatisfies(license, allow)) {
+      this.warn(
+          `Dependency "${dependency.name}" has a license (${dependency.license}) which is not compatible with requirement (${allow}), ` +
+          `looks like a license violation to fix.`
+      );
+    }
+  }
+
+  /**
+   * Export scanned third party dependencies to a destination output (a function, a
+   * file written to disk, etc.).
+   *
+   * @param {Array<Object>} outputDependencies The dependencies to include in the output.
+   * @param {Object|function|string} output The output destination.
+   * @return {void}
+   */
+  _exportThirdParties(outputDependencies, output) {
+    if (_.isFunction(output)) {
+      return output(outputDependencies);
+    }
+
+    // Default is to export to given file.
+
+    // Allow custom formatting of output using given template option.
+    const template = _.isString(output.template) ? (dependencies) => _.template(output.template)({dependencies, _, moment}) : output.template;
+    const defaultTemplate = (dependencies) => (
+      _.isEmpty(dependencies) ? 'No third parties dependencies' : _.map(dependencies, (d) => d.text()).join(`${EOL}${EOL}---${EOL}${EOL}`)
+    );
+
+    const text = _.isFunction(template) ? template(outputDependencies) : defaultTemplate(outputDependencies);
+    const isOutputFile = _.isString(output);
+    const file = isOutputFile ? output : output.file;
+    const encoding = isOutputFile ? 'utf-8' : (output.encoding || 'utf-8');
+
+    this.debug(`exporting third-party summary to ${file}`);
+    this.debug(`use encoding: ${encoding}`);
+
+    // Create directory if it does not already exist.
+    mkdirp.sync(path.parse(file).dir);
+
+    fs.writeFileSync(file, (text || '').trim(), {
+      encoding,
+    });
   }
 }
 

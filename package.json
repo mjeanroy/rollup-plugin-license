@@ -39,7 +39,9 @@
     "lodash": "4.17.15",
     "magic-string": "0.25.3",
     "mkdirp": "0.5.1",
-    "moment": "2.24.0"
+    "moment": "2.24.0",
+    "spdx-expression-validate": "2.0.0",
+    "spdx-satisfies": "5.0.0"
   },
   "devDependencies": {
     "@babel/core": "7.5.5",

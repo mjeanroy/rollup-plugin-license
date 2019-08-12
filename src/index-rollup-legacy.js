@@ -93,7 +93,7 @@ module.exports = (options = {}) => {
      * @return {void}
      */
     ongenerate() {
-      plugin.exportThirdParties();
+      plugin.scanThirdParties();
     },
   };
 };
