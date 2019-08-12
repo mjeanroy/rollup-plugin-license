@@ -1,3 +1,18 @@
+## 0.11.0 (2019-08-07)
+
+* release: prepare next release ([4d46360](https://github.com/mjeanroy/rollup-plugin-license/commit/4d46360))
+* release: release version ([852f99e](https://github.com/mjeanroy/rollup-plugin-license/commit/852f99e))
+* docs: update CHANGELOG file ([7ebe67f](https://github.com/mjeanroy/rollup-plugin-license/commit/7ebe67f))
+* docs: update README ([6139ede](https://github.com/mjeanroy/rollup-plugin-license/commit/6139ede))
+* docs: update README ([a5ddca0](https://github.com/mjeanroy/rollup-plugin-license/commit/a5ddca0))
+* docs: update README ([6bbac60](https://github.com/mjeanroy/rollup-plugin-license/commit/6bbac60))
+* feat: allow banner option to be used with inline string banner ([66e7256](https://github.com/mjeanroy/rollup-plugin-license/commit/66e7256))
+* chore(package): update rollup to version 1.19.3 ([a051c84](https://github.com/mjeanroy/rollup-plugin-license/commit/a051c84)), closes [#425](https://github.com/mjeanroy/rollup-plugin-license/issues/425)
+* chore(package): update rollup to version 1.19.4 ([aa27fb5](https://github.com/mjeanroy/rollup-plugin-license/commit/aa27fb5))
+* chore(package): update rollup-plugin-commonjs to version 10.0.2 ([08ce930](https://github.com/mjeanroy/rollup-plugin-license/commit/08ce930))
+
+
+
 ## 0.10.0 (2019-08-01)
 
 * release: prepare next release ([7141d3b](https://github.com/mjeanroy/rollup-plugin-license/commit/7141d3b))
