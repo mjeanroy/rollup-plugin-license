@@ -70,6 +70,19 @@ const SCHEMA = {
             Joi.func(),
           ],
         }),
+
+        Joi.array().items(
+            Joi.func(),
+            Joi.string(),
+            Joi.object().keys({
+              file: Joi.string(),
+              encoding: Joi.string(),
+              template: [
+                Joi.string(),
+                Joi.func(),
+              ],
+            })
+        ),
       ],
     }),
   ],

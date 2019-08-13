@@ -27,6 +27,7 @@
 const path = require('path');
 const tmp = require('tmp');
 const fs = require('fs');
+const _ = require('lodash');
 const rollup = require('rollup');
 const nodeResolve = require('rollup-plugin-node-resolve');
 const commonjs = require('rollup-plugin-commonjs');
@@ -167,6 +168,73 @@ describe('Dependency', () => {
             expect(json[0].name).toBe('lodash');
 
             done();
+          });
+        });
+  });
+
+  it('should generate bundle with dependency output as a JSON & a text file', (done) => {
+    const bundleOutput = path.join(tmpDir.name, 'bundle.js');
+    const jsonOutput = path.join(tmpDir.name, 'dependencies.json');
+    const txtOutput = path.join(tmpDir.name, 'dependencies.json');
+    const rollupConfig = {
+      input: path.join(__dirname, 'bundle.js'),
+
+      output: {
+        file: bundleOutput,
+        format: 'es',
+      },
+
+      plugins: [
+        nodeResolve(),
+        commonjs(),
+
+        licensePlugin({
+          thirdParty: {
+            output: [
+              {
+                file: txtOutput,
+              },
+              {
+                file: jsonOutput,
+                template(dependencies) {
+                  return JSON.stringify(dependencies);
+                },
+              },
+            ],
+          },
+        }),
+      ],
+    };
+
+    rollup.rollup(rollupConfig)
+        .then((bundle) => bundle.write(rollupConfig.output))
+        .then(() => {
+          const onDone = _.after(2, () => done());
+
+          fs.readFile(jsonOutput, 'utf8', (err, data) => {
+            if (err) {
+              done.fail(err);
+            }
+
+            const content = data.toString();
+            const json = JSON.parse(content);
+            expect(json).toBeDefined();
+            expect(json.length).toBe(1);
+            expect(json[0].name).toBe('lodash');
+
+            onDone();
+          });
+
+          fs.readFile(txtOutput, 'utf8', (err, data) => {
+            if (err) {
+              done.fail(err);
+            }
+
+            const content = data.toString();
+            expect(content).toBeDefined();
+            expect(content).toContain('lodash');
+
+            onDone();
           });
         });
   });

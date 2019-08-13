@@ -292,7 +292,7 @@ class LicensePlugin {
 
     const output = thirdParty.output;
     if (output) {
-      return this._exportThirdParties(outputDependencies, output);
+      this._exportThirdParties(outputDependencies, output);
     }
   }
 
@@ -442,31 +442,33 @@ class LicensePlugin {
    * @return {void}
    */
   _exportThirdParties(outputDependencies, output) {
-    if (_.isFunction(output)) {
-      return output(outputDependencies);
-    }
+    _.forEach(_.castArray(output), (output) => {
+      if (_.isFunction(output)) {
+        return output(outputDependencies);
+      }
 
-    // Default is to export to given file.
+      // Default is to export to given file.
 
-    // Allow custom formatting of output using given template option.
-    const template = _.isString(output.template) ? (dependencies) => _.template(output.template)({dependencies, _, moment}) : output.template;
-    const defaultTemplate = (dependencies) => (
-      _.isEmpty(dependencies) ? 'No third parties dependencies' : _.map(dependencies, (d) => d.text()).join(`${EOL}${EOL}---${EOL}${EOL}`)
-    );
+      // Allow custom formatting of output using given template option.
+      const template = _.isString(output.template) ? (dependencies) => _.template(output.template)({dependencies, _, moment}) : output.template;
+      const defaultTemplate = (dependencies) => (
+        _.isEmpty(dependencies) ? 'No third parties dependencies' : _.map(dependencies, (d) => d.text()).join(`${EOL}${EOL}---${EOL}${EOL}`)
+      );
 
-    const text = _.isFunction(template) ? template(outputDependencies) : defaultTemplate(outputDependencies);
-    const isOutputFile = _.isString(output);
-    const file = isOutputFile ? output : output.file;
-    const encoding = isOutputFile ? 'utf-8' : (output.encoding || 'utf-8');
+      const text = _.isFunction(template) ? template(outputDependencies) : defaultTemplate(outputDependencies);
+      const isOutputFile = _.isString(output);
+      const file = isOutputFile ? output : output.file;
+      const encoding = isOutputFile ? 'utf-8' : (output.encoding || 'utf-8');
 
-    this.debug(`exporting third-party summary to ${file}`);
-    this.debug(`use encoding: ${encoding}`);
+      this.debug(`exporting third-party summary to ${file}`);
+      this.debug(`use encoding: ${encoding}`);
 
-    // Create directory if it does not already exist.
-    mkdirp.sync(path.parse(file).dir);
+      // Create directory if it does not already exist.
+      mkdirp.sync(path.parse(file).dir);
 
-    fs.writeFileSync(file, (text || '').trim(), {
-      encoding,
+      fs.writeFileSync(file, (text || '').trim(), {
+        encoding,
+      });
     });
   }
 }
