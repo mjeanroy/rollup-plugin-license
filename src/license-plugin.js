@@ -424,13 +424,37 @@ class LicensePlugin {
   _scanLicenseViolation(dependency, allow) {
     const license = dependency.license || 'UNLICENSED';
     if (license === 'UNLICENSED') {
-      this.warn(`Dependency "${dependency.name}" does not specify any license.`);
+      this._handleUnlicensedDependency(dependency);
     } else if (!spdxExpressionValidate(license) || !spdxSatisfies(license, allow)) {
-      this.warn(
-          `Dependency "${dependency.name}" has a license (${dependency.license}) which is not compatible with requirement (${allow}), ` +
-          `looks like a license violation to fix.`
-      );
+      this._handleLicenseViolation(dependency, allow);
     }
+  }
+
+  /**
+   * Handle unlicensed dependency: print a warning to the console to alert for the dependency
+   * that should be fixed.
+   *
+   * @param {Object} dependency The dependency.
+   * @return {void}
+   */
+  _handleUnlicensedDependency(dependency) {
+    this.warn(
+        `Dependency "${dependency.name}" does not specify any license.`
+    );
+  }
+
+  /**
+   * Handle license violation: print a warning to the console to alert about the violation.
+   *
+   * @param {Object} dependency The dependency.
+   * @param {*} allow The allowed expression.
+   * @return {void}
+   */
+  _handleLicenseViolation(dependency, allow) {
+    this.warn(
+        `Dependency "${dependency.name}" has a license (${dependency.license}) which is not compatible with requirement (${allow}), ` +
+        `looks like a license violation to fix.`
+    );
   }
 
   /**
