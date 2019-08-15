@@ -462,37 +462,49 @@ class LicensePlugin {
    * file written to disk, etc.).
    *
    * @param {Array<Object>} outputDependencies The dependencies to include in the output.
-   * @param {Object|function|string} output The output destination.
+   * @param {Object|function|string|Array} outputs The output (or the array of output) destination.
    * @return {void}
    */
-  _exportThirdParties(outputDependencies, output) {
-    _.forEach(_.castArray(output), (output) => {
-      if (_.isFunction(output)) {
-        return output(outputDependencies);
-      }
+  _exportThirdParties(outputDependencies, outputs) {
+    _.forEach(_.castArray(outputs), (output) => {
+      this._exportThirdPartiesToOutput(outputDependencies, output);
+    });
+  }
 
-      // Default is to export to given file.
+  /**
+   * Export scanned third party dependencies to a destination output (a function, a
+   * file written to disk, etc.).
+   *
+   * @param {Array<Object>} outputDependencies The dependencies to include in the output.
+   * @param {Array} output The output destination.
+   * @return {void}
+   */
+  _exportThirdPartiesToOutput(outputDependencies, output) {
+    if (_.isFunction(output)) {
+      return output(outputDependencies);
+    }
 
-      // Allow custom formatting of output using given template option.
-      const template = _.isString(output.template) ? (dependencies) => _.template(output.template)({dependencies, _, moment}) : output.template;
-      const defaultTemplate = (dependencies) => (
-        _.isEmpty(dependencies) ? 'No third parties dependencies' : _.map(dependencies, (d) => d.text()).join(`${EOL}${EOL}---${EOL}${EOL}`)
-      );
+    // Default is to export to given file.
 
-      const text = _.isFunction(template) ? template(outputDependencies) : defaultTemplate(outputDependencies);
-      const isOutputFile = _.isString(output);
-      const file = isOutputFile ? output : output.file;
-      const encoding = isOutputFile ? 'utf-8' : (output.encoding || 'utf-8');
+    // Allow custom formatting of output using given template option.
+    const template = _.isString(output.template) ? (dependencies) => _.template(output.template)({dependencies, _, moment}) : output.template;
+    const defaultTemplate = (dependencies) => (
+      _.isEmpty(dependencies) ? 'No third parties dependencies' : _.map(dependencies, (d) => d.text()).join(`${EOL}${EOL}---${EOL}${EOL}`)
+    );
 
-      this.debug(`exporting third-party summary to ${file}`);
-      this.debug(`use encoding: ${encoding}`);
+    const text = _.isFunction(template) ? template(outputDependencies) : defaultTemplate(outputDependencies);
+    const isOutputFile = _.isString(output);
+    const file = isOutputFile ? output : output.file;
+    const encoding = isOutputFile ? 'utf-8' : (output.encoding || 'utf-8');
 
-      // Create directory if it does not already exist.
-      mkdirp.sync(path.parse(file).dir);
+    this.debug(`exporting third-party summary to ${file}`);
+    this.debug(`use encoding: ${encoding}`);
 
-      fs.writeFileSync(file, (text || '').trim(), {
-        encoding,
-      });
+    // Create directory if it does not already exist.
+    mkdirp.sync(path.parse(file).dir);
+
+    fs.writeFileSync(file, (text || '').trim(), {
+      encoding,
     });
   }
 }
