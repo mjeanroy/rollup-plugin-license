@@ -266,6 +266,8 @@ license({
 
 ## Changelogs
 
+- 0.12.1
+  - Restore compatibility with Node6
 - 0.12.0
   - Improve `output` configuration (see [#379](https://github.com/mjeanroy/rollup-plugin-license/issues/379)).
   - Improve option object validation and warning.

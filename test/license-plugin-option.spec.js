@@ -291,4 +291,69 @@ describe('licensePluginOptions', () => {
       },
     });
   });
+
+  it('should validate option object when output is an array', () => {
+    const options = {
+      thirdParty: {
+        output: [
+          'ThirdParty.txt',
+        ],
+      },
+    };
+
+    const result = licensePluginOptions(options);
+
+    expect(result).toEqual({
+      thirdParty: {
+        output: [
+          'ThirdParty.txt',
+        ],
+      },
+    });
+  });
+
+  it('should validate option object and fail when output array contains null', () => {
+    const options = {
+      thirdParty: {
+        output: [
+          null,
+        ],
+      },
+    };
+
+    expect(() => licensePluginOptions(options)).toThrow(new Error(
+        '[rollup-plugin-license] -- Error during validation of option object: "thirdParty.output[0]" is null.'
+    ));
+  });
+
+  it('should validate option object and fail when output array contains undefined', () => {
+    const options = {
+      thirdParty: {
+        output: [
+          undefined,
+        ],
+      },
+    };
+
+    expect(() => licensePluginOptions(options)).toThrow(new Error(
+        '[rollup-plugin-license] -- Error during validation of option object: "thirdParty.output[0]" is undefined.'
+    ));
+  });
+
+  it('should validate option object and fail when output array contains invalid value', () => {
+    const options = {
+      thirdParty: {
+        output: [
+          true,
+        ],
+      },
+    };
+
+    expect(() => licensePluginOptions(options)).toThrow(new Error(
+        '[rollup-plugin-license] -- Error during validation of option object: ' +
+        '"thirdParty.output[0]" must be a function OR ' +
+        '"thirdParty.output[0]" must be a string OR ' +
+        '"thirdParty.output[0]" must be an object'
+    ));
+  });
 });
