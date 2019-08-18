@@ -25,48 +25,167 @@
 'use strict';
 
 const _ = require('lodash');
-const Joi = require('@hapi/joi');
 const PLUGIN_NAME = require('./license-plugin-name.js');
 
+const validators = {
+  string() {
+    return {
+      type: 'object.type.string',
+      message: 'must be a string',
+      schema: null,
+      test(value) {
+        return _.isString(value);
+      },
+    };
+  },
+
+  boolean() {
+    return {
+      type: 'object.type.boolean',
+      message: 'must be a boolean',
+      schema: null,
+      test(value) {
+        return _.isBoolean(value);
+      },
+    };
+  },
+
+  func() {
+    return {
+      type: 'object.type.func',
+      message: 'must be a function',
+      schema: null,
+      test(value) {
+        return _.isFunction(value);
+      },
+    };
+  },
+
+  object(schema) {
+    return {
+      type: 'object.type.object',
+      message: 'must be an object',
+      schema,
+      test(value) {
+        return _.isObject(value) &&
+          !_.isArray(value) &&
+          !_.isFunction(value) &&
+          !_.isNil(value) &&
+          !_.isString(value) &&
+          !_.isNumber(value);
+      },
+    };
+  },
+
+  any() {
+    return {
+      type: 'object.any',
+      message: null,
+      schema: null,
+      test: () => true,
+    };
+  },
+};
+
+/**
+ * Validate given object against given schema.
+ *
+ * Note that the very first version used `@hapi/joi` but this package does not support node < 8 in its latest version.
+ * Since I don't want to depends on deprecated and non maintained packages, and I want to keep compatibility with
+ * Node 6, I re-implemented the small part I needed here.
+ *
+ * Once node 6 will not be supported (probably with rollup >= 2), it will be time to drop this in favor of `@hapi/joi`
+ * for example.
+ *
+ * @param {Object} obj Object to validate.
+ * @param {Object} schema The schema against the given object will be validated.
+ * @param {Array<string>} current The current path context of given object, useful to validate against subobject.
+ * @return {Array<Object>} Found errors.
+ */
+function validate(obj, schema, current = []) {
+  const errors = [];
+
+  _.forEach(obj, (value, k) => {
+    if (_.isNil(value)) {
+      return;
+    }
+
+    if (!_.has(schema, k)) {
+      errors.push({
+        type: 'object.allowUnknown',
+        path: [...current, k],
+      });
+
+      return;
+    }
+
+    const validators = _.castArray(schema[k]);
+    const matchedValidators = _.filter(validators, (validator) => validator.test(value));
+    if (_.isEmpty(matchedValidators)) {
+      errors.push({
+        path: [...current, k],
+        message: _.map(validators, (validator) => `"${k}" ${validator.message}`).join(' OR '),
+      });
+
+      return;
+    }
+
+    _.forEach(matchedValidators, (validator) => {
+      if (validator.schema) {
+        const subErrors = validate(value, validator.schema, [k]);
+        if (!_.isEmpty(subErrors)) {
+          errors.push(...subErrors);
+        }
+      }
+    });
+  });
+
+  return errors;
+}
+
+/**
+ * The option object schema.
+ * @type {Object}
+ */
 const SCHEMA = {
   sourcemap: [
-    Joi.string(),
-    Joi.boolean(),
+    validators.string(),
+    validators.boolean(),
   ],
 
-  debug: Joi.boolean(),
-  cwd: Joi.string(),
+  debug: validators.boolean(),
+  cwd: validators.string(),
 
   banner: [
-    Joi.func(),
-    Joi.string(),
-    Joi.object().keys({
-      commentStyle: Joi.string(),
-      data: Joi.any(),
+    validators.func(),
+    validators.string(),
+    validators.object({
+      commentStyle: validators.string(),
+      data: validators.any(),
       content: [
-        Joi.func(),
-        Joi.string(),
-        Joi.object().keys({
-          file: Joi.string(),
-          encoding: Joi.string(),
+        validators.func(),
+        validators.string(),
+        validators.object({
+          file: validators.string(),
+          encoding: validators.string(),
         }),
       ],
     }),
   ],
 
   thirdParty: [
-    Joi.func(),
-    Joi.object().keys({
-      includePrivate: Joi.boolean(),
+    validators.func(),
+    validators.object({
+      includePrivate: validators.boolean(),
       output: [
-        Joi.func(),
-        Joi.string(),
-        Joi.object().keys({
-          file: Joi.string(),
-          encoding: Joi.string(),
+        validators.func(),
+        validators.string(),
+        validators.object({
+          file: validators.string(),
+          encoding: validators.string(),
           template: [
-            Joi.string(),
-            Joi.func(),
+            validators.string(),
+            validators.func(),
           ],
         }),
       ],
@@ -224,37 +343,10 @@ function normalizeOptions(options) {
  * Validate given option object.
  *
  * @param {Object} options Option object.
- * @param {boolean} allowUnknown A flag to check if unknown options should results in an error.
  * @return {Array} An array of all errors.
  */
-function doValidation(options, allowUnknown) {
-  const result = Joi.validate(options, SCHEMA, {
-    abortEarly: false,
-    convert: false,
-    allowUnknown,
-  });
-
-  return result.error ? result.error.details : [];
-}
-
-/**
- * Print a warning for each unknown option entries.
- *
- * @param {Object} options Option object.
- * @return {void}
- */
-function printForUnknownProperties(options) {
-  const errors = doValidation(options, false);
-  if (_.isEmpty(errors)) {
-    return;
-  }
-
-  const allowUnknownErrors = _.filter(errors, (e) => e.type === 'object.allowUnknown');
-  if (allowUnknownErrors.length > 0) {
-    _.forEach(allowUnknownErrors, (e) => (
-      warn(`Unknown property: "${e.path.join('.')}", allowed options are: ${_.keys(SCHEMA).join(', ')}.`))
-    );
-  }
+function doValidation(options) {
+  return validate(options, SCHEMA);
 }
 
 /**
@@ -264,14 +356,26 @@ function printForUnknownProperties(options) {
  * @return {void}
  */
 function validateOptions(options) {
-  const errors = doValidation(options, true);
+  const errors = doValidation(options);
   if (_.isEmpty(errors)) {
     return;
   }
 
-  const messages = _.map(errors, (e) => e.message).join(' ; ');
-  const message = `[${PLUGIN_NAME}] -- Error during validation of option object: ${messages}`;
-  throw new Error(message);
+  const messages = [];
+
+  _.forEach(errors, (e) => {
+    if (e.type === 'object.allowUnknown') {
+      warn(`Unknown property: "${e.path.join('.')}", allowed options are: ${_.keys(SCHEMA).join(', ')}.`);
+    } else {
+      messages.push(e.message);
+    }
+  });
+
+  if (!_.isEmpty(messages)) {
+    throw new Error(
+        `[${PLUGIN_NAME}] -- Error during validation of option object: ${messages.join(' ; ')}`
+    );
+  }
 }
 
 /**
@@ -283,7 +387,6 @@ function validateOptions(options) {
 module.exports = function licensePluginOption(options) {
   const normalizedOptions = normalizeOptions(options);
 
-  printForUnknownProperties(normalizedOptions);
   validateOptions(normalizedOptions);
 
   return normalizedOptions;
