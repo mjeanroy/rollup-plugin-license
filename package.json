@@ -56,7 +56,7 @@
     "gulp-eslint": "6.0.0",
     "gulp-git": "2.9.0",
     "gulp-jasmine": "4.0.0",
-    "jasmine-core": "3.4.0",
+    "jasmine-core": "3.5.0",
     "rimraf": "3.0.0",
     "rollup": "1.21.4",
     "rollup-plugin-commonjs": "10.1.0",
