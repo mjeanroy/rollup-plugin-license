@@ -36,7 +36,7 @@
     "commenting": "1.1.0",
     "glob": "7.1.4",
     "lodash": "4.17.15",
-    "magic-string": "0.25.3",
+    "magic-string": "0.25.4",
     "mkdirp": "0.5.1",
     "moment": "2.24.0",
     "spdx-expression-validate": "2.0.0",
