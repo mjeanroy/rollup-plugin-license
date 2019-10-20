@@ -58,7 +58,7 @@
     "gulp-jasmine": "4.0.0",
     "jasmine-core": "3.5.0",
     "rimraf": "3.0.0",
-    "rollup": "1.25.0",
+    "rollup": "1.25.1",
     "rollup-plugin-commonjs": "10.1.0",
     "rollup-plugin-node-resolve": "5.2.0",
     "tmp": "0.1.0"
