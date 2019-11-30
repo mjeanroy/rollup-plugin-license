@@ -42,6 +42,16 @@ function normalizeLicense(license) {
 }
 
 /**
+ * Check if given license name is the `UNLICENSED` value.
+ *
+ * @param {string} license The license to check.
+ * @return {boolean} `true` if `license` is the UNLICENSED one, `false` otherwise.
+ */
+function checkUnlicensed(license) {
+  return license.toUpperCase() === 'UNLICENSED';
+}
+
+/**
  * Check if dependency is unlicensed, or not.
  *
  * @param {Object} dependency The dependency.
@@ -49,7 +59,7 @@ function normalizeLicense(license) {
  */
 function isUnlicensed(dependency) {
   const license = normalizeLicense(dependency.license);
-  return license.toUpperCase() === 'UNLICENSED';
+  return checkUnlicensed(license);
 }
 
 /**
@@ -61,6 +71,10 @@ function isUnlicensed(dependency) {
  */
 function isValid(dependency, allow) {
   const license = normalizeLicense(dependency.license);
+  if (checkUnlicensed(license)) {
+    return false;
+  }
+
   return spdxExpressionValidate(license) && spdxSatisfies(license, allow);
 }
 

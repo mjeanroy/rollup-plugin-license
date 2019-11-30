@@ -421,9 +421,22 @@ class LicensePlugin {
    * @return {void}
    */
   _scanLicenseViolation(dependency, allow) {
+    if (!licenseValidator.isValid(dependency, allow)) {
+      this._handleInvalidLicense(dependency, allow);
+    }
+  }
+
+  /**
+   * Scan dependency for a dependency violation.
+   *
+   * @param {Object} dependency The dependency to scan.
+   * @param {string} allow The allowed licenses as a SPDX pattern.
+   * @return {void}
+   */
+  _handleInvalidLicense(dependency, allow) {
     if (licenseValidator.isUnlicensed(dependency)) {
       this._handleUnlicensedDependency(dependency);
-    } else if (!licenseValidator.isValid(dependency, allow)) {
+    } else {
       this._handleLicenseViolation(dependency, allow);
     }
   }
