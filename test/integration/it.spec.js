@@ -35,7 +35,12 @@ const join = require('../utils/join.js');
 const licensePlugin = require('../../dist/index.js');
 
 describe('Dependency', () => {
+  let warn;
   let tmpDir;
+
+  beforeEach(() => {
+    warn = spyOn(console, 'warn');
+  });
 
   beforeEach(() => {
     tmpDir = tmp.dirSync({
@@ -48,372 +53,184 @@ describe('Dependency', () => {
   });
 
   it('should generate bundle with dependency output', (done) => {
-    const bundleOutput = path.join(tmpDir.name, 'bundle.js');
     const thirdPartyOutput = path.join(tmpDir.name, 'dependencies.txt');
-
-    const rollupConfig = {
-      input: path.join(__dirname, 'bundle.js'),
-
-      output: {
-        file: bundleOutput,
-        format: 'es',
+    const rollupConfig = createRollupConfig({
+      thirdParty: {
+        output: thirdPartyOutput,
       },
+    });
 
-      plugins: [
-        nodeResolve(),
-        commonjs(),
-
-        licensePlugin({
-          thirdParty: {
-            output: thirdPartyOutput,
-          },
-        }),
-      ],
-    };
-
-    rollup.rollup(rollupConfig)
-        .then((bundle) => bundle.write(rollupConfig.output))
-        .then(() => {
-          fs.readFile(thirdPartyOutput, 'utf8', (err, data) => {
-            if (err) {
-              done.fail(err);
-            }
-
-            expect(data.toString()).toContain('lodash');
-            done();
-          });
-        });
+    writeBundle(rollupConfig).then(() => {
+      verifyFile(thirdPartyOutput, done, (data) => {
+        expect(data.toString()).toContain('lodash');
+      });
+    });
   });
 
   it('should generate bundle with dependency output as an object', (done) => {
-    const bundleOutput = path.join(tmpDir.name, 'bundle.js');
     const thirdPartyOutput = path.join(tmpDir.name, 'dependencies.txt');
-
-    const rollupConfig = {
-      input: path.join(__dirname, 'bundle.js'),
-
-      output: {
-        file: bundleOutput,
-        format: 'es',
+    const rollupConfig = createRollupConfig({
+      thirdParty: {
+        output: {
+          file: thirdPartyOutput,
+        },
       },
+    });
 
-      plugins: [
-        nodeResolve(),
-        commonjs(),
-
-        licensePlugin({
-          thirdParty: {
-            output: {
-              file: thirdPartyOutput,
-            },
-          },
-        }),
-      ],
-    };
-
-    rollup.rollup(rollupConfig)
-        .then((bundle) => bundle.write(rollupConfig.output))
-        .then(() => {
-          fs.readFile(thirdPartyOutput, 'utf8', (err, data) => {
-            if (err) {
-              done.fail(err);
-            }
-
-            expect(data.toString()).toContain('lodash');
-            done();
-          });
-        });
+    writeBundle(rollupConfig).then(() => {
+      verifyFile(thirdPartyOutput, done, (data) => {
+        expect(data.toString()).toContain('lodash');
+      });
+    });
   });
 
   it('should generate bundle with dependency output as a JSON file', (done) => {
-    const bundleOutput = path.join(tmpDir.name, 'bundle.js');
     const thirdPartyOutput = path.join(tmpDir.name, 'dependencies.json');
-    const rollupConfig = {
-      input: path.join(__dirname, 'bundle.js'),
-
-      output: {
-        file: bundleOutput,
-        format: 'es',
-      },
-
-      plugins: [
-        nodeResolve(),
-        commonjs(),
-
-        licensePlugin({
-          thirdParty: {
-            output: {
-              file: thirdPartyOutput,
-              template(dependencies) {
-                return JSON.stringify(dependencies);
-              },
-            },
+    const rollupConfig = createRollupConfig({
+      thirdParty: {
+        output: {
+          file: thirdPartyOutput,
+          template(dependencies) {
+            return JSON.stringify(dependencies);
           },
-        }),
-      ],
-    };
+        },
+      },
+    });
 
-    rollup.rollup(rollupConfig)
-        .then((bundle) => bundle.write(rollupConfig.output))
-        .then(() => {
-          fs.readFile(thirdPartyOutput, 'utf8', (err, data) => {
-            if (err) {
-              done.fail(err);
-            }
-
-            const content = data.toString();
-            const json = JSON.parse(content);
-            expect(json).toBeDefined();
-            expect(json.length).toBe(1);
-            expect(json[0].name).toBe('lodash');
-
-            done();
-          });
-        });
+    writeBundle(rollupConfig).then(() => {
+      verifyFile(thirdPartyOutput, done, (data) => {
+        const content = data.toString();
+        const json = JSON.parse(content);
+        expect(json).toBeDefined();
+        expect(json.length).toBe(1);
+        expect(json[0].name).toBe('lodash');
+      });
+    });
   });
 
   it('should generate bundle with dependency output as a JSON & a text file', (done) => {
-    const bundleOutput = path.join(tmpDir.name, 'bundle.js');
     const jsonOutput = path.join(tmpDir.name, 'dependencies.json');
     const txtOutput = path.join(tmpDir.name, 'dependencies.json');
-    const rollupConfig = {
-      input: path.join(__dirname, 'bundle.js'),
-
-      output: {
-        file: bundleOutput,
-        format: 'es',
-      },
-
-      plugins: [
-        nodeResolve(),
-        commonjs(),
-
-        licensePlugin({
-          thirdParty: {
-            output: [
-              {
-                file: txtOutput,
-              },
-              {
-                file: jsonOutput,
-                template(dependencies) {
-                  return JSON.stringify(dependencies);
-                },
-              },
-            ],
+    const rollupConfig = createRollupConfig({
+      thirdParty: {
+        output: [
+          {
+            file: txtOutput,
           },
-        }),
-      ],
-    };
+          {
+            file: jsonOutput,
+            template(dependencies) {
+              return JSON.stringify(dependencies);
+            },
+          },
+        ],
+      },
+    });
 
-    rollup.rollup(rollupConfig)
-        .then((bundle) => bundle.write(rollupConfig.output))
-        .then(() => {
-          const onDone = _.after(2, () => done());
+    writeBundle(rollupConfig).then(() => {
+      const onDone = _.after(2, () => done());
+      onDone.fail = (err) => done.fail(err);
 
-          fs.readFile(jsonOutput, 'utf8', (err, data) => {
-            if (err) {
-              done.fail(err);
-            }
+      verifyFile(jsonOutput, onDone, (data) => {
+        const content = data.toString();
+        const json = JSON.parse(content);
+        expect(json).toBeDefined();
+        expect(json.length).toBe(1);
+        expect(json[0].name).toBe('lodash');
+      });
 
-            const content = data.toString();
-            const json = JSON.parse(content);
-            expect(json).toBeDefined();
-            expect(json.length).toBe(1);
-            expect(json[0].name).toBe('lodash');
-
-            onDone();
-          });
-
-          fs.readFile(txtOutput, 'utf8', (err, data) => {
-            if (err) {
-              done.fail(err);
-            }
-
-            const content = data.toString();
-            expect(content).toBeDefined();
-            expect(content).toContain('lodash');
-
-            onDone();
-          });
-        });
+      verifyFile(txtOutput, onDone, (data) => {
+        const content = data.toString();
+        expect(content).toBeDefined();
+        expect(content).toContain('lodash');
+      });
+    });
   });
 
   it('should generate bundle and export dependencies to given function', (done) => {
-    const bundleOutput = path.join(tmpDir.name, 'bundle.js');
     const thirdPartyOutput = jasmine.createSpy('thirdPartyOutput');
-
-    const rollupConfig = {
-      input: path.join(__dirname, 'bundle.js'),
-
-      output: {
-        file: bundleOutput,
-        format: 'es',
+    const rollupConfig = createRollupConfig({
+      thirdParty: {
+        output: thirdPartyOutput,
       },
+    });
 
-      plugins: [
-        nodeResolve(),
-        commonjs(),
-
-        licensePlugin({
-          thirdParty: {
-            output: thirdPartyOutput,
-          },
+    writeBundle(rollupConfig).then(() => {
+      expect(thirdPartyOutput).toHaveBeenCalledWith([
+        jasmine.objectContaining({
+          name: 'lodash',
         }),
-      ],
-    };
+      ]);
 
-    rollup.rollup(rollupConfig)
-        .then((bundle) => bundle.write(rollupConfig.output))
-        .then(() => {
-          expect(thirdPartyOutput).toHaveBeenCalledWith([
-            jasmine.objectContaining({
-              name: 'lodash',
-            }),
-          ]);
-
-          done();
-        });
+      done();
+    });
   });
 
   it('should generate bundle with license header', (done) => {
-    const bundleOutput = path.join(tmpDir.name, 'bundle.js');
     const banner = 'test banner';
+    const rollupConfig = createRollupConfig({
+      banner,
+    });
 
-    const rollupConfig = {
-      input: path.join(__dirname, 'bundle.js'),
-
-      output: {
-        file: bundleOutput,
-        format: 'es',
-      },
-
-      plugins: [
-        nodeResolve(),
-        commonjs(),
-        licensePlugin({banner}),
-      ],
-    };
-
-    rollup.rollup(rollupConfig)
-        .then((bundle) => bundle.write(rollupConfig.output))
-        .then(() => {
-          fs.readFile(bundleOutput, 'utf8', (err, data) => {
-            if (err) {
-              done.fail(err);
-            }
-
-            expect(data.toString()).toContain(join([
-              `/**`,
-              ` * ${banner}`,
-              ` */`,
-            ]));
-
-            done();
-          });
-        });
+    writeBundle(rollupConfig).then(() => {
+      verifyFile(rollupConfig.output.file, done, (data) => {
+        expect(data.toString()).toContain(join([
+          `/**`,
+          ` * ${banner}`,
+          ` */`,
+        ]));
+      });
+    });
   });
 
   it('should generate bundle with license header from given file', (done) => {
-    const warn = spyOn(console, 'warn');
-    const bundleOutput = path.join(tmpDir.name, 'bundle.js');
     const banner = {
       file: path.join(__dirname, '..', 'fixtures', 'banner.txt'),
       encoding: 'utf-8',
     };
 
-    const rollupConfig = {
-      input: path.join(__dirname, 'bundle.js'),
+    const rollupConfig = createRollupConfig({
+      banner,
+    });
 
-      output: {
-        file: bundleOutput,
-        format: 'es',
-      },
+    writeBundle(rollupConfig).then(() => {
+      verifyFile(rollupConfig.output.file, done, (data) => {
+        expect(data.toString()).toContain(join([
+          '/**',
+          ' * Test banner.',
+          ' *',
+          ' * With a second line.',
+          ' */',
+        ]));
 
-      plugins: [
-        nodeResolve(),
-        commonjs(),
-        licensePlugin({
-          banner,
-        }),
-      ],
-    };
-
-    rollup.rollup(rollupConfig)
-        .then((bundle) => bundle.write(rollupConfig.output))
-        .then(() => {
-          fs.readFile(bundleOutput, 'utf8', (err, data) => {
-            if (err) {
-              done.fail(err);
-            }
-
-            expect(data.toString()).toContain(join([
-              '/**',
-              ' * Test banner.',
-              ' *',
-              ' * With a second line.',
-              ' */',
-            ]));
-
-            expect(warn).toHaveBeenCalledWith(
-                '[rollup-plugin-license] -- "banner.file" has been deprecated and will be removed in a future version, ' +
-                'please use "banner.content.file" instead.'
-            );
-
-            done();
-          });
-        });
+        expect(warn).toHaveBeenCalledWith(
+            '[rollup-plugin-license] -- "banner.file" has been deprecated and will be removed in a future version, ' +
+            'please use "banner.content.file" instead.'
+        );
+      });
+    });
   });
 
   it('should generate bundle with license header from content as a raw string', (done) => {
-    const warn = spyOn(console, 'warn');
-    const bundleOutput = path.join(tmpDir.name, 'bundle.js');
     const content = 'Banner from inline content';
-    const banner = {
-      content,
-    };
+    const banner = {content};
+    const rollupConfig = createRollupConfig({
+      banner,
+    });
 
-    const rollupConfig = {
-      input: path.join(__dirname, 'bundle.js'),
-
-      output: {
-        file: bundleOutput,
-        format: 'es',
-      },
-
-      plugins: [
-        nodeResolve(),
-        commonjs(),
-        licensePlugin({
-          banner,
-        }),
-      ],
-    };
-
-    rollup.rollup(rollupConfig)
-        .then((bundle) => bundle.write(rollupConfig.output))
-        .then(() => {
-          fs.readFile(bundleOutput, 'utf8', (err, data) => {
-            if (err) {
-              done.fail(err);
-            }
-
-            expect(data.toString()).toContain(join([
-              `/**`,
-              ` * ${content}`,
-              ` */`,
-            ]));
-
-            expect(warn).not.toHaveBeenCalled();
-
-            done();
-          });
-        });
+    writeBundle(rollupConfig).then(() => {
+      verifyFile(rollupConfig.output.file, done, (data) => {
+        expect(warn).not.toHaveBeenCalled();
+        expect(data.toString()).toContain(join([
+          `/**`,
+          ` * ${content}`,
+          ` */`,
+        ]));
+      });
+    });
   });
 
   it('should generate bundle with license header from content as a string returned from function', (done) => {
-    const warn = spyOn(console, 'warn');
-    const bundleOutput = path.join(tmpDir.name, 'bundle.js');
     const content = 'Banner from inline content';
     const banner = {
       content() {
@@ -421,47 +238,23 @@ describe('Dependency', () => {
       },
     };
 
-    const rollupConfig = {
-      input: path.join(__dirname, 'bundle.js'),
+    const rollupConfig = createRollupConfig({
+      banner,
+    });
 
-      output: {
-        file: bundleOutput,
-        format: 'es',
-      },
-
-      plugins: [
-        nodeResolve(),
-        commonjs(),
-        licensePlugin({
-          banner,
-        }),
-      ],
-    };
-
-    rollup.rollup(rollupConfig)
-        .then((bundle) => bundle.write(rollupConfig.output))
-        .then(() => {
-          fs.readFile(bundleOutput, 'utf8', (err, data) => {
-            if (err) {
-              done.fail(err);
-            }
-
-            expect(data.toString()).toContain(join([
-              `/**`,
-              ` * ${content}`,
-              ` */`,
-            ]));
-
-            expect(warn).not.toHaveBeenCalled();
-
-            done();
-          });
-        });
+    writeBundle(rollupConfig).then(() => {
+      verifyFile(rollupConfig.output.file, done, (data) => {
+        expect(warn).not.toHaveBeenCalled();
+        expect(data.toString()).toContain(join([
+          `/**`,
+          ` * ${content}`,
+          ` */`,
+        ]));
+      });
+    });
   });
 
   it('should generate bundle with license header from given content file', (done) => {
-    const warn = spyOn(console, 'warn');
-    const bundleOutput = path.join(tmpDir.name, 'bundle.js');
     const banner = {
       content: {
         file: path.join(__dirname, '..', 'fixtures', 'banner.txt'),
@@ -469,43 +262,55 @@ describe('Dependency', () => {
       },
     };
 
-    const rollupConfig = {
+    const rollupConfig = createRollupConfig({
+      banner,
+    });
+
+    writeBundle(rollupConfig).then(() => {
+      verifyFile(rollupConfig.output.file, done, (data) => {
+        expect(warn).not.toHaveBeenCalled();
+        expect(data.toString()).toContain(join([
+          '/**',
+          ' * Test banner.',
+          ' *',
+          ' * With a second line.',
+          ' */',
+        ]));
+      });
+    });
+  });
+
+  function createRollupConfig(licensePluginOptions) {
+    return {
       input: path.join(__dirname, 'bundle.js'),
 
       output: {
-        file: bundleOutput,
+        file: path.join(tmpDir.name, 'bundle.js'),
         format: 'es',
       },
 
       plugins: [
         nodeResolve(),
         commonjs(),
-        licensePlugin({
-          banner,
-        }),
+        licensePlugin(
+            licensePluginOptions
+        ),
       ],
     };
+  }
 
-    rollup.rollup(rollupConfig)
-        .then((bundle) => bundle.write(rollupConfig.output))
-        .then(() => {
-          fs.readFile(bundleOutput, 'utf8', (err, data) => {
-            if (err) {
-              done.fail(err);
-            }
+  function writeBundle(rollupConfig) {
+    return rollup.rollup(rollupConfig).then((bundle) => bundle.write(rollupConfig.output));
+  }
 
-            expect(data.toString()).toContain(join([
-              '/**',
-              ' * Test banner.',
-              ' *',
-              ' * With a second line.',
-              ' */',
-            ]));
+  function verifyFile(file, done, test) {
+    fs.readFile(file, 'utf8', (err, data) => {
+      if (err) {
+        done.fail(err);
+      }
 
-            expect(warn).not.toHaveBeenCalled();
-
-            done();
-          });
-        });
-  });
+      test(data);
+      done();
+    });
+  }
 });
