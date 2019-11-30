@@ -26,77 +26,7 @@
 
 const _ = require('lodash');
 const PLUGIN_NAME = require('./license-plugin-name.js');
-
-const validators = {
-  string() {
-    return {
-      type: 'object.type.string',
-      message: 'must be a string',
-      schema: null,
-      test(value) {
-        return _.isString(value);
-      },
-    };
-  },
-
-  boolean() {
-    return {
-      type: 'object.type.boolean',
-      message: 'must be a boolean',
-      schema: null,
-      test(value) {
-        return _.isBoolean(value);
-      },
-    };
-  },
-
-  func() {
-    return {
-      type: 'object.type.func',
-      message: 'must be a function',
-      schema: null,
-      test(value) {
-        return _.isFunction(value);
-      },
-    };
-  },
-
-  object(schema) {
-    return {
-      type: 'object.type.object',
-      message: 'must be an object',
-      schema,
-      test(value) {
-        return _.isObject(value) &&
-          !_.isArray(value) &&
-          !_.isFunction(value) &&
-          !_.isNil(value) &&
-          !_.isString(value) &&
-          !_.isNumber(value);
-      },
-    };
-  },
-
-  array(schema) {
-    return {
-      type: 'object.type.array',
-      message: 'must be an array',
-      schema,
-      test(value) {
-        return _.isArray(value);
-      },
-    };
-  },
-
-  any() {
-    return {
-      type: 'object.any',
-      message: null,
-      schema: null,
-      test: () => true,
-    };
-  },
-};
+const validators = require('./schema-validators.js');
 
 /**
  * Format given array of path to a human readable path.
