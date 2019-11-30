@@ -1919,6 +1919,46 @@ describe('LicensePlugin', () => {
       verifyWarnAboutApache2License();
     });
 
+    it('should fail with unlicensed dependencies if enabled', () => {
+      const instance = licensePlugin({
+        thirdParty: {
+          allow: {
+            test: '(Apache-2.0 OR MIT)',
+            failOnUnlicensed: true,
+            failOnViolation: true,
+          },
+        },
+      });
+
+      instance.addDependency(unlicensedDependency);
+      instance.addDependency(apache2Dependency);
+      instance.addDependency(mitDependency);
+
+      expect(() => instance.scanThirdParties()).toThrow(new Error(
+          'Dependency "baz" does not specify any license.'
+      ));
+    });
+
+    it('should fail with license violation if enabled', () => {
+      const instance = licensePlugin({
+        thirdParty: {
+          allow: {
+            test: 'MIT',
+            failOnUnlicensed: false,
+            failOnViolation: true,
+          },
+        },
+      });
+
+      instance.addDependency(unlicensedDependency);
+      instance.addDependency(apache2Dependency);
+      instance.addDependency(mitDependency);
+
+      expect(() => instance.scanThirdParties()).toThrow(new Error(
+          'Dependency "foo" has a license (Apache-2.0) which is not compatible with requirement, looks like a license violation to fix.'
+      ));
+    });
+
     function verifyWarnAboutApache2License() {
       expect(warn).toHaveBeenCalledWith(
           '[rollup-plugin-license] -- ' +

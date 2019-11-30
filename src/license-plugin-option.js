@@ -73,6 +73,9 @@ const SCHEMA = {
             validators.string(),
             validators.func(),
           ],
+
+          failOnUnlicensed: validators.boolean(),
+          failOnViolation: validators.boolean(),
         }),
       ],
 

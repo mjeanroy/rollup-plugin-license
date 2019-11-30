@@ -424,7 +424,9 @@ class LicensePlugin {
     const testFn = _.isString(allow) || _.isFunction(allow) ? allow : allow.test;
     const isValid = _.isFunction(testFn) ? testFn(dependency) : licenseValidator.isValid(dependency, testFn);
     if (!isValid) {
-      this._handleInvalidLicense(dependency);
+      const failOnUnlicensed = allow.failOnUnlicensed === true;
+      const failOnViolation = allow.failOnViolation === true;
+      this._handleInvalidLicense(dependency, failOnUnlicensed, failOnViolation);
     }
   }
 
@@ -434,13 +436,15 @@ class LicensePlugin {
    * - Print a warning for dependency violation.
    *
    * @param {Object} dependency The dependency to scan.
+   * @param {boolean} failOnUnlicensed `true` to fail on unlicensed dependency, `false` otherwise.
+   * @param {boolean} failOnViolation `true` to fail on license violation, `false` otherwise.
    * @return {void}
    */
-  _handleInvalidLicense(dependency) {
+  _handleInvalidLicense(dependency, failOnUnlicensed, failOnViolation) {
     if (licenseValidator.isUnlicensed(dependency)) {
-      this._handleUnlicensedDependency(dependency);
+      this._handleUnlicensedDependency(dependency, failOnUnlicensed);
     } else {
-      this._handleLicenseViolation(dependency);
+      this._handleLicenseViolation(dependency, failOnViolation);
     }
   }
 
@@ -449,25 +453,36 @@ class LicensePlugin {
    * that should be fixed.
    *
    * @param {Object} dependency The dependency.
+   * @param {boolean} fail `true` to fail instead of emitting a simple warning.
    * @return {void}
    */
-  _handleUnlicensedDependency(dependency) {
-    this.warn(
-        `Dependency "${dependency.name}" does not specify any license.`
-    );
+  _handleUnlicensedDependency(dependency, fail) {
+    const message = `Dependency "${dependency.name}" does not specify any license.`;
+
+    if (!fail) {
+      this.warn(message);
+    } else {
+      throw new Error(message);
+    }
   }
 
   /**
    * Handle license violation: print a warning to the console to alert about the violation.
    *
    * @param {Object} dependency The dependency.
+   * @param {boolean} fail `true` to fail instead of emitting a simple warning.
    * @return {void}
    */
-  _handleLicenseViolation(dependency) {
-    this.warn(
-        `Dependency "${dependency.name}" has a license (${dependency.license}) which is not compatible with ` +
-        `requirement, looks like a license violation to fix.`
-    );
+  _handleLicenseViolation(dependency, fail) {
+    const message =
+      `Dependency "${dependency.name}" has a license (${dependency.license}) which is not compatible with ` +
+      `requirement, looks like a license violation to fix.`;
+
+    if (!fail) {
+      this.warn(message);
+    } else {
+      throw new Error(message);
+    }
   }
 
   /**
