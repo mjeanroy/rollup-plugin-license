@@ -31,12 +31,11 @@ const _ = require('lodash');
 const moment = require('moment');
 const MagicString = require('magic-string');
 const glob = require('glob');
-const spdxExpressionValidate = require('spdx-expression-validate');
-const spdxSatisfies = require('spdx-satisfies');
 
 const Dependency = require('./dependency.js');
 const generateBlockComment = require('./generate-block-comment.js');
 const licensePluginOptions = require('./license-plugin-option.js');
+const licenseValidator = require('./license-validator');
 const PLUGIN_NAME = require('./license-plugin-name.js');
 const EOL = require('./eol.js');
 
@@ -422,10 +421,9 @@ class LicensePlugin {
    * @return {void}
    */
   _scanLicenseViolation(dependency, allow) {
-    const license = dependency.license || 'UNLICENSED';
-    if (license === 'UNLICENSED') {
+    if (licenseValidator.isUnlicensed(dependency)) {
       this._handleUnlicensedDependency(dependency);
-    } else if (!spdxExpressionValidate(license) || !spdxSatisfies(license, allow)) {
+    } else if (!licenseValidator.isValid(dependency, allow)) {
       this._handleLicenseViolation(dependency, allow);
     }
   }
