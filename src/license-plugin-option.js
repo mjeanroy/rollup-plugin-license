@@ -283,7 +283,12 @@ const SCHEMA = {
     validators.func(),
     validators.object({
       includePrivate: validators.boolean(),
-      allow: validators.string(),
+
+      allow: [
+        validators.string(),
+        validators.func(),
+      ],
+
       output: [
         validators.func(),
         validators.string(),

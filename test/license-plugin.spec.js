@@ -1850,7 +1850,7 @@ describe('LicensePlugin', () => {
 
     expect(warn).toHaveBeenCalledWith(
         '[rollup-plugin-license] -- ' +
-        'Dependency "foo" has a license (Apache-2.0) which is not compatible with requirement (MIT), ' +
+        'Dependency "foo" has a license (Apache-2.0) which is not compatible with requirement, ' +
         'looks like a license violation to fix.'
     );
   });
@@ -1874,6 +1874,41 @@ describe('LicensePlugin', () => {
 
     expect(warn).toHaveBeenCalledWith(
         '[rollup-plugin-license] -- Dependency "baz" does not specify any license.'
+    );
+  });
+
+  it('should warn for invalid dependencies using validator function', () => {
+    const warn = spyOn(console, 'warn');
+    const allow = jasmine.createSpy('allow').and.callFake((dependency) => (
+      dependency.license === 'MIT'
+    ));
+
+    const instance = licensePlugin({
+      thirdParty: {
+        allow,
+      },
+    });
+
+    instance.addDependency({
+      name: 'foo',
+      version: '1.0.0',
+      description: 'Foo Package',
+      license: 'Apache-2.0',
+    });
+
+    instance.addDependency({
+      name: 'bar',
+      version: '2.0.0',
+      description: 'Bar Package',
+      license: 'MIT',
+    });
+
+    instance.scanThirdParties();
+
+    expect(warn).toHaveBeenCalledWith(
+        '[rollup-plugin-license] -- ' +
+        'Dependency "foo" has a license (Apache-2.0) which is not compatible with requirement, ' +
+        'looks like a license violation to fix.'
     );
   });
 });

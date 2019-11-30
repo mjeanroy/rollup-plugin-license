@@ -417,27 +417,29 @@ class LicensePlugin {
    * Scan dependency for a dependency violation.
    *
    * @param {Object} dependency The dependency to scan.
-   * @param {string} allow The allowed licenses as a SPDX pattern.
+   * @param {string|function} allow The allowed licenses as a SPDX pattern, or a validator function.
    * @return {void}
    */
   _scanLicenseViolation(dependency, allow) {
-    if (!licenseValidator.isValid(dependency, allow)) {
-      this._handleInvalidLicense(dependency, allow);
+    const isValid = _.isFunction(allow) ? allow(dependency) : licenseValidator.isValid(dependency, allow);
+    if (!isValid) {
+      this._handleInvalidLicense(dependency);
     }
   }
 
   /**
-   * Scan dependency for a dependency violation.
+   * Handle invalid dependency:
+   * - Print a warning for unlicensed dependency.
+   * - Print a warning for dependency violation.
    *
    * @param {Object} dependency The dependency to scan.
-   * @param {string} allow The allowed licenses as a SPDX pattern.
    * @return {void}
    */
-  _handleInvalidLicense(dependency, allow) {
+  _handleInvalidLicense(dependency) {
     if (licenseValidator.isUnlicensed(dependency)) {
       this._handleUnlicensedDependency(dependency);
     } else {
-      this._handleLicenseViolation(dependency, allow);
+      this._handleLicenseViolation(dependency);
     }
   }
 
@@ -458,13 +460,12 @@ class LicensePlugin {
    * Handle license violation: print a warning to the console to alert about the violation.
    *
    * @param {Object} dependency The dependency.
-   * @param {*} allow The allowed expression.
    * @return {void}
    */
-  _handleLicenseViolation(dependency, allow) {
+  _handleLicenseViolation(dependency) {
     this.warn(
-        `Dependency "${dependency.name}" has a license (${dependency.license}) which is not compatible with requirement (${allow}), ` +
-        `looks like a license violation to fix.`
+        `Dependency "${dependency.name}" has a license (${dependency.license}) which is not compatible with ` +
+        `requirement, looks like a license violation to fix.`
     );
   }
 
