@@ -287,6 +287,12 @@ const SCHEMA = {
       allow: [
         validators.string(),
         validators.func(),
+        validators.object({
+          test: [
+            validators.string(),
+            validators.func(),
+          ],
+        }),
       ],
 
       output: [

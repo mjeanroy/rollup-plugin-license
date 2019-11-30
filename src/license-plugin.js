@@ -417,11 +417,12 @@ class LicensePlugin {
    * Scan dependency for a dependency violation.
    *
    * @param {Object} dependency The dependency to scan.
-   * @param {string|function} allow The allowed licenses as a SPDX pattern, or a validator function.
+   * @param {string|function|object} allow The allowed licenses as a SPDX pattern, or a validator function.
    * @return {void}
    */
   _scanLicenseViolation(dependency, allow) {
-    const isValid = _.isFunction(allow) ? allow(dependency) : licenseValidator.isValid(dependency, allow);
+    const testFn = _.isString(allow) || _.isFunction(allow) ? allow : allow.test;
+    const isValid = _.isFunction(testFn) ? testFn(dependency) : licenseValidator.isValid(dependency, testFn);
     if (!isValid) {
       this._handleInvalidLicense(dependency);
     }

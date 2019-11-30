@@ -1795,120 +1795,142 @@ describe('LicensePlugin', () => {
     ]);
   });
 
-  it('should not warn without any license violations', () => {
-    const warn = spyOn(console, 'warn');
-    const allow = '(Apache-2.0 OR MIT)';
-    const instance = licensePlugin({
-      thirdParty: {
-        allow,
-      },
+  describe('with license checker', () => {
+    let warn;
+    let mitDependency;
+    let apache2Dependency;
+    let unlicensedDependency;
+
+    beforeEach(() => {
+      warn = spyOn(console, 'warn');
+
+      mitDependency = {
+        name: 'bar',
+        version: '2.0.0',
+        description: 'Bar Package',
+        license: 'MIT',
+      };
+
+      apache2Dependency = {
+        name: 'foo',
+        version: '1.0.0',
+        description: 'Foo Package',
+        license: 'Apache-2.0',
+      };
+
+      unlicensedDependency = {
+        name: 'baz',
+        version: '3.0.0',
+        description: 'Baz Package',
+      };
     });
 
-    instance.addDependency({
-      name: 'foo',
-      version: '1.0.0',
-      description: 'Foo Package',
-      license: 'Apache-2.0',
+    it('should not warn without any license violations', () => {
+      const allow = '(Apache-2.0 OR MIT)';
+      const instance = licensePlugin({
+        thirdParty: {
+          allow,
+        },
+      });
+
+      instance.addDependency(apache2Dependency);
+      instance.addDependency(mitDependency);
+      instance.scanThirdParties();
+
+      expect(warn).not.toHaveBeenCalled();
     });
 
-    instance.addDependency({
-      name: 'bar',
-      version: '2.0.0',
-      description: 'Bar Package',
-      license: 'MIT',
+    it('should warn for license violations', () => {
+      const allow = 'MIT';
+      const instance = licensePlugin({
+        thirdParty: {
+          allow,
+        },
+      });
+
+      instance.addDependency(apache2Dependency);
+      instance.addDependency(mitDependency);
+      instance.scanThirdParties();
+
+      verifyWarnAboutApache2License();
     });
 
-    instance.scanThirdParties();
+    it('should warn for unlicensed dependencies', () => {
+      const allow = '(Apache-2.0 OR MIT)';
+      const instance = licensePlugin({
+        thirdParty: {
+          allow,
+        },
+      });
 
-    expect(warn).not.toHaveBeenCalled();
-  });
+      instance.addDependency(apache2Dependency);
+      instance.addDependency(unlicensedDependency);
+      instance.scanThirdParties();
 
-  it('should warn for license violations', () => {
-    const warn = spyOn(console, 'warn');
-    const allow = 'MIT';
-    const instance = licensePlugin({
-      thirdParty: {
-        allow,
-      },
+      verifyWarnAboutUnlicensedLicense();
     });
 
-    instance.addDependency({
-      name: 'foo',
-      version: '1.0.0',
-      description: 'Foo Package',
-      license: 'Apache-2.0',
+    it('should warn for invalid dependencies using validator function', () => {
+      const allow = jasmine.createSpy('allow').and.callFake((dependency) => dependency.license === 'MIT');
+      const instance = licensePlugin({
+        thirdParty: {
+          allow,
+        },
+      });
+
+      instance.addDependency(apache2Dependency);
+      instance.addDependency(mitDependency);
+      instance.scanThirdParties();
+
+      verifyWarnAboutApache2License();
     });
 
-    instance.addDependency({
-      name: 'bar',
-      version: '2.0.0',
-      description: 'Bar Package',
-      license: 'MIT',
+    it('should check for invalid dependencies using object definition option', () => {
+      const test = 'MIT';
+      const instance = licensePlugin({
+        thirdParty: {
+          allow: {
+            test,
+          },
+        },
+      });
+
+      instance.addDependency(apache2Dependency);
+      instance.addDependency(mitDependency);
+      instance.scanThirdParties();
+
+      verifyWarnAboutApache2License();
     });
 
-    instance.scanThirdParties();
+    it('should check for invalid dependencies using object definition option and validator function', () => {
+      const test = jasmine.createSpy('allow').and.callFake((dependency) => dependency.license === 'MIT');
+      const instance = licensePlugin({
+        thirdParty: {
+          allow: {
+            test,
+          },
+        },
+      });
 
-    expect(warn).toHaveBeenCalledWith(
-        '[rollup-plugin-license] -- ' +
-        'Dependency "foo" has a license (Apache-2.0) which is not compatible with requirement, ' +
-        'looks like a license violation to fix.'
-    );
-  });
+      instance.addDependency(apache2Dependency);
+      instance.addDependency(mitDependency);
+      instance.scanThirdParties();
 
-  it('should warn for unlicensed dependencies', () => {
-    const warn = spyOn(console, 'warn');
-    const allow = '(Apache-2.0 OR MIT)';
-    const instance = licensePlugin({
-      thirdParty: {
-        allow,
-      },
+      verifyWarnAboutApache2License();
     });
 
-    instance.addDependency({
-      name: 'baz',
-      version: '3.0.0',
-      description: 'Baz Package',
-    });
+    function verifyWarnAboutApache2License() {
+      expect(warn).toHaveBeenCalledWith(
+          '[rollup-plugin-license] -- ' +
+          'Dependency "foo" has a license (Apache-2.0) which is not compatible with requirement, ' +
+          'looks like a license violation to fix.'
+      );
+    }
 
-    instance.scanThirdParties();
-
-    expect(warn).toHaveBeenCalledWith(
-        '[rollup-plugin-license] -- Dependency "baz" does not specify any license.'
-    );
-  });
-
-  it('should warn for invalid dependencies using validator function', () => {
-    const warn = spyOn(console, 'warn');
-    const allow = jasmine.createSpy('allow').and.callFake((dependency) => (
-      dependency.license === 'MIT'
-    ));
-
-    const instance = licensePlugin({
-      thirdParty: {
-        allow,
-      },
-    });
-
-    instance.addDependency({
-      name: 'foo',
-      version: '1.0.0',
-      description: 'Foo Package',
-      license: 'Apache-2.0',
-    });
-
-    instance.addDependency({
-      name: 'bar',
-      version: '2.0.0',
-      description: 'Bar Package',
-      license: 'MIT',
-    });
-
-    instance.scanThirdParties();
-
-    expect(warn).toHaveBeenCalledWith(
-        '[rollup-plugin-license] -- ' +
-        'Dependency "foo" has a license (Apache-2.0) which is not compatible with requirement, ' +
-        'looks like a license violation to fix.'
-    );
+    function verifyWarnAboutUnlicensedLicense() {
+      expect(warn).toHaveBeenCalledWith(
+          '[rollup-plugin-license] -- Dependency "baz" does not specify any license.'
+      );
+    }
   });
 });
