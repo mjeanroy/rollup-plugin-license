@@ -25,6 +25,7 @@
 'use strict';
 
 const _ = require('lodash');
+const resolve = require('./resolve.js');
 const licensePlugin = require('./license-plugin.js');
 
 module.exports = (options = {}) => {
@@ -55,6 +56,15 @@ module.exports = (options = {}) => {
               .map((mod) => mod[0])
               .value()
       );
+
+      if (chunk.imports && chunk.imports.length > 0) {
+        plugin.scanDependencies(
+            _.chain(chunk.imports)
+                .map((id) => resolve(id, chunk.facadeModuleId))
+                .filter((dependency) => !_.isNil(dependency))
+                .value()
+        );
+      }
 
       return plugin.prependBanner(code, outputOptions.sourcemap !== false);
     },

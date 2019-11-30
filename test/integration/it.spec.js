@@ -280,8 +280,38 @@ describe('Dependency', () => {
     });
   });
 
-  function createRollupConfig(licensePluginOptions) {
-    return {
+  it('should include external dependency', (done) => {
+    const thirdPartyOutput = jasmine.createSpy('thirdPartyOutput');
+    const pluginOptions = {
+      thirdParty: {
+        output: thirdPartyOutput,
+      },
+    };
+
+    const rollupOptions = {
+      external: [
+        'lodash',
+      ],
+    };
+
+    const rollupConfig = createRollupConfig(
+        pluginOptions,
+        rollupOptions
+    );
+
+    writeBundle(rollupConfig).then(() => {
+      expect(thirdPartyOutput).toHaveBeenCalledWith([
+        jasmine.objectContaining({
+          name: 'lodash',
+        }),
+      ]);
+
+      done();
+    });
+  });
+
+  function createRollupConfig(licensePluginOptions, rollupOptions = {}) {
+    const defaultOptions = {
       input: path.join(__dirname, 'bundle.js'),
 
       output: {
@@ -297,6 +327,11 @@ describe('Dependency', () => {
         ),
       ],
     };
+
+    return Object.assign(
+        defaultOptions,
+        rollupOptions
+    );
   }
 
   function writeBundle(rollupConfig) {
