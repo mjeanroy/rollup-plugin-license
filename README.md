@@ -309,6 +309,8 @@ license({
 
 ## Changelogs
 
+- 0.13.0
+  - Add license checking (see [#381](https://github.com/mjeanroy/rollup-plugin-license/issues/381)).
 - 0.12.1
   - Restore compatibility with Node6
 - 0.12.0
