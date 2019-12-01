@@ -264,6 +264,49 @@ license({
 })
 ```
 
+## License Checks
+
+Starting with version 0.13, it is possible to ensure that dependencies does not violate any license restriction.
+For example, suppose you want to limit dependencies with MIT or Apache-2.0 licenses, simply define the restriction such as:
+
+```javascript
+license({
+  thirdParty: {
+    allow: '(MIT OR Apache-2.0)',
+  },
+})
+```
+
+Note that the `allow` value here should be a valid SPDX pattern (more information [here](https://www.npmjs.com/package/spdx-expression-validate)).
+
+The `allow` option here will print a warning to the console for all license violation. Note that, if you want more control, it can also be defined as function:
+
+```javascript
+license({
+  thirdParty: {
+    allow(dependency) {
+      return dependency.license === 'MIT';
+    },
+  },
+})
+```
+
+The function defined here allow only MIT licenses, and will print a warning for anything else.
+
+Finally, if emitting a warning is not enought for you, you can also choose to fail the build:
+
+```javascript
+license({
+  thirdParty: {
+    allow: {
+      test: 'MIT',             // Or a function that should returns `true` or `false`
+      failOnUnlicensed: true,  // Fail if a dependency does not specify any licenses, default is `false`
+      failOnViolation: true,   // Fail if a dependency specify a license that does not match given requirement, default is `false`
+    },
+  },
+})
+```
+
 ## Changelogs
 
 - 0.12.1
