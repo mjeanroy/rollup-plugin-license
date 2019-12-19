@@ -43,7 +43,7 @@
     "spdx-satisfies": "5.0.0"
   },
   "devDependencies": {
-    "@babel/core": "7.7.5",
+    "@babel/core": "7.7.7",
     "@babel/preset-env": "7.7.6",
     "eslint": "6.7.2",
     "eslint-config-google": "0.14.0",
