@@ -26,7 +26,7 @@
  * Join given lines into a single line.
  *
  * @param {Array<string>} lines The lines to join.
- * @param {string} separator The separator, defaults to '\n'.
+ * @param {string} separator The separator, defaults to End Of Line character.
  * @return {string} The full text.
  */
 module.exports = function join(lines, separator = '\n') {
