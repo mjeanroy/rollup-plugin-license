@@ -22,17 +22,4 @@
 # THE SOFTWARE.
 ##
 
-# NPM modules
-node_modules/
-
-# Do not send dev resources
-/test
-/src
-/scripts
-/gulpfile.js
-/.babelrc
-/.eslintrc
-/.eslintignore
-/.gitattributes
-/.nvmrc
-/.travis.yml
+*.js text eol=lf
