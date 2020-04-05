@@ -181,34 +181,6 @@ describe('rollup-plugin-license', () => {
     });
   });
 
-  it('should generate bundle with license header from given file', (done) => {
-    const banner = {
-      file: path.join(__dirname, '..', 'fixtures', 'banner.txt'),
-      encoding: 'utf-8',
-    };
-
-    const rollupConfig = createRollupConfig({
-      banner,
-    });
-
-    writeBundle(rollupConfig).then(() => {
-      verifyFile(rollupConfig.output.file, done, (data) => {
-        expect(data.toString()).toContain(join([
-          '/**',
-          ' * Test banner.',
-          ' *',
-          ' * With a second line.',
-          ' */',
-        ]));
-
-        expect(warn).toHaveBeenCalledWith(
-            '[rollup-plugin-license] -- "banner.file" has been deprecated and will be removed in a future version, ' +
-            'please use "banner.content.file" instead.'
-        );
-      });
-    });
-  });
-
   it('should generate bundle with license header from content as a raw string', (done) => {
     const content = 'Banner from inline content';
     const banner = {content};

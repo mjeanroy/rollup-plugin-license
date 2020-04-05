@@ -25,10 +25,10 @@
 import path from 'path';
 import fs from 'fs';
 import tmp from 'tmp';
-import {licensePluginStable} from '../src/index-rollup-stable.js';
+import rollupPluginLicense from '../src/index.js';
 import {join} from './utils/join.js';
 
-describe('rollup-plugin-license [rollup stable]', () => {
+describe('rollup-plugin-license', () => {
   let tmpDir;
 
   beforeEach(() => {
@@ -42,13 +42,13 @@ describe('rollup-plugin-license [rollup stable]', () => {
   });
 
   it('should return new plugin instance', () => {
-    const instance = licensePluginStable();
+    const instance = rollupPluginLicense();
     expect(instance.name).toBe('rollup-plugin-license');
   });
 
   it('should scan dependencies when chunk is rendered', (done) => {
     const thirdPartyOutput = path.join(tmpDir.name, 'dependencies.txt');
-    const instance = licensePluginStable({
+    const instance = rollupPluginLicense({
       thirdParty: {
         includePrivate: true,
         output: thirdPartyOutput,
@@ -86,7 +86,7 @@ describe('rollup-plugin-license [rollup stable]', () => {
 
   it('should scan dependencies when chunk is rendered and skip tree-shaken modules', (done) => {
     const thirdPartyOutput = path.join(tmpDir.name, 'dependencies.txt');
-    const instance = licensePluginStable({
+    const instance = rollupPluginLicense({
       thirdParty: {
         includePrivate: true,
         output: thirdPartyOutput,
@@ -134,7 +134,7 @@ describe('rollup-plugin-license [rollup stable]', () => {
 
   it('should prepend banner when bundle is transformed', () => {
     const banner = 'test banner';
-    const instance = licensePluginStable({
+    const instance = rollupPluginLicense({
       banner,
     });
 
@@ -157,7 +157,7 @@ describe('rollup-plugin-license [rollup stable]', () => {
 
   it('should create third-parties file when bundle is generated', (done) => {
     const thirdPartyOutput = path.join(tmpDir.name, 'dependencies.txt');
-    const instance = licensePluginStable({
+    const instance = rollupPluginLicense({
       thirdParty: {
         output: thirdPartyOutput,
       },
@@ -193,7 +193,7 @@ describe('rollup-plugin-license [rollup stable]', () => {
   });
 
   it('should initialize plugin with sourcemap option', () => {
-    const instance = licensePluginStable({
+    const instance = rollupPluginLicense({
       sourcemap: true,
     });
 
@@ -209,7 +209,7 @@ describe('rollup-plugin-license [rollup stable]', () => {
   });
 
   it('should enable sourcemap by default', () => {
-    const instance = licensePluginStable();
+    const instance = rollupPluginLicense();
 
     const code = 'var foo = 0;';
     const chunk = {};
@@ -223,7 +223,7 @@ describe('rollup-plugin-license [rollup stable]', () => {
   });
 
   it('should disbable sourcemap (lowercase) in plugin options', () => {
-    const instance = licensePluginStable({
+    const instance = rollupPluginLicense({
       sourcemap: false,
     });
 
@@ -238,28 +238,8 @@ describe('rollup-plugin-license [rollup stable]', () => {
     expect(result.map).not.toBeDefined();
   });
 
-  it('should disable sourceMap (camelcase) in plugin options', () => {
-    const warn = spyOn(console, 'warn');
-    const instance = licensePluginStable({
-      sourceMap: false,
-    });
-
-    const code = 'var foo = 0;';
-    const chunk = {};
-    const outputOptions = {};
-    const result = instance.renderChunk(code, chunk, outputOptions);
-
-    expect(result).toBeDefined();
-    expect(result.code).toBeDefined();
-    expect(result.map).not.toBeDefined();
-    expect(warn).toHaveBeenCalledWith(
-        '[rollup-plugin-license] -- "sourceMap" has been deprecated and will be removed in a future version, ' +
-        'please use "sourcemap" instead.'
-    );
-  });
-
   it('should disable sourcemap using output options', () => {
-    const instance = licensePluginStable();
+    const instance = rollupPluginLicense();
 
     const code = 'var foo = 0;';
     const chunk = {};

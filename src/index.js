@@ -22,14 +22,56 @@
  * SOFTWARE.
  */
 
+import _ from 'lodash';
+import {licensePlugin} from './license-plugin.js';
 
-import * as rollup from 'rollup';
-import {licensePluginLegacy} from './index-rollup-legacy';
-import {licensePluginStable} from './index-rollup-stable';
+/**
+ * Create rollup plugin compatible with rollup >= 1.0.0
+ *
+ * @param {Object} options Plugin options.
+ * @return {Object} Plugin instance.
+ */
+export default function rollupPluginLicense(options = {}) {
+  const plugin = licensePlugin(options);
 
-const VERSION = rollup.VERSION;
-const MAJOR_VERSION = VERSION ? Number(VERSION.split('.')[0]) : 0;
-const IS_ROLLUP_LEGACY = MAJOR_VERSION === 0;
-const plugin = IS_ROLLUP_LEGACY ? licensePluginLegacy : licensePluginStable;
+  return {
+    /**
+     * Name of the plugin, used automatically by rollup.
+     * @type {string}
+     */
+    name: plugin.name,
 
-export default plugin;
+    /**
+     * Function called by rollup when the final bundle is generated: it is used
+     * to prepend the banner file on the generated bundle.
+     *
+     * @param {string} code Bundle content.
+     * @param {Object} chunk The chunk being generated.
+     * @param {Object} outputOptions The options for the generated output.
+     * @return {void}
+     */
+    renderChunk(code, chunk, outputOptions = {}) {
+      plugin.scanDependencies(
+          _.chain(chunk.modules)
+              .toPairs()
+              .reject((mod) => mod[1].isAsset)
+              .filter((mod) => mod[1].renderedLength > 0)
+              .map((mod) => mod[0])
+              .value()
+      );
+
+      return plugin.prependBanner(code, outputOptions.sourcemap !== false);
+    },
+
+    /**
+     * Function called by rollup when the final bundle will be written on disk: it
+     * is used to generate a file containing a summary of all third-party dependencies
+     * with license information.
+     *
+     * @return {void}
+     */
+    generateBundle() {
+      plugin.scanThirdParties();
+    },
+  };
+}

@@ -72,19 +72,6 @@ describe('LicensePlugin', () => {
       expect(plugin._dependencies).toEqual({});
     });
 
-    it('should print warning when plugin is used with sourceMap (camelcase)', () => {
-      const warn = spyOn(console, 'warn');
-
-      licensePlugin({
-        sourceMap: false,
-      });
-
-      expect(warn).toHaveBeenCalledWith(
-          '[rollup-plugin-license] -- "sourceMap" has been deprecated and will be removed in a future version, ' +
-          'please use "sourcemap" instead.'
-      );
-    });
-
     it('should print warning with unknown options', () => {
       const warn = spyOn(console, 'warn');
 
@@ -436,13 +423,11 @@ describe('LicensePlugin', () => {
   });
 
   describe('with banner option', () => {
-    let warn;
     let code;
     let bannerJs;
     let bannerTxt;
 
     beforeEach(() => {
-      warn = spyOn(console, 'warn');
       code = 'var foo = 0;';
       bannerJs = path.join(__dirname, 'fixtures', 'banner.js');
       bannerTxt = path.join(__dirname, 'fixtures', 'banner.txt');
@@ -478,43 +463,6 @@ describe('LicensePlugin', () => {
 
       verifyResult(result);
       expect(readFileSync).toHaveBeenCalledWith(jasmine.any(String), encoding);
-    });
-
-    it('should prepend banner to bundle from (deprecated) file option', () => {
-      const instance = licensePlugin({
-        banner: {
-          file: bannerJs,
-        },
-      });
-
-      const result = instance.prependBanner(code);
-
-      verifyResult(result);
-      expect(warn).toHaveBeenCalledWith(
-          '[rollup-plugin-license] -- "banner.file" has been deprecated and will be removed in a future version, ' +
-          'please use "banner.content.file" instead.'
-      );
-    });
-
-
-    it('should prepend banner to bundle with (deprecated) custom encoding option', () => {
-      const readFileSync = spyOn(fs, 'readFileSync').and.callThrough();
-      const encoding = 'ascii';
-      const instance = licensePlugin({
-        banner: {
-          file: bannerJs,
-          encoding,
-        },
-      });
-
-      const result = instance.prependBanner(code);
-
-      verifyResult(result);
-      expect(readFileSync).toHaveBeenCalledWith(jasmine.any(String), encoding);
-      expect(warn).toHaveBeenCalledWith(
-          '[rollup-plugin-license] -- "banner.file" has been deprecated and will be removed in a future version, ' +
-          'please use "banner.content.file" instead.'
-      );
     });
 
     it('should fail to prepend banner without any content', () => {
@@ -948,29 +896,6 @@ describe('LicensePlugin', () => {
 
       verifyFileWithEncoding(file, encoding, done, (content) => {
         expect(content).toContain('foo');
-      });
-    });
-
-    it('should export list of dependencies with (deprecated) custom encoding to given file', (done) => {
-      const warn = spyOn(console, 'warn');
-      const output = path.join(tmpDir.name, 'third-party.txt');
-      const encoding = 'base64';
-      const instance = licensePlugin({
-        thirdParty: {
-          output,
-          encoding,
-        },
-      });
-
-      instance.addDependency(pkg1);
-      instance.scanThirdParties();
-
-      verifyFileWithEncoding(output, encoding, done, (content) => {
-        expect(content).toContain('foo');
-        expect(warn).toHaveBeenCalledWith(
-            '[rollup-plugin-license] -- "thirdParty.encoding" has been deprecated and will be removed in a future version, ' +
-            'please use "thirdParty.output.encoding" instead.'
-        );
       });
     });
 
