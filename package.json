@@ -1,6 +1,6 @@
 {
   "name": "rollup-plugin-license",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "description": "Rollup plugin to add license banner to the final bundle and output third party licenses",
   "main": "dist/index.js",
   "scripts": {
