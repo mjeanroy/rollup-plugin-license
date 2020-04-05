@@ -2,7 +2,10 @@
   "presets": [
     [
       "@babel/preset-env", {
-        "modules": "cjs"
+        "modules": "cjs",
+        "targets": {
+          "node": "6"
+        }
       }
     ]
   ],
@@ -16,7 +19,10 @@
       "presets": [
         [
           "@babel/preset-env", {
-            "modules": "false"
+            "modules": "false",
+            "targets": {
+              "node": "6"
+            }
           }
         ]
       ]

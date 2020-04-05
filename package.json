@@ -66,5 +66,8 @@
     "rollup-plugin-prettier": "0.6.0",
     "rollup-plugin-strip-banner": "1.2.0",
     "tmp": "0.1.0"
+  },
+  "engines": {
+    "node": ">=6.0.0"
   }
 }
