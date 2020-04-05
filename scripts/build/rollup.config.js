@@ -22,13 +22,46 @@
  * SOFTWARE.
  */
 
-const rollup = require('rollup');
-const config = require('./rollup.config');
+const path = require('path');
+const fs = require('fs');
+const commenting = require('commenting');
+const stripBanner = require('rollup-plugin-strip-banner');
+const babel = require('rollup-plugin-babel');
+const prettier = require('rollup-plugin-prettier');
+const config = require('../config');
+const pkg = require('../../package.json');
+const license = fs.readFileSync(path.join(config.root, 'LICENSE'), 'utf-8');
 
-module.exports = function build() {
-  return rollup.rollup(config).then((bundle) => (
-    Promise.all(config.output.map((output) => (
-      bundle.write(output)
-    )))
-  ));
+module.exports = {
+  input: path.join(config.src, 'index.js'),
+
+  output: [
+    {
+      format: 'cjs',
+      file: path.join(config.dist, 'index.js'),
+      banner: commenting(license, {
+        extension: '.js',
+      }),
+    },
+  ],
+
+  plugins: [
+    stripBanner(),
+
+    babel({
+      envName: 'rollup',
+    }),
+
+    prettier({
+      parser: 'babel',
+    }),
+  ],
+
+  external: [
+    'fs',
+    'path',
+
+    ...Object.keys(pkg.dependencies),
+    ...Object.keys(pkg.peerDependencies),
+  ],
 };

@@ -9,5 +9,17 @@
 
   "plugins": [
     "add-module-exports"
-  ]
+  ],
+
+  "env": {
+    "rollup": {
+      "presets": [
+        [
+          "@babel/preset-env", {
+            "modules": "false"
+          }
+        ]
+      ]
+    }
+  }
 }
