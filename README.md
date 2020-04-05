@@ -176,7 +176,7 @@ module.exports = {
 };
 ```
 
-This format has been deprecated with version 0.11.0 (still works but will be removed in a future version), and the banner file should be defined inside `banner.content` entry:
+This format has been deprecated with version 0.11.0 and removed with version 1.0.O, and the banner file should be defined inside `banner.content` entry:
 
 ```javascript
 const path = require('path');
@@ -309,6 +309,10 @@ license({
 
 ## Changelogs
 
+- 1.0.0
+  - Remove support for rollup < 1.0.0
+  - Remove support for deprecated options.
+  - Support node >= 6
 - 0.14.0
   - Update rollup peer dependency
   - Produce a single file as dist output
