@@ -30,7 +30,7 @@
     "url": "https://github.com/mjeanroy/rollup-plugin-license"
   },
   "peerDependencies": {
-    "rollup": "< 2"
+    "rollup": "< 3"
   },
   "dependencies": {
     "commenting": "1.1.0",
