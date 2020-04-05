@@ -309,6 +309,10 @@ license({
 
 ## Changelogs
 
+- 0.14.0
+  - Update rollup peer dependency
+  - Produce a single file as dist output
+  - Update dependencies
 - 0.13.0
   - Add license checking (see [#381](https://github.com/mjeanroy/rollup-plugin-license/issues/381)).
 - 0.12.1
