@@ -1,3 +1,28 @@
+## 2.0.0 (2020-04-05)
+
+* release: prepare next release ([7b3af98](https://github.com/mjeanroy/rollup-plugin-license/commit/7b3af98))
+* release: release version ([b9bb6d7](https://github.com/mjeanroy/rollup-plugin-license/commit/b9bb6d7))
+* chore: support node >= 10 ([339e5ff](https://github.com/mjeanroy/rollup-plugin-license/commit/339e5ff))
+* chore: update mkdirp to version 1.0.4 ([bbe116e](https://github.com/mjeanroy/rollup-plugin-license/commit/bbe116e))
+* chore: update rollup to version 2.3.3 ([a9206e3](https://github.com/mjeanroy/rollup-plugin-license/commit/a9206e3))
+* chore: update rollup-plugin-strip-banner to version 2.0.0 ([e6351a4](https://github.com/mjeanroy/rollup-plugin-license/commit/e6351a4))
+* chore: use @rollup/plugin-commonjs ([22130c3](https://github.com/mjeanroy/rollup-plugin-license/commit/22130c3))
+* chore: use @rollup/plugin-node-resolve ([ed3d642](https://github.com/mjeanroy/rollup-plugin-license/commit/ed3d642))
+
+
+
+## 1.0.0 (2020-04-05)
+
+* release: prepare next release ([266ab96](https://github.com/mjeanroy/rollup-plugin-license/commit/266ab96))
+* release: release version ([c193784](https://github.com/mjeanroy/rollup-plugin-license/commit/c193784))
+* chore: remove deprecated options and remove support of rollup < 1.x.x ([d9d4988](https://github.com/mjeanroy/rollup-plugin-license/commit/d9d4988))
+* chore: support node >= 6 ([57664ec](https://github.com/mjeanroy/rollup-plugin-license/commit/57664ec))
+* chore: update changelog ([bddaa32](https://github.com/mjeanroy/rollup-plugin-license/commit/bddaa32))
+* chore: update rollup peer dependency ([cd13547](https://github.com/mjeanroy/rollup-plugin-license/commit/cd13547))
+* docs: update README ([c05189f](https://github.com/mjeanroy/rollup-plugin-license/commit/c05189f))
+
+
+
 ## 0.14.0 (2020-04-05)
 
 * release: prepare next release ([8b667ee](https://github.com/mjeanroy/rollup-plugin-license/commit/8b667ee))
