@@ -64,7 +64,7 @@
     "rollup-plugin-commonjs": "10.1.0",
     "rollup-plugin-node-resolve": "5.2.0",
     "rollup-plugin-prettier": "0.6.0",
-    "rollup-plugin-strip-banner": "1.2.0",
+    "rollup-plugin-strip-banner": "2.0.0",
     "tmp": "0.1.0"
   },
   "engines": {
