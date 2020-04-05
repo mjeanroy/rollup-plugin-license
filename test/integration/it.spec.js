@@ -27,7 +27,7 @@ import tmp from 'tmp';
 import fs from 'fs';
 import _ from 'lodash';
 import * as rollup from 'rollup';
-import nodeResolve from 'rollup-plugin-node-resolve';
+import nodeResolve from '@rollup/plugin-node-resolve';
 import commonjs from '@rollup/plugin-commonjs';
 import licensePlugin from '../../src/index.js';
 import {join} from '../utils/join.js';
