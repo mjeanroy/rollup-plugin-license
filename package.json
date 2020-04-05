@@ -37,7 +37,7 @@
     "glob": "7.1.6",
     "lodash": "4.17.15",
     "magic-string": "0.25.7",
-    "mkdirp": "0.5.1",
+    "mkdirp": "1.0.4",
     "moment": "2.24.0",
     "spdx-expression-validate": "2.0.0",
     "spdx-satisfies": "5.0.0"
