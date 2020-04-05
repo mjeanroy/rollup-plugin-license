@@ -29,7 +29,7 @@ const path = require('path');
 const tmp = require('tmp');
 const moment = require('moment');
 const join = require('./utils/join.js');
-const licensePlugin = require('../dist/license-plugin.js');
+const licensePlugin = require('../src/license-plugin.js');
 
 describe('LicensePlugin', () => {
   let tmpDir;

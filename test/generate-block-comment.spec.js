@@ -23,7 +23,7 @@
  */
 
 const join = require('./utils/join.js');
-const generateBlockComment = require('../dist/generate-block-comment.js');
+const generateBlockComment = require('../src/generate-block-comment.js');
 
 describe('generateBlockComment', () => {
   it('should generate block comment from given text', () => {

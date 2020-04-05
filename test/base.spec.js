@@ -23,8 +23,8 @@
  */
 
 const _ = require('lodash');
-const Dependency = require('../dist/dependency.js');
-const Person = require('../dist/person.js');
+const Dependency = require('../src/dependency.js');
+const Person = require('../src/person.js');
 
 beforeEach(() => {
   jasmine.addCustomEqualityTester((first, second) => {

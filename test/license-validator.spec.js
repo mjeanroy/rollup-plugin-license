@@ -24,7 +24,7 @@
 
 'use strict';
 
-const licenseValidator = require('../dist/license-validator.js');
+const licenseValidator = require('../src/license-validator.js');
 
 describe('licenseValidator', () => {
   it('should check for unlicensed dependency', () => {

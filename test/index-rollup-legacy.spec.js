@@ -26,7 +26,7 @@ const path = require('path');
 const fs = require('fs');
 const tmp = require('tmp');
 const join = require('./utils/join.js');
-const plugin = require('../dist/index-rollup-legacy.js');
+const plugin = require('../src/index-rollup-legacy.js');
 
 describe('rollup-plugin-license [rollup legacy]', () => {
   let tmpDir;

@@ -24,7 +24,7 @@
 
 'use strict';
 
-const licensePluginOptions = require('../dist/license-plugin-option.js');
+const licensePluginOptions = require('../src/license-plugin-option.js');
 
 describe('licensePluginOptions', () => {
   it('should validate option', () => {

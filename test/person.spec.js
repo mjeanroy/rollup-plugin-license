@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-const Person = require('../dist/person.js');
+const Person = require('../src/person.js');
 
 describe('Person', () => {
   it('should parse author name', () => {

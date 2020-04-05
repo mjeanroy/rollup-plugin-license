@@ -24,7 +24,7 @@
 
 'use strict';
 
-const formatPath = require('../dist/format-path.js');
+const formatPath = require('../src/format-path.js');
 
 describe('formatPath', () => {
   it('should format path of object', () => {

@@ -23,7 +23,7 @@
  */
 
 const join = require('./utils/join.js');
-const Dependency = require('../dist/dependency.js');
+const Dependency = require('../src/dependency.js');
 
 describe('Dependency', () => {
   it('should should extract package fields', () => {

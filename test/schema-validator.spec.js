@@ -24,8 +24,8 @@
 
 'use strict';
 
-const validateSchema = require('../dist/schema-validator.js');
-const validators = require('../dist/schema-validators.js');
+const validateSchema = require('../src/schema-validator.js');
+const validators = require('../src/schema-validators.js');
 
 describe('validateSchema', () => {
   it('should validate simple object', () => {

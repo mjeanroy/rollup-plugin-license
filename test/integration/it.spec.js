@@ -32,7 +32,7 @@ const rollup = require('rollup');
 const nodeResolve = require('rollup-plugin-node-resolve');
 const commonjs = require('rollup-plugin-commonjs');
 const join = require('../utils/join.js');
-const licensePlugin = require('../../dist/index.js');
+const licensePlugin = require('../../src/index.js');
 
 describe('Dependency', () => {
   let warn;

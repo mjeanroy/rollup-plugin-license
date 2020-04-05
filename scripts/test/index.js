@@ -25,7 +25,6 @@
 const path = require('path');
 const gulp = require('gulp');
 const jasmine = require('gulp-jasmine');
-const build = require('../build');
 const config = require('../config');
 
 /**
@@ -49,8 +48,7 @@ function test() {
  * @return {void}
  */
 function tdd(done) {
-  gulp.watch(path.join(config.dist, '**', '*.js'), test);
-  gulp.watch(path.join(config.src, '**', '*.js'), build);
+  gulp.watch(path.join(config.src, '**', '*.js'), test);
   gulp.watch(path.join(config.test, '**', '*.js'), test);
 
   done();
