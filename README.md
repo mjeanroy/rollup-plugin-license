@@ -309,6 +309,9 @@ license({
 
 ## Changelogs
 
+- 2.0.0
+  - Support node >= 10
+  - Update dependencies
 - 1.0.0
   - Remove support for rollup < 1.0.0
   - Remove support for deprecated options.
