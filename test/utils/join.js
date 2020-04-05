@@ -29,6 +29,6 @@
  * @param {string} separator The separator, defaults to End Of Line character.
  * @return {string} The full text.
  */
-module.exports = function join(lines, separator = '\n') {
+export function join(lines, separator = '\n') {
   return lines.join(separator);
-};
+}

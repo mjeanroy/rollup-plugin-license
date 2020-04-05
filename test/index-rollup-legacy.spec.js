@@ -22,11 +22,11 @@
  * SOFTWARE.
  */
 
-const path = require('path');
-const fs = require('fs');
-const tmp = require('tmp');
-const join = require('./utils/join.js');
-const plugin = require('../src/index-rollup-legacy.js');
+import path from 'path';
+import fs from 'fs';
+import tmp from 'tmp';
+import {licensePluginLegacy} from '../src/index-rollup-legacy.js';
+import {join} from './utils/join.js';
 
 describe('rollup-plugin-license [rollup legacy]', () => {
   let tmpDir;
@@ -42,12 +42,12 @@ describe('rollup-plugin-license [rollup legacy]', () => {
   });
 
   it('should return new plugin instance', () => {
-    const instance = plugin();
+    const instance = licensePluginLegacy();
     expect(instance.name).toBe('rollup-plugin-license');
   });
 
   it('should enable sourceMap if `options.sourceMap` (camelcase) is true', () => {
-    const instance = plugin();
+    const instance = licensePluginLegacy();
     const sourceMap = true;
     instance.options({sourceMap});
 
@@ -61,7 +61,7 @@ describe('rollup-plugin-license [rollup legacy]', () => {
   });
 
   it('should enable sourceMap if `options.sourcemap` (lowercase) is true', () => {
-    const instance = plugin();
+    const instance = licensePluginLegacy();
     const sourcemap = true;
     instance.options({sourcemap});
 
@@ -75,7 +75,7 @@ describe('rollup-plugin-license [rollup legacy]', () => {
   });
 
   it('should not enable sourceMap if `options.sourceMap` (camelcase) is false', () => {
-    const instance = plugin();
+    const instance = licensePluginLegacy();
     const sourceMap = false;
     instance.options({sourceMap});
 
@@ -89,7 +89,7 @@ describe('rollup-plugin-license [rollup legacy]', () => {
   });
 
   it('should not enable sourceMap if options.sourcemap (lowercase) is false', () => {
-    const instance = plugin();
+    const instance = licensePluginLegacy();
     const sourcemap = false;
     instance.options({sourcemap});
 
@@ -103,7 +103,7 @@ describe('rollup-plugin-license [rollup legacy]', () => {
   });
 
   it('should not try to disable sourceMap if `sourceMap` (camelcase) is set in plugin options', () => {
-    const instance = plugin({
+    const instance = licensePluginLegacy({
       sourcemap: true,
     });
 
@@ -121,7 +121,7 @@ describe('rollup-plugin-license [rollup legacy]', () => {
   });
 
   it('should not try to disable sourceMap if sourcemap (lowercase) is set in plugin options', () => {
-    const instance = plugin({
+    const instance = licensePluginLegacy({
       sourcemap: true,
     });
 
@@ -139,7 +139,7 @@ describe('rollup-plugin-license [rollup legacy]', () => {
   });
 
   it('should enable sourceMap by default', () => {
-    const instance = plugin();
+    const instance = licensePluginLegacy();
 
     instance.options({});
 
@@ -153,7 +153,7 @@ describe('rollup-plugin-license [rollup legacy]', () => {
   });
 
   it('should disable sourcemap (lowercase) in plugin options', () => {
-    const instance = plugin({
+    const instance = licensePluginLegacy({
       sourcemap: false,
     });
 
@@ -168,7 +168,7 @@ describe('rollup-plugin-license [rollup legacy]', () => {
 
   it('should disable sourceMap (camelcase) in plugin options', () => {
     const warn = spyOn(console, 'warn');
-    const instance = plugin({
+    const instance = licensePluginLegacy({
       sourceMap: false,
     });
 
@@ -187,7 +187,7 @@ describe('rollup-plugin-license [rollup legacy]', () => {
 
   it('should scan dependency on load', (done) => {
     const thirdPartyOutput = path.join(tmpDir.name, 'dependencies.txt');
-    const instance = plugin({
+    const instance = licensePluginLegacy({
       thirdParty: {
         includePrivate: true,
         output: thirdPartyOutput,
@@ -213,7 +213,7 @@ describe('rollup-plugin-license [rollup legacy]', () => {
 
   it('should prepend banner when bundle is transformed', () => {
     const banner = 'test banner';
-    const instance = plugin({banner});
+    const instance = licensePluginLegacy({banner});
 
     const code = 'var foo = 0;';
     const outputOptions = {};
@@ -233,7 +233,7 @@ describe('rollup-plugin-license [rollup legacy]', () => {
 
   it('should create third-parties file when bundle is generated', (done) => {
     const thirdPartyOutput = path.join(tmpDir.name, 'dependencies.txt');
-    const instance = plugin({
+    const instance = licensePluginLegacy({
       thirdParty: {
         output: thirdPartyOutput,
       },

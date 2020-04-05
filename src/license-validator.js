@@ -22,8 +22,8 @@
  * SOFTWARE.
  */
 
-const spdxExpressionValidate = require('spdx-expression-validate');
-const spdxSatisfies = require('spdx-satisfies');
+import spdxExpressionValidate from 'spdx-expression-validate';
+import spdxSatisfies from 'spdx-satisfies';
 
 /**
  * Normalize license name:
@@ -78,7 +78,7 @@ function isValid(dependency, allow) {
   return spdxExpressionValidate(license) && spdxSatisfies(license, allow);
 }
 
-module.exports = {
+export const licenseValidator = {
   isUnlicensed,
   isValid,
 };

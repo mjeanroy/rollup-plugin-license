@@ -22,12 +22,16 @@
  * SOFTWARE.
  */
 
-'use strict';
+import _ from 'lodash';
+import {licensePlugin} from './license-plugin.js';
 
-const _ = require('lodash');
-const licensePlugin = require('./license-plugin.js');
-
-module.exports = (options = {}) => {
+/**
+ * Create rollup plugin compatible with rollup < 1.0.0
+ *
+ * @param {Object} options Plugin options.
+ * @return {Object} Plugin instance.
+ */
+export function licensePluginLegacy(options = {}) {
   const plugin = licensePlugin(options);
 
   return {
@@ -96,4 +100,4 @@ module.exports = (options = {}) => {
       plugin.scanThirdParties();
     },
   };
-};
+}

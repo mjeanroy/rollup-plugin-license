@@ -22,9 +22,7 @@
  * SOFTWARE.
  */
 
-'use strict';
-
-const _ = require('lodash');
+import _ from 'lodash';
 
 /**
  * Format given array of path to a human readable path.
@@ -32,7 +30,7 @@ const _ = require('lodash');
  * @param {Array<string|number>} paths List of paths.
  * @return {string} The full path.
  */
-function formatPath(paths) {
+export function formatPath(paths) {
   let str = '';
 
   _.forEach(paths, (p) => {
@@ -47,5 +45,3 @@ function formatPath(paths) {
 
   return str;
 }
-
-module.exports = formatPath;

@@ -22,13 +22,11 @@
  * SOFTWARE.
  */
 
-'use strict';
-
-const path = require('path');
-const fs = require('fs');
-const tmp = require('tmp');
-const join = require('./utils/join.js');
-const plugin = require('../src/index-rollup-stable.js');
+import path from 'path';
+import fs from 'fs';
+import tmp from 'tmp';
+import {licensePluginStable} from '../src/index-rollup-stable.js';
+import {join} from './utils/join.js';
 
 describe('rollup-plugin-license [rollup stable]', () => {
   let tmpDir;
@@ -44,13 +42,13 @@ describe('rollup-plugin-license [rollup stable]', () => {
   });
 
   it('should return new plugin instance', () => {
-    const instance = plugin();
+    const instance = licensePluginStable();
     expect(instance.name).toBe('rollup-plugin-license');
   });
 
   it('should scan dependencies when chunk is rendered', (done) => {
     const thirdPartyOutput = path.join(tmpDir.name, 'dependencies.txt');
-    const instance = plugin({
+    const instance = licensePluginStable({
       thirdParty: {
         includePrivate: true,
         output: thirdPartyOutput,
@@ -88,7 +86,7 @@ describe('rollup-plugin-license [rollup stable]', () => {
 
   it('should scan dependencies when chunk is rendered and skip tree-shaken modules', (done) => {
     const thirdPartyOutput = path.join(tmpDir.name, 'dependencies.txt');
-    const instance = plugin({
+    const instance = licensePluginStable({
       thirdParty: {
         includePrivate: true,
         output: thirdPartyOutput,
@@ -136,7 +134,7 @@ describe('rollup-plugin-license [rollup stable]', () => {
 
   it('should prepend banner when bundle is transformed', () => {
     const banner = 'test banner';
-    const instance = plugin({
+    const instance = licensePluginStable({
       banner,
     });
 
@@ -159,7 +157,7 @@ describe('rollup-plugin-license [rollup stable]', () => {
 
   it('should create third-parties file when bundle is generated', (done) => {
     const thirdPartyOutput = path.join(tmpDir.name, 'dependencies.txt');
-    const instance = plugin({
+    const instance = licensePluginStable({
       thirdParty: {
         output: thirdPartyOutput,
       },
@@ -195,7 +193,7 @@ describe('rollup-plugin-license [rollup stable]', () => {
   });
 
   it('should initialize plugin with sourcemap option', () => {
-    const instance = plugin({
+    const instance = licensePluginStable({
       sourcemap: true,
     });
 
@@ -211,7 +209,7 @@ describe('rollup-plugin-license [rollup stable]', () => {
   });
 
   it('should enable sourcemap by default', () => {
-    const instance = plugin();
+    const instance = licensePluginStable();
 
     const code = 'var foo = 0;';
     const chunk = {};
@@ -225,7 +223,7 @@ describe('rollup-plugin-license [rollup stable]', () => {
   });
 
   it('should disbable sourcemap (lowercase) in plugin options', () => {
-    const instance = plugin({
+    const instance = licensePluginStable({
       sourcemap: false,
     });
 
@@ -242,7 +240,7 @@ describe('rollup-plugin-license [rollup stable]', () => {
 
   it('should disable sourceMap (camelcase) in plugin options', () => {
     const warn = spyOn(console, 'warn');
-    const instance = plugin({
+    const instance = licensePluginStable({
       sourceMap: false,
     });
 
@@ -261,7 +259,7 @@ describe('rollup-plugin-license [rollup stable]', () => {
   });
 
   it('should disable sourcemap using output options', () => {
-    const instance = plugin();
+    const instance = licensePluginStable();
 
     const code = 'var foo = 0;';
     const chunk = {};

@@ -22,11 +22,14 @@
  * SOFTWARE.
  */
 
-'use strict';
 
-const rollup = require('rollup');
+import * as rollup from 'rollup';
+import {licensePluginLegacy} from './index-rollup-legacy';
+import {licensePluginStable} from './index-rollup-stable';
+
 const VERSION = rollup.VERSION;
 const MAJOR_VERSION = VERSION ? Number(VERSION.split('.')[0]) : 0;
 const IS_ROLLUP_LEGACY = MAJOR_VERSION === 0;
+const plugin = IS_ROLLUP_LEGACY ? licensePluginLegacy : licensePluginStable;
 
-module.exports = IS_ROLLUP_LEGACY ? require('./index-rollup-legacy') : require('./index-rollup-stable');
+export default plugin;

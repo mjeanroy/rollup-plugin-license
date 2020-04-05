@@ -22,6 +22,4 @@
  * SOFTWARE.
  */
 
-'use strict';
-
-module.exports = '\n';
+export const EOL = '\n';

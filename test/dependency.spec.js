@@ -22,8 +22,8 @@
  * SOFTWARE.
  */
 
-const join = require('./utils/join.js');
-const Dependency = require('../src/dependency.js');
+import {Dependency} from '../src/dependency.js';
+import {join} from './utils/join.js';
 
 describe('Dependency', () => {
   it('should should extract package fields', () => {

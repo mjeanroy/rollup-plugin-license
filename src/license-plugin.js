@@ -22,22 +22,20 @@
  * SOFTWARE.
  */
 
-'use strict';
+import fs from 'fs';
+import path from 'path';
+import mkdirp from 'mkdirp';
+import _ from 'lodash';
+import moment from 'moment';
+import MagicString from 'magic-string';
+import glob from 'glob';
 
-const fs = require('fs');
-const path = require('path');
-const mkdirp = require('mkdirp');
-const _ = require('lodash');
-const moment = require('moment');
-const MagicString = require('magic-string');
-const glob = require('glob');
-
-const Dependency = require('./dependency.js');
-const generateBlockComment = require('./generate-block-comment.js');
-const licensePluginOptions = require('./license-plugin-option.js');
-const licenseValidator = require('./license-validator');
-const PLUGIN_NAME = require('./license-plugin-name.js');
-const EOL = require('./eol.js');
+import {Dependency} from './dependency.js';
+import {generateBlockComment} from './generate-block-comment.js';
+import {licensePluginOptions} from './license-plugin-option.js';
+import {licenseValidator} from './license-validator';
+import {PLUGIN_NAME} from './license-plugin-name.js';
+import {EOL} from './eol.js';
 
 /**
  * Pre-Defined comment style:
@@ -544,8 +542,8 @@ class LicensePlugin {
  * @param {Object} options Option object.
  * @return {LicensePlugin} The new instance.
  */
-module.exports = function licensePlugin(options) {
+export function licensePlugin(options) {
   return new LicensePlugin(
       licensePluginOptions(options)
   );
-};
+}

@@ -22,9 +22,7 @@
  * SOFTWARE.
  */
 
-'use strict';
-
-const formatPath = require('../src/format-path.js');
+import {formatPath} from '../src/format-path.js';
 
 describe('formatPath', () => {
   it('should format path of object', () => {

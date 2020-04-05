@@ -22,9 +22,7 @@
  * SOFTWARE.
  */
 
-'use strict';
-
-const licenseValidator = require('../src/license-validator.js');
+import {licenseValidator} from '../src/license-validator.js';
 
 describe('licenseValidator', () => {
   it('should check for unlicensed dependency', () => {

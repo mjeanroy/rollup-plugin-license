@@ -22,19 +22,17 @@
  * SOFTWARE.
  */
 
-'use strict';
+import path from 'path';
+import tmp from 'tmp';
+import fs from 'fs';
+import _ from 'lodash';
+import * as rollup from 'rollup';
+import nodeResolve from 'rollup-plugin-node-resolve';
+import commonjs from 'rollup-plugin-commonjs';
+import licensePlugin from '../../src/index.js';
+import {join} from '../utils/join.js';
 
-const path = require('path');
-const tmp = require('tmp');
-const fs = require('fs');
-const _ = require('lodash');
-const rollup = require('rollup');
-const nodeResolve = require('rollup-plugin-node-resolve');
-const commonjs = require('rollup-plugin-commonjs');
-const join = require('../utils/join.js');
-const licensePlugin = require('../../src/index.js');
-
-describe('Dependency', () => {
+describe('rollup-plugin-license', () => {
   let warn;
   let tmpDir;
 

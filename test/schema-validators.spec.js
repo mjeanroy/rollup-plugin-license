@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-const validators = require('../src/schema-validators.js');
+import {validators} from '../src/schema-validators.js';
 
 describe('schema validators', () => {
   it('should validate string', () => {

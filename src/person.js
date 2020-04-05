@@ -22,9 +22,7 @@
  * SOFTWARE.
  */
 
-'use strict';
-
-const _ = require('lodash');
+import _ from 'lodash';
 
 /**
  * Person, defined by:
@@ -32,7 +30,7 @@ const _ = require('lodash');
  * - An email (optional).
  * - An URL (optional).
  */
-module.exports = class Person {
+export class Person {
   /**
    * Create the person.
    *
@@ -94,4 +92,4 @@ module.exports = class Person {
 
     return text;
   }
-};
+}

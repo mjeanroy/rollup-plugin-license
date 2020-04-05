@@ -22,9 +22,7 @@
  * SOFTWARE.
  */
 
-'use strict';
-
-const commenting = require('commenting');
+import commenting from 'commenting';
 
 /**
  * Generate block comment from given text content.
@@ -33,7 +31,7 @@ const commenting = require('commenting');
  * @param {Object} commentStyle The comment style setting.
  * @return {string} Block comment.
  */
-module.exports = function generateBlockComment(text, commentStyle) {
+export function generateBlockComment(text, commentStyle) {
   const options = {
     extension: '.js',
   };
@@ -47,4 +45,4 @@ module.exports = function generateBlockComment(text, commentStyle) {
   }
 
   return commenting(text.trim(), options);
-};
+}

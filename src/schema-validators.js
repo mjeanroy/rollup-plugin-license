@@ -22,9 +22,7 @@
  * SOFTWARE.
  */
 
-'use strict';
-
-const _ = require('lodash');
+import _ from 'lodash';
 
 /**
  * Check if given value is a `string`.
@@ -96,7 +94,7 @@ function isObject(value) {
   return _.isObject(value) && !isArray(value) && !isFunction(value) && !isNil(value) && !isString(value) && !isNumber(value);
 }
 
-module.exports = {
+export const validators = {
   string() {
     return {
       type: 'object.type.string',

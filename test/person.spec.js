@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-const Person = require('../src/person.js');
+import {Person} from '../src/person.js';
 
 describe('Person', () => {
   it('should parse author name', () => {

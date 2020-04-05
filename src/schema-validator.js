@@ -22,10 +22,8 @@
  * SOFTWARE.
  */
 
-'use strict';
-
-const _ = require('lodash');
-const formatPath = require('./format-path.js');
+import _ from 'lodash';
+import {formatPath} from './format-path.js';
 
 /**
  * Validate value against given schema.
@@ -147,4 +145,14 @@ function validate(obj, schema, current = []) {
   return _.isArray(obj) ? validateArray(obj, schema, current) : validateObject(obj, schema, current);
 }
 
-module.exports = validate;
+/**
+ * Validate given object against given schema.
+ *
+ * @param {Object} obj Object to validate.
+ * @param {Object} schema The schema against the given object will be validated.
+ * @param {Array<string>} current The current path context of given object, useful to validate against subobject.
+ * @return {Array<Object>} Found errors.
+ */
+export function validateSchema(obj, schema, current) {
+  return validate(obj, schema, current);
+}

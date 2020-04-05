@@ -22,10 +22,8 @@
  * SOFTWARE.
  */
 
-'use strict';
-
-const validateSchema = require('../src/schema-validator.js');
-const validators = require('../src/schema-validators.js');
+import {validateSchema} from '../src/schema-validator.js';
+import {validators} from '../src/schema-validators.js';
 
 describe('validateSchema', () => {
   it('should validate simple object', () => {

@@ -1,5 +1,13 @@
 {
   "presets": [
-    "@babel/preset-env"
+    [
+      "@babel/preset-env", {
+        "modules": "cjs"
+      }
+    ]
+  ],
+
+  "plugins": [
+    "add-module-exports"
   ]
 }

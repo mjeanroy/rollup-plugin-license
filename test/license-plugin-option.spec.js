@@ -22,9 +22,7 @@
  * SOFTWARE.
  */
 
-'use strict';
-
-const licensePluginOptions = require('../src/license-plugin-option.js');
+import {licensePluginOptions} from '../src/license-plugin-option.js';
 
 describe('licensePluginOptions', () => {
   it('should validate option', () => {

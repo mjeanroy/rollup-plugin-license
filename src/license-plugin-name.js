@@ -22,10 +22,8 @@
  * SOFTWARE.
  */
 
-'use strict';
-
 /**
  * The plugin name.
  * @type {string}
  */
-module.exports = 'rollup-plugin-license';
+export const PLUGIN_NAME = 'rollup-plugin-license';

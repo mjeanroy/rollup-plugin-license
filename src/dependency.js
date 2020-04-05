@@ -22,16 +22,14 @@
  * SOFTWARE.
  */
 
-'use strict';
-
-const _ = require('lodash');
-const EOL = require('./eol.js');
-const Person = require('./person.js');
+import _ from 'lodash';
+import {EOL} from './eol.js';
+import {Person} from './person.js';
 
 /**
  * Dependency structure.
  */
-module.exports = class Dependency {
+export class Dependency {
   /**
    * Create new dependency from package description.
    *
@@ -118,4 +116,4 @@ module.exports = class Dependency {
 
     return lines.join(EOL);
   }
-};
+}

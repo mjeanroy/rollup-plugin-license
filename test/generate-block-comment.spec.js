@@ -22,8 +22,8 @@
  * SOFTWARE.
  */
 
-const join = require('./utils/join.js');
-const generateBlockComment = require('../src/generate-block-comment.js');
+import {generateBlockComment} from '../src/generate-block-comment.js';
+import {join} from './utils/join.js';
 
 describe('generateBlockComment', () => {
   it('should generate block comment from given text', () => {

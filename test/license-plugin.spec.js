@@ -22,14 +22,12 @@
  * SOFTWARE.
  */
 
-'use strict';
-
-const fs = require('fs');
-const path = require('path');
-const tmp = require('tmp');
-const moment = require('moment');
-const join = require('./utils/join.js');
-const licensePlugin = require('../src/license-plugin.js');
+import fs from 'fs';
+import path from 'path';
+import tmp from 'tmp';
+import moment from 'moment';
+import {licensePlugin} from '../src/license-plugin.js';
+import {join} from './utils/join.js';
 
 describe('LicensePlugin', () => {
   let tmpDir;

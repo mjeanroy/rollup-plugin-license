@@ -22,13 +22,11 @@
  * SOFTWARE.
  */
 
-'use strict';
-
-const _ = require('lodash');
-const PLUGIN_NAME = require('./license-plugin-name.js');
-const validators = require('./schema-validators.js');
-const validateSchema = require('./schema-validator.js');
-const formatPath = require('./format-path.js');
+import _ from 'lodash';
+import {PLUGIN_NAME} from './license-plugin-name.js';
+import {validators} from './schema-validators.js';
+import {validateSchema} from './schema-validator.js';
+import {formatPath} from './format-path.js';
 
 /**
  * The option object schema.
@@ -299,10 +297,10 @@ function validateOptions(options) {
  * @param {Object} options Option object to validate.
  * @return {Object} New normalized options.
  */
-module.exports = function licensePluginOption(options) {
+export function licensePluginOptions(options) {
   const normalizedOptions = normalizeOptions(options);
 
   validateOptions(normalizedOptions);
 
   return normalizedOptions;
-};
+}

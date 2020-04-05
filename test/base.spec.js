@@ -22,9 +22,9 @@
  * SOFTWARE.
  */
 
-const _ = require('lodash');
-const Dependency = require('../src/dependency.js');
-const Person = require('../src/person.js');
+import _ from 'lodash';
+import {Dependency} from '../src/dependency.js';
+import {Person} from '../src/person.js';
 
 beforeEach(() => {
   jasmine.addCustomEqualityTester((first, second) => {
