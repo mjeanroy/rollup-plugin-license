@@ -63,7 +63,7 @@
     "rimraf": "3.0.2",
     "rollup": "2.3.4",
     "rollup-plugin-babel": "4.4.0",
-    "rollup-plugin-prettier": "0.6.0",
+    "rollup-plugin-prettier": "2.0.0",
     "rollup-plugin-strip-banner": "2.0.0",
     "tmp": "0.1.0"
   },
