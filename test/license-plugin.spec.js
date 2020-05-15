@@ -133,6 +133,17 @@ describe('LicensePlugin', () => {
       });
     });
 
+    it('should load pkg and going up directories until a package name is found', () => {
+      const id = path.join(__dirname, 'fixtures', 'fake-package-5', 'esm', 'index.js');
+      const result = plugin.scanDependency(id);
+
+      expect(result).not.toBeDefined();
+      expect(addDependency).toHaveBeenCalled();
+      expect(plugin._dependencies).toEqual({
+        'fake-package': fakePackage,
+      });
+    });
+
     it('should load pkg including license text from LICENSE.md file', () => {
       const id = path.join(__dirname, 'fixtures', 'fake-package-2', 'src', 'index.js');
       const result = plugin.scanDependency(id);
@@ -158,7 +169,6 @@ describe('LicensePlugin', () => {
         }),
       });
     });
-
 
     it('should load pkg including license text from LICENSE file', () => {
       const id = path.join(__dirname, 'fixtures', 'fake-package-4', 'src', 'index.js');
@@ -259,10 +269,12 @@ describe('LicensePlugin', () => {
   });
 
   describe('when adding dependencies', () => {
+    let warn;
     let plugin;
     let pkg;
 
     beforeEach(() => {
+      warn = spyOn(console, 'warn');
       plugin = licensePlugin();
       pkg = {
         name: 'foo',
@@ -322,6 +334,17 @@ describe('LicensePlugin', () => {
           ],
         },
       });
+    });
+
+    it('should warn when adding dependency without name', () => {
+      plugin.addDependency({
+        type: 'module',
+      });
+
+      expect(plugin._dependencies).toEqual({});
+      expect(warn).toHaveBeenCalledWith(
+          '[rollup-plugin-license] -- Trying to add dependency without any name, skipping it.'
+      );
     });
 
     it('should add dependency and parse author field', () => {
