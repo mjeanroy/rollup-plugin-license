@@ -857,17 +857,23 @@ class LicensePlugin {
       if (exists) {
         this.debug(`found package.json at: ${pkgPath}, read it`); // Read `package.json` file
 
-        pkg = JSON.parse(fs.readFileSync(pkgPath, "utf-8")); // Read license file, if it exists.
+        const pkgJson = JSON.parse(fs.readFileSync(pkgPath, "utf-8")); // We are probably in a package.json specifying the type of package (module, cjs).
+        // Nevertheless, if the package name is not defined, we must not use this `package.json` descriptor.
 
-        const licenseFile = glob.sync(path.join(dir, "LICENSE*"))[0];
+        if (pkgJson.name) {
+          // We found it!
+          pkg = pkgJson; // Read license file, if it exists.
 
-        if (licenseFile) {
-          pkg.licenseText = fs.readFileSync(licenseFile, "utf-8");
-        } // Add the new dependency to the set of third-party dependencies.
+          const licenseFile = glob.sync(path.join(dir, "LICENSE*"))[0];
 
-        this.addDependency(pkg); // We can stop now.
+          if (licenseFile) {
+            pkg.licenseText = fs.readFileSync(licenseFile, "utf-8");
+          } // Add the new dependency to the set of third-party dependencies.
 
-        break;
+          this.addDependency(pkg); // We can stop now.
+
+          break;
+        }
       } // Go up in the directory tree.
 
       dir = path.normalize(path.join(dir, ".."));
@@ -936,7 +942,9 @@ class LicensePlugin {
   addDependency(pkg) {
     const name = pkg.name;
 
-    if (!_.has(this._dependencies, name)) {
+    if (!name) {
+      this.warn("Trying to add dependency without any name, skipping it.");
+    } else if (!_.has(this._dependencies, name)) {
       this._dependencies[name] = new Dependency(pkg);
     }
   }
