@@ -22,34 +22,13 @@
  * SOFTWARE.
  */
 
-require('@babel/register')({
-  ignore: [
-    /node_modules/,
-  ],
-});
-
+const path = require('path');
 const gulp = require('gulp');
-const clean = require('./scripts/clean');
-const lint = require('./scripts/lint');
-const build = require('./scripts/build');
-const watch = require('./scripts/watch');
-const test = require('./scripts/test');
-const release = require('./scripts/release');
-const changelog = require('./scripts/changelog');
+const build = require('../build');
+const config = require('../config');
 
-const prebuild = gulp.series(clean, lint);
-const pretest = gulp.series(prebuild, build);
-const prerelease = gulp.series(pretest, test.test);
-
-module.exports = {
-  'clean': clean,
-  'lint': lint,
-  'build': gulp.series(prebuild, build),
-  'watch': watch,
-  'test': gulp.series(pretest, test.test),
-  'tdd': gulp.series(pretest, test.tdd),
-  'changelog': changelog,
-  'release:patch': gulp.series(prerelease, release.patch),
-  'release:minor': gulp.series(prerelease, release.minor),
-  'release:major': gulp.series(prerelease, release.major),
+module.exports = function watch(done) {
+  gulp.watch(path.join(config.src, '**', '*.js'), build, () => (
+    done()
+  ));
 };
