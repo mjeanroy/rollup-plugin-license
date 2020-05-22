@@ -29,6 +29,7 @@ import _ from 'lodash';
 import moment from 'moment';
 import MagicString from 'magic-string';
 import glob from 'glob';
+import packageNameRegex from 'package-name-regex';
 
 import {Dependency} from './dependency.js';
 import {generateBlockComment} from './generate-block-comment.js';
@@ -176,7 +177,11 @@ class LicensePlugin {
 
         // We are probably in a package.json specifying the type of package (module, cjs).
         // Nevertheless, if the package name is not defined, we must not use this `package.json` descriptor.
-        if (pkgJson.name) {
+        const license = pkgJson.license || pkgJson.licenses;
+        const hasLicense = license && license.length > 0;
+        const name = pkgJson.name;
+        const isValidPackageName = name && packageNameRegex.test(name);
+        if (isValidPackageName || hasLicense) {
           // We found it!
           pkg = pkgJson;
 

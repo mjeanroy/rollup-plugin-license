@@ -144,6 +144,40 @@ describe('LicensePlugin', () => {
       });
     });
 
+    it('should load pkg and going up directories until a valid package name is found', () => {
+      const id = path.join(__dirname, 'fixtures', 'fake-package-6', 'internal', 'index.js');
+      const result = plugin.scanDependency(id);
+
+      expect(result).not.toBeDefined();
+      expect(addDependency).toHaveBeenCalled();
+      expect(plugin._dependencies).toEqual({
+        'fake-package': fakePackage,
+      });
+    });
+
+    it('should load pkg and going up directories until a package name with a license is found even with a non valid package name', () => {
+      const id = path.join(__dirname, 'fixtures', 'fake-package-7', 'internal', 'index.js');
+      const result = plugin.scanDependency(id);
+
+      expect(result).not.toBeDefined();
+      expect(addDependency).toHaveBeenCalled();
+      expect(plugin._dependencies).toEqual({
+        '@fake-package/core/internal': {
+          name: '@fake-package/core/internal',
+          maintainers: [],
+          version: null,
+          description: null,
+          repository: null,
+          homepage: null,
+          private: true,
+          license: 'MIT',
+          licenseText: null,
+          author: null,
+          contributors: [],
+        },
+      });
+    });
+
     it('should load pkg including license text from LICENSE.md file', () => {
       const id = path.join(__dirname, 'fixtures', 'fake-package-2', 'src', 'index.js');
       const result = plugin.scanDependency(id);
