@@ -39,6 +39,7 @@ module.exports = {
     {
       format: 'cjs',
       file: path.join(config.dist, 'index.js'),
+      exports: 'default',
       banner: commenting(license, {
         extension: '.js',
       }),
@@ -50,6 +51,7 @@ module.exports = {
 
     babel({
       envName: 'rollup',
+      babelHelpers: 'bundled',
     }),
 
     prettier({
