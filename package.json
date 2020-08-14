@@ -50,7 +50,7 @@
     "@babel/register": "7.10.5",
     "@rollup/plugin-babel": "5.2.0",
     "@rollup/plugin-commonjs": "15.0.0",
-    "@rollup/plugin-node-resolve": "8.4.0",
+    "@rollup/plugin-node-resolve": "9.0.0",
     "babel-plugin-add-module-exports": "1.0.2",
     "eslint": "7.6.0",
     "eslint-config-google": "0.14.0",
