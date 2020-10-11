@@ -39,7 +39,7 @@
     "lodash": "4.17.20",
     "magic-string": "0.25.7",
     "mkdirp": "1.0.4",
-    "moment": "2.29.0",
+    "moment": "2.29.1",
     "package-name-regex": "1.0.8",
     "spdx-expression-validate": "2.0.0",
     "spdx-satisfies": "5.0.0"
