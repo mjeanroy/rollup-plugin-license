@@ -37,7 +37,7 @@ jobs:
         name: Set up NodeJS
         with:
           node-version: ${{ matrix.node }}
-      - name: Insrall
+      - name: Install
         run: npm install
       - name: Test
         run: npm test
