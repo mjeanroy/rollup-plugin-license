@@ -45,7 +45,7 @@
     "spdx-satisfies": "5.0.0"
   },
   "devDependencies": {
-    "@babel/core": "7.12.16",
+    "@babel/core": "7.12.17",
     "@babel/preset-env": "7.12.16",
     "@babel/register": "7.12.13",
     "@rollup/plugin-babel": "5.2.3",
