@@ -102,7 +102,7 @@ export type ThirdPartyOutput = string | {
      *      <% }) %>
      * `
      */
-    template: ((dependencies: Dependency[])=> string[] | string) | string,
+    template?: ((dependencies: Dependency[])=> string[] | string) | string,
 
     /**
      * Ensures that dependencies does not violate any license restriction.
