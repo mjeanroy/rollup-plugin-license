@@ -72,6 +72,7 @@ interface Dependency {
         url: string,
         text: ()=> string,
     }[],
+    text: ()=> string,
 }
 
 export type ThirdPartyOutput = string | {
