@@ -152,6 +152,6 @@ export interface Options {
     thirdParty?: ThirdParty,
 };
 
-type LicensePlugin = (options: Options)=> Plugin;
+declare function rollupPluginLicense(options: Options): Plugin;
 
-export default LicensePlugin;
+export default rollupPluginLicense
