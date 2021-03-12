@@ -45,20 +45,33 @@ export type Banner = string | {
 
 interface Dependency {
     name: string,
+    maintainers: string[],
     version: string,
-    private: boolean,
     description: string,
     repository: {
         url: string,
+        type: string,
     },
     homepage: string,
+    private: boolean,
+
+    /**
+     * SPDX License short ID
+     */
+    license: string,
+    licenseText: string,
     author: {
+        name: string,
+        email: string | null,
+        url: string,
         text: ()=> string,
     },
     contributors: {
+        name: string,
+        email: string | null,
+        url: string,
         text: ()=> string,
     }[],
-    licenseText: string,
 }
 
 export type ThirdPartyOutput = string | {
