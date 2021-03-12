@@ -59,7 +59,7 @@ interface Dependency {
         text: ()=> string,
     }[],
     licenseText: string,
-};
+}
 
 export type ThirdPartyOutput = string | {
 
@@ -127,7 +127,7 @@ export type ThirdParty = {
     /**
      * Output file for 
      */
-    output: string | ThirdPartyOutput,
+    output: ThirdPartyOutput,
 };
 
 export interface Options {
@@ -150,7 +150,7 @@ export interface Options {
      * automatically
      */
     thirdParty?: ThirdParty,
-};
+}
 
 declare function rollupPluginLicense(options: Options): Plugin;
 
