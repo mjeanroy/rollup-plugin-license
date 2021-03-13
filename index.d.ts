@@ -24,7 +24,7 @@
 
 import type { Plugin } from "rollup";
 
-interface Person {
+export interface Person {
     readonly name: string,
     readonly email: string | null,
     readonly url: string | null,
@@ -62,7 +62,7 @@ export type Banner = string | {
 /**
  * Dependency information is derived from the package.json file
  */
-interface Dependency {
+export interface Dependency {
     readonly name: string,
     readonly maintainers: string[],
     readonly version: string,
