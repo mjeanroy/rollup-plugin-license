@@ -24,11 +24,27 @@
 
 import type { Plugin } from "rollup";
 
+interface Person {
+    readonly name: string,
+    readonly email: string | null,
+    readonly url: string | null,
+
+    /**
+     * Turns the person into a formatted string
+     * @returns formatted person info
+     */
+    text: ()=> string,
+}
+
 export type CommentStyle = "regular" | "ignored" | "slash";
 
 export type Banner = string | {
-    commentStyle: CommentStyle,
-    content: string | {
+
+    /**
+     * @see {@link https://github.com/mjeanroy/rollup-plugin-license#comment-style}
+     */
+    commentStyle?: CommentStyle,
+    content: string | (()=> string) | {
 
         /**
          * File to get banner content from
@@ -43,39 +59,49 @@ export type Banner = string | {
     data?: {[key: string]: string} | (()=> {[key: string]: string}),
 };
 
+/**
+ * Dependency information is derived from the package.json file
+ */
 interface Dependency {
-    name: string,
-    maintainers: string[],
-    version: string,
-    description: string,
-    repository: {
-        url: string,
-        type: string,
+    readonly name: string,
+    readonly maintainers: string[],
+    readonly version: string,
+    readonly description: string,
+    readonly repository: {
+        readonly url: string,
+        readonly type: string,
     },
-    homepage: string,
-    private: boolean,
+    readonly homepage: string,
+
+    /**
+     * If dependency is private
+     */
+    readonly private: boolean,
 
     /**
      * SPDX License short ID
      */
-    license: string,
-    licenseText: string,
-    author: {
-        name: string,
-        email: string | null,
-        url: string,
-        text: ()=> string,
-    },
-    contributors: {
-        name: string,
-        email: string | null,
-        url: string,
-        text: ()=> string,
-    }[],
+    readonly license: string,
+
+    /**
+     * Full License file text
+     */
+    readonly licenseText: string,
+
+    /**
+     * Author information
+     */
+    readonly author: Person,
+    readonly contributors: Person[],
+
+    /**
+     * Turns the dependency into a formatted string
+     * @returns formatted dependency license info
+     */
     text: ()=> string,
 }
 
-export type ThirdPartyOutput = string | {
+export type ThirdPartyOutput = string | ((dependencies: Dependency[])=> void) | {
 
     /**
      * Name of file to write licenses to
@@ -104,6 +130,15 @@ export type ThirdPartyOutput = string | {
      * `
      */
     template?: ((dependencies: Dependency[])=> string[] | string) | string,
+};
+
+export type ThirdParty = ((dependencies: Dependency[])=> void) | {
+
+    /**
+     * If private dependencies should be allowed (`private: true` in package.json)
+     * @default false
+     */
+    includePrivate?: boolean,
 
     /**
      * Ensures that dependencies does not violate any license restriction.
@@ -116,36 +151,40 @@ export type ThirdPartyOutput = string | {
      *      return dependency.license === 'MIT';
      * }
      */
-    allow?: string | ((dependency: Dependency)=> boolean),
+    allow?: string | ((dependency: Dependency)=> boolean) | {
 
-    /**
-     * Fail if a dependency does not specify any licenses
-     * @default false
-     */
-    failOnUnlicensed?: boolean,
+        /**
+         * Testing if the license if valid
+         */
+        test: string | ((dependency: Dependency)=> boolean),
 
-    /**
-     * Fail if a dependency specify a license that does not match given requirement
-     * @default false
-     */
-    failOnViolation?: boolean,
-};
-
-export type ThirdParty = {
-
-    /**
-     * @default false
-     */
-    includePrivate?: boolean
+        /**
+         * Fail if a dependency does not specify any licenses
+         * @default false
+         */
+        failOnUnlicensed?: boolean,
+    
+        /**
+         * Fail if a dependency specify a license that does not match given requirement
+         * @default false
+         */
+        failOnViolation?: boolean,
+    },
 
     /**
      * Output file for 
      */
-    output: ThirdPartyOutput,
+    output: ThirdPartyOutput | ThirdPartyOutput[],
 };
 
-export interface Options {
-    sourcemap?: boolean,
+export type Options = {
+    sourcemap?: boolean | string,
+
+    /**
+     * Debug mode
+     * @default false
+     */
+    debug?: boolean,
 
     /**
      * Current Working Directory
