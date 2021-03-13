@@ -129,7 +129,7 @@ export type ThirdPartyOutput = string | ((dependencies: Dependency[])=> void) | 
      *      <% }) %>
      * `
      */
-    template?: ((dependencies: Dependency[])=> string[] | string) | string,
+    template?: ((dependencies: Dependency[])=> string) | string,
 };
 
 export type ThirdParty = ((dependencies: Dependency[])=> void) | {
