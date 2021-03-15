@@ -41,6 +41,11 @@ module.exports = function lint() {
     path.join(config.src, '**', '*.js'),
     path.join(config.test, '**', '*.js'),
     path.join(config.scripts, '**', '*.js'),
+
+    path.join(config.root, '*.ts'),
+    path.join(config.src, '**', '*.ts'),
+    path.join(config.test, '**', '*.ts'),
+    path.join(config.scripts, '**', '*.ts'),
   ];
 
   log.debug('Linting files: ');

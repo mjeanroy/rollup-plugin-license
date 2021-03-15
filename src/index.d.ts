@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-import type { Plugin } from "rollup";
+import type {Plugin} from 'rollup';
 
 export interface Person {
   readonly name: string,
@@ -33,18 +33,17 @@ export interface Person {
    * Turns the person into a formatted string
    * @returns formatted person info
    */
-  text: ()=> string,
+  text: () => string,
 }
 
-export type CommentStyle = "regular" | "ignored" | "slash";
+export type CommentStyle = 'regular' | 'ignored' | 'slash';
 
 export type Banner = string | {
   /**
    * @see {@link https://github.com/mjeanroy/rollup-plugin-license#comment-style}
    */
   commentStyle?: CommentStyle,
-  content: string | (()=> string) | {
-
+  content: string | (() => string) | {
     /**
      * File to get banner content from
      */
@@ -55,7 +54,7 @@ export type Banner = string | {
      */
     encoding?: string,
   },
-  data?: {[key: string]: string} | (()=> {[key: string]: string}),
+  data?: { [key: string]: string } | (() => { [key: string]: string }),
 };
 
 /**
@@ -97,10 +96,10 @@ export interface Dependency {
    * Turns the dependency into a formatted string
    * @returns formatted dependency license info
    */
-  text: ()=> string,
+  text: () => string,
 }
 
-export type ThirdPartyOutput = string | ((dependencies: Dependency[])=> void) | {
+export type ThirdPartyOutput = string | ((dependencies: Dependency[]) => void) | {
 
   /**
    * Name of file to write licenses to
@@ -120,7 +119,7 @@ export type ThirdPartyOutput = string | ((dependencies: Dependency[])=> void) | 
    *          `${dependency.name}:${dependency.version} -- ${dependency.license}`).join('\n')
    *      );
    * },
-   * 
+   *
    * // Lodash template that can be defined to customize report output
    * template: `
    *      <% _.forEach(dependencies, function (dependency) { %>
@@ -128,10 +127,10 @@ export type ThirdPartyOutput = string | ((dependencies: Dependency[])=> void) | 
    *      <% }) %>
    * `
    */
-  template?: ((dependencies: Dependency[])=> string) | string,
+  template?: ((dependencies: Dependency[]) => string) | string,
 };
 
-export type ThirdParty = ((dependencies: Dependency[])=> void) | {
+export type ThirdParty = ((dependencies: Dependency[]) => void) | {
   /**
    * If private dependencies should be allowed (`private: true` in package.json)
    * @default false
@@ -144,33 +143,32 @@ export type ThirdParty = ((dependencies: Dependency[])=> void) | {
    * licenses, simply define the restriction such as:
    * @example
    * {allow: '(MIT OR Apache-2.0)'}
-   * 
+   *
    * allow(dependency) {
    *      return dependency.license === 'MIT';
    * }
    */
-  allow?: string | ((dependency: Dependency)=> boolean) | {
+  allow?: string | ((dependency: Dependency) => boolean) | {
+    /**
+     * Testing if the license if valid
+     */
+    test: string | ((dependency: Dependency) => boolean),
 
-      /**
-       * Testing if the license if valid
-       */
-      test: string | ((dependency: Dependency)=> boolean),
+    /**
+     * Fail if a dependency does not specify any licenses
+     * @default false
+     */
+    failOnUnlicensed?: boolean,
 
-      /**
-       * Fail if a dependency does not specify any licenses
-       * @default false
-       */
-      failOnUnlicensed?: boolean,
-
-      /**
-       * Fail if a dependency specify a license that does not match given requirement
-       * @default false
-       */
-      failOnViolation?: boolean,
+    /**
+     * Fail if a dependency specify a license that does not match given requirement
+     * @default false
+     */
+    failOnViolation?: boolean,
   },
 
   /**
-   * Output file for 
+   * Output file for
    */
   output: ThirdPartyOutput | ThirdPartyOutput[],
 };
@@ -205,4 +203,4 @@ export type Options = {
 
 declare function rollupPluginLicense(options: Options): Plugin;
 
-export default rollupPluginLicense
+export default rollupPluginLicense;
