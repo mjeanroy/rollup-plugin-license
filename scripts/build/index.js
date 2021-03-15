@@ -22,13 +22,27 @@
  * SOFTWARE.
  */
 
+const path = require('path');
+const gulp = require('gulp');
 const rollup = require('rollup');
-const config = require('./rollup.config');
+const rollupConfig = require('./rollup.config');
+const config = require('../config');
 
-module.exports = function build() {
-  return rollup.rollup(config).then((bundle) => (
-    Promise.all(config.output.map((output) => (
+module.exports = gulp.series(
+    buildOutput,
+    copyTypings
+);
+
+// eslint-disable-next-line require-jsdoc
+function buildOutput() {
+  return rollup.rollup(rollupConfig).then((bundle) => (
+    Promise.all(rollupConfig.output.map((output) => (
       bundle.write(output)
     )))
   ));
-};
+}
+
+// eslint-disable-next-line require-jsdoc
+function copyTypings() {
+  return gulp.src(path.join(config.src, 'index.d.ts')).pipe(gulp.dest(config.dist));
+}
