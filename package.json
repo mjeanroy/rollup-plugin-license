@@ -42,7 +42,7 @@
     "magic-string": "0.25.7",
     "mkdirp": "1.0.4",
     "moment": "2.29.1",
-    "package-name-regex": "1.0.10",
+    "package-name-regex": "1.0.11",
     "spdx-expression-validate": "2.0.0",
     "spdx-satisfies": "5.0.0"
   },
