@@ -44,7 +44,7 @@
     "moment": "2.29.1",
     "package-name-regex": "2.0.0",
     "spdx-expression-validate": "2.0.0",
-    "spdx-satisfies": "5.0.0"
+    "spdx-satisfies": "5.0.1"
   },
   "devDependencies": {
     "@babel/core": "7.14.0",
