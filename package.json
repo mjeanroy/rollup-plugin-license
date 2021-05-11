@@ -44,7 +44,7 @@
     "moment": "2.29.1",
     "package-name-regex": "2.0.0",
     "spdx-expression-validate": "2.0.0",
-    "spdx-satisfies": "5.0.0"
+    "spdx-satisfies": "5.0.1"
   },
   "devDependencies": {
     "@babel/core": "7.14.0",
@@ -54,9 +54,9 @@
     "@rollup/plugin-commonjs": "19.0.0",
     "@rollup/plugin-node-resolve": "13.0.0",
     "@typescript-eslint/eslint-plugin": "4.23.0",
-    "@typescript-eslint/parser": "4.22.1",
+    "@typescript-eslint/parser": "4.23.0",
     "babel-plugin-add-module-exports": "1.0.4",
-    "eslint": "7.25.0",
+    "eslint": "7.26.0",
     "eslint-config-google": "0.14.0",
     "fancy-log": "1.3.3",
     "fs-extra": "10.0.0",
