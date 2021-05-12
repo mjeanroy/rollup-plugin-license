@@ -22,12 +22,16 @@
  * SOFTWARE.
  */
 
+// Required with prettier >= 2.3.0 with node 11
+require('globalthis').shim();
+
 const path = require('path');
 const fs = require('fs');
 const commenting = require('commenting');
-const stripBanner = require('rollup-plugin-strip-banner');
 const babel = require('@rollup/plugin-babel').default;
+const stripBanner = require('rollup-plugin-strip-banner');
 const prettier = require('rollup-plugin-prettier');
+
 const config = require('../config');
 const pkg = require('../../package.json');
 const license = fs.readFileSync(path.join(config.root, 'LICENSE'), 'utf-8');
