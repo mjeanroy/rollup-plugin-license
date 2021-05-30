@@ -54,24 +54,31 @@ export interface Person {
 
 export type CommentStyle = 'regular' | 'ignored' | 'slash';
 
-export type Banner = string | {
+interface BannerContentOptions {
+  /**
+   * File to get banner content from.
+   */
+  file: string,
+
+  /**
+   * File encoding.
+   * @default utf-8
+   */
+  encoding?: string,
+}
+
+type BannerContent = string | BannerContentOptions;
+
+interface BannerOptions {
   /**
    * @see {@link https://github.com/mjeanroy/rollup-plugin-license#comment-style}
    */
   commentStyle?: CommentStyle,
-  content: string | (() => string) | {
-    /**
-     * File to get banner content from
-     */
-    file: string,
-
-    /**
-     * @default utf-8
-     */
-    encoding?: string,
-  },
+  content: BannerContent | (() => BannerContent),
   data?: { [key: string]: string } | (() => { [key: string]: string }),
-};
+}
+
+export type Banner = string | BannerOptions;
 
 /**
  * Dependency information is derived from the package.json file
