@@ -24,16 +24,32 @@
 
 import type {Plugin} from 'rollup';
 
+/**
+ * A person, as described in NPM documentation.
+ *
+ * @see https://docs.npmjs.com/cli/v7/configuring-npm/package-json#people-fields-author-contributors
+ */
 export interface Person {
-  readonly name: string,
-  readonly email: string | null,
-  readonly url: string | null,
+  /**
+   * Person Name.
+   */
+  readonly name: string;
+
+  /**
+   * Person Email.
+   */
+  readonly email: string | null;
+
+  /**
+   * Person URL.
+   */
+   readonly url: string | null;
 
   /**
    * Turns the person into a formatted string
    * @returns formatted person info
    */
-  text: () => string,
+  text: () => string;
 }
 
 export type CommentStyle = 'regular' | 'ignored' | 'slash';
@@ -69,6 +85,7 @@ export interface Dependency {
     readonly url: string,
     readonly type: string,
   },
+
   readonly homepage: string,
 
   /**
