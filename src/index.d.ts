@@ -24,6 +24,11 @@
 
 import type {Plugin} from 'rollup';
 
+type FilePath = string;
+type FileEncoding = string;
+type FactoryFn<T> = () => T;
+type Factory<T> = T | FactoryFn<T>;
+
 /**
  * A person, as described in NPM documentation.
  *
@@ -52,30 +57,49 @@ export interface Person {
   text: () => string;
 }
 
+/**
+ * @see {@link https://github.com/mjeanroy/rollup-plugin-license#comment-style}
+ */
 export type CommentStyle = 'regular' | 'ignored' | 'slash';
 
+/**
+ * Banner content descriptor.
+ */
 interface BannerContentOptions {
   /**
    * File to get banner content from.
    */
-  file: string,
+  file: FilePath;
 
   /**
    * File encoding.
    * @default utf-8
    */
-  encoding?: string,
+  encoding?: FileEncoding;
 }
 
+/**
+ * Banner content, can be:
+ * - A raw string, evaluated as a (lodash) template.
+ * - A file description, the content being read and evaluated as a (lodash) template.
+ */
 type BannerContent = string | BannerContentOptions;
 
+/**
+ * Data injected during banner "rendering" (i.e evaluated as template
+ * model).
+ */
+interface BannerContentData {
+  [key: string]: any;
+}
+
+/**
+ * Banner Options.
+ */
 interface BannerOptions {
-  /**
-   * @see {@link https://github.com/mjeanroy/rollup-plugin-license#comment-style}
-   */
-  commentStyle?: CommentStyle,
-  content: BannerContent | (() => BannerContent),
-  data?: { [key: string]: string } | (() => { [key: string]: string }),
+  content: Factory<BannerContent>;
+  commentStyle?: CommentStyle;
+  data?: Factory<BannerContentData>;
 }
 
 export type Banner = string | BannerOptions;
@@ -197,32 +221,32 @@ export type ThirdParty = ((dependencies: Dependency[]) => void) | {
   output: ThirdPartyOutput | ThirdPartyOutput[],
 };
 
-export type Options = {
-  sourcemap?: boolean | string,
+export interface Options {
+  sourcemap?: boolean | string;
 
   /**
    * Debug mode
    * @default false
    */
-  debug?: boolean,
+  debug?: boolean;
 
   /**
    * Current Working Directory
    * @default process.cwd()
    */
-  cwd?: string,
+  cwd?: string;
 
   /**
    * License banner to place at the top of your bundle
    */
-  banner?: Banner,
+  banner?: Factory<Banner>;
 
   /**
    * For third party dependencies.
    * Creates a file containing a summary of all dependencies can be generated
    * automatically
    */
-  thirdParty?: ThirdParty,
+  thirdParty?: ThirdParty;
 }
 
 declare function rollupPluginLicense(options: Options): Plugin;
