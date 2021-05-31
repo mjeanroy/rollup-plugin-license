@@ -31,6 +31,7 @@ node_modules/
 /scripts
 /gulpfile.js
 /.babelrc
+/.editorconfig
 /.eslintrc
 /.eslintignore
 /.gitattributes
