@@ -105,46 +105,84 @@ interface BannerOptions {
 export type Banner = string | BannerOptions;
 
 /**
+ * Dependency Repository Description.
+ */
+interface DependencyRepository {
+  /**
+   * Repository URL.
+   */
+  readonly url: string;
+
+  /**
+   * Repository Type (git, svn, etc.).
+   */
+  readonly type: string;
+}
+
+/**
  * Dependency information is derived from the package.json file
  */
 export interface Dependency {
-  readonly name: string,
-  readonly maintainers: string[],
-  readonly version: string,
-  readonly description: string,
-  readonly repository: {
-    readonly url: string,
-    readonly type: string,
-  },
-
-  readonly homepage: string,
+  /**
+   * Dependency Name.
+   */
+  readonly name: string | null;
 
   /**
-   * If dependency is private
+   * Dependency Maintainers list.
    */
-  readonly private: boolean,
+  readonly maintainers: string[];
 
   /**
-   * SPDX License short ID
+   * Dependency Version.
    */
-  readonly license: string,
+  readonly version: string | null;
 
   /**
-   * Full License file text
+   * Dependency Description.
    */
-  readonly licenseText: string,
+  readonly description: string | null;
 
   /**
-   * Author information
+   * Dependency Repository Location.
    */
-  readonly author: Person,
-  readonly contributors: Person[],
+  readonly repository: string | DependencyRepository | null;
+
+  /**
+   * Repository Public Homepage.
+   */
+  readonly homepage: string | null;
+
+  /**
+   * If dependency is private.
+   */
+  readonly private: boolean;
+
+  /**
+   * SPDX License short ID.
+   */
+  readonly license: string | null;
+
+  /**
+   * Full License file text.
+   */
+  readonly licenseText: string | null;
+
+  /**
+   * Author information.
+   */
+  readonly author: Person | null;
+
+  /**
+   * Dependency Contributes list.
+   */
+  readonly contributors: Person[];
 
   /**
    * Turns the dependency into a formatted string
    * @returns formatted dependency license info
    */
-  text: () => string,
+  text: () => string;
 }
 
 export type ThirdPartyOutput = string | ((dependencies: Dependency[]) => void) | {
