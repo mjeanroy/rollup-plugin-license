@@ -185,37 +185,6 @@ export interface Dependency {
   text: () => string;
 }
 
-export type ThirdPartyOutput = string | ((dependencies: Dependency[]) => void) | {
-
-  /**
-   * Name of file to write licenses to
-   */
-  file: string,
-
-  /**
-   * @default utf-8
-   */
-  encoding?: string,
-
-  /**
-   * @example
-   * // Template function that can be defined to customize report output
-   * template(dependencies) {
-   *      return dependencies.map((dependency) => (
-   *          `${dependency.name}:${dependency.version} -- ${dependency.license}`).join('\n')
-   *      );
-   * },
-   *
-   * // Lodash template that can be defined to customize report output
-   * template: `
-   *      <% _.forEach(dependencies, function (dependency) { %>
-   *          <%= dependency.name %>:<%= dependency.version%> -- <%= dependency.license %>
-   *      <% }) %>
-   * `
-   */
-  template?: ((dependencies: Dependency[]) => string) | string,
-};
-
 /**
  * SPDX Licence Identifier.
  */
@@ -247,12 +216,69 @@ interface ThirdPartyAllowOptions {
   failOnViolation?: boolean;
 }
 
-export type ThirdParty = ((dependencies: Dependency[]) => void) | {
+/**
+ * Output generator: may write a file to disk, or something else as long as it is a
+ * synchronous operation.
+ */
+type ThirdPartyOutputGeneratorFn = (dependencies: Dependency[]) => void;
+
+/**
+ * Template as a raw string.
+ */
+type ThirdPartyOutputTemplate = string;
+
+/**
+ * Template function.
+ */
+type ThirdPartyOutputTemplateFn = (dependencies: Dependency[]) => void;
+
+/**
+ * Third Party output options object.
+ */
+interface ThirdPartyOutputOptions {
+  /**
+   * Name of file to write licenses to
+   */
+  file: FilePath;
+
+  /**
+   * @default utf-8
+   */
+  encoding?: FileEncoding;
+
+  /**
+   * Template function that can be defined to customize report output.
+   *
+   * @example
+   *   template(dependencies) {
+   *     return dependencies.map((dependency) => (
+   *       `${dependency.name}:${dependency.version} -- ${dependency.license}`).join('\n')
+   *     );
+   *   },
+   *
+   *   // Lodash template that can be defined to customize report output
+   *   template: `
+   *     <% _.forEach(dependencies, function (dependency) { %>
+   *       <%= dependency.name %>:<%= dependency.version%> -- <%= dependency.license %>
+   *     <% }) %>
+   *   `
+   */
+  template?: ThirdPartyOutputTemplate | ThirdPartyOutputTemplateFn;
+}
+
+type ThirdPartyOutput = FilePath | ThirdPartyOutputGeneratorFn | ThirdPartyOutputOptions;
+
+interface ThirdPartyOptions {
+  /**
+   * Output for third party report.
+   */
+  output: ThirdPartyOutput | ThirdPartyOutput[];
+
   /**
    * If private dependencies should be checked (`private: true` in package.json)
    * @default false
    */
-  includePrivate?: boolean,
+  includePrivate?: boolean;
 
   /**
    * Ensures that dependencies does not violate any license restriction.
@@ -269,13 +295,10 @@ export type ThirdParty = ((dependencies: Dependency[]) => void) | {
    *     return dependency.license === 'MIT';
    *   }
    */
-  allow?: ThirdPartyValidator | ThirdPartyAllowOptions,
+  allow?: ThirdPartyValidator | ThirdPartyAllowOptions;
+}
 
-  /**
-   * Output file for
-   */
-  output: ThirdPartyOutput | ThirdPartyOutput[],
-};
+export type ThirdParty = ThirdPartyOutputGeneratorFn | ThirdPartyOptions;
 
 export interface Options {
   sourcemap?: boolean | string;

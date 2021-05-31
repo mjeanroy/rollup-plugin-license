@@ -293,7 +293,8 @@ class LicensePlugin {
         .value();
 
     if (_.isFunction(thirdParty)) {
-      return thirdParty(outputDependencies);
+      thirdParty(outputDependencies);
+      return;
     }
 
     const allow = thirdParty.allow;
@@ -521,7 +522,8 @@ class LicensePlugin {
    */
   _exportThirdPartiesToOutput(outputDependencies, output) {
     if (_.isFunction(output)) {
-      return output(outputDependencies);
+      output(outputDependencies);
+      return;
     }
 
     // Default is to export to given file.
