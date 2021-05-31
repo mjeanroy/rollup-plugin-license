@@ -309,6 +309,9 @@ license({
 
 ## Changelogs
 
+- 2.4.0
+  - Typings added
+  - Update dependencies
 - 2.0.0
   - Support node >= 10
   - Update dependencies
