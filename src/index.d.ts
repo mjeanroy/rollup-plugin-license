@@ -216,42 +216,60 @@ export type ThirdPartyOutput = string | ((dependencies: Dependency[]) => void) |
   template?: ((dependencies: Dependency[]) => string) | string,
 };
 
+/**
+ * SPDX Licence Identifier.
+ */
+type SpdxId = string;
+
+/**
+ * Function checking dependency license validity.
+ */
+type ThirdPartyDependencyValidatorFn = (Dependency: Dependency) => boolean;
+
+type ThirdPartyValidator = SpdxId | ThirdPartyDependencyValidatorFn;
+
+interface ThirdPartyAllowOptions {
+  /**
+   * Testing if the license if valid
+   */
+  test: ThirdPartyValidator;
+
+  /**
+   * Fail if a dependency does not specify any licenses
+   * @default false
+   */
+  failOnUnlicensed?: boolean;
+
+  /**
+   * Fail if a dependency specify a license that does not match given requirement
+   * @default false
+   */
+  failOnViolation?: boolean;
+}
+
 export type ThirdParty = ((dependencies: Dependency[]) => void) | {
   /**
-   * If private dependencies should be allowed (`private: true` in package.json)
+   * If private dependencies should be checked (`private: true` in package.json)
    * @default false
    */
   includePrivate?: boolean,
 
   /**
    * Ensures that dependencies does not violate any license restriction.
-   * For example, suppose you want to limit dependencies with MIT or Apache-2.0
-   * licenses, simply define the restriction such as:
-   * @example
-   * {allow: '(MIT OR Apache-2.0)'}
    *
-   * allow(dependency) {
-   *      return dependency.license === 'MIT';
-   * }
+   * For example, suppose you want to limit dependencies with MIT or Apache-2.0
+   * licenses, simply define the restriction:
+   *
+   * @example
+   *   {
+   *     allow: '(MIT OR Apache-2.0)'
+   *   }
+   *
+   *   allow(dependency) {
+   *     return dependency.license === 'MIT';
+   *   }
    */
-  allow?: string | ((dependency: Dependency) => boolean) | {
-    /**
-     * Testing if the license if valid
-     */
-    test: string | ((dependency: Dependency) => boolean),
-
-    /**
-     * Fail if a dependency does not specify any licenses
-     * @default false
-     */
-    failOnUnlicensed?: boolean,
-
-    /**
-     * Fail if a dependency specify a license that does not match given requirement
-     * @default false
-     */
-    failOnViolation?: boolean,
-  },
+  allow?: ThirdPartyValidator | ThirdPartyAllowOptions,
 
   /**
    * Output file for
