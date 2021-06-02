@@ -191,6 +191,19 @@ describe('LicensePlugin', () => {
       });
     });
 
+    it('should load pkg including license text from license.md file ignoring case of license file', () => {
+      const id = path.join(__dirname, 'fixtures', 'fake-package-8', 'src', 'index.js');
+      const result = plugin.scanDependency(id);
+
+      expect(result).not.toBeDefined();
+      expect(addDependency).toHaveBeenCalled();
+      expect(plugin._dependencies).toEqual({
+        'fake-package': Object.assign(fakePackage, {
+          licenseText: 'license.md file',
+        }),
+      });
+    });
+
     it('should load pkg including license text from LICENSE.txt file', () => {
       const id = path.join(__dirname, 'fixtures', 'fake-package-3', 'src', 'index.js');
       const result = plugin.scanDependency(id);
