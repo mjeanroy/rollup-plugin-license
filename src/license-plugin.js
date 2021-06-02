@@ -186,7 +186,7 @@ class LicensePlugin {
           pkg = pkgJson;
 
           // Read license file, if it exists.
-          const licenseFile = glob.sync(path.join(dir, 'LICENSE*'), {nocase: true})[0];
+          const licenseFile = glob.sync(path.join(dir, 'LICENSE*'), {nocase: true, strict: false, silent: true})[0];
           if (licenseFile) {
             pkg.licenseText = fs.readFileSync(licenseFile, 'utf-8');
           }
