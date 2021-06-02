@@ -186,7 +186,10 @@ class LicensePlugin {
           pkg = pkgJson;
 
           // Read license file, if it exists.
-          const licenseFile = glob.sync(path.join(dir, 'LICENSE*'))[0];
+          const cwd = this._cwd || process.cwd();
+          const absolutePath = path.join(dir, 'LICENSE*');
+          const relativeToCwd = path.relative(cwd, absolutePath);
+          const licenseFile = this._findGlob(relativeToCwd, cwd)[0];
           if (licenseFile) {
             pkg.licenseText = fs.readFileSync(licenseFile, 'utf-8');
           }
@@ -328,6 +331,21 @@ class LicensePlugin {
    */
   warn(msg) {
     console.warn(`[${this.name}] -- ${msg}`);
+  }
+
+  /**
+   * Find given file, matching given pattern.
+   *
+   * @param {string} pattern Pattern to look for.
+   * @param {string} cwd Working directory.
+   * @returns {*} All match.
+   * @private
+   */
+  _findGlob(pattern, cwd) {
+    return glob.sync(pattern, {
+      cwd,
+      nocase: true,
+    });
   }
 
   /**
