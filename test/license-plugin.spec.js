@@ -124,9 +124,9 @@ describe('LicensePlugin', () => {
 
     it('should load pkg', () => {
       const id = path.join(__dirname, 'fixtures', 'fake-package-1', 'src', 'index.js');
-      const result = plugin.scanDependency(id);
 
-      expect(result).not.toBeDefined();
+      plugin.scanDependency(id);
+
       expect(addDependency).toHaveBeenCalled();
       expect(plugin._dependencies).toEqual({
         'fake-package': fakePackage,
@@ -135,9 +135,9 @@ describe('LicensePlugin', () => {
 
     it('should load pkg and going up directories until a package name is found', () => {
       const id = path.join(__dirname, 'fixtures', 'fake-package-5', 'esm', 'index.js');
-      const result = plugin.scanDependency(id);
 
-      expect(result).not.toBeDefined();
+      plugin.scanDependency(id);
+
       expect(addDependency).toHaveBeenCalled();
       expect(plugin._dependencies).toEqual({
         'fake-package': fakePackage,
@@ -146,9 +146,9 @@ describe('LicensePlugin', () => {
 
     it('should load pkg and going up directories until a valid package name is found', () => {
       const id = path.join(__dirname, 'fixtures', 'fake-package-6', 'internal', 'index.js');
-      const result = plugin.scanDependency(id);
 
-      expect(result).not.toBeDefined();
+      plugin.scanDependency(id);
+
       expect(addDependency).toHaveBeenCalled();
       expect(plugin._dependencies).toEqual({
         'fake-package': fakePackage,
@@ -157,9 +157,9 @@ describe('LicensePlugin', () => {
 
     it('should load pkg and going up directories until a package name with a license is found even with a non valid package name', () => {
       const id = path.join(__dirname, 'fixtures', 'fake-package-7', 'internal', 'index.js');
-      const result = plugin.scanDependency(id);
 
-      expect(result).not.toBeDefined();
+      plugin.scanDependency(id);
+
       expect(addDependency).toHaveBeenCalled();
       expect(plugin._dependencies).toEqual({
         '@fake-package/core/internal': {
@@ -180,9 +180,9 @@ describe('LicensePlugin', () => {
 
     it('should load pkg including license text from LICENSE.md file', () => {
       const id = path.join(__dirname, 'fixtures', 'fake-package-2', 'src', 'index.js');
-      const result = plugin.scanDependency(id);
 
-      expect(result).not.toBeDefined();
+      plugin.scanDependency(id);
+
       expect(addDependency).toHaveBeenCalled();
       expect(plugin._dependencies).toEqual({
         'fake-package': Object.assign(fakePackage, {
@@ -193,9 +193,9 @@ describe('LicensePlugin', () => {
 
     it('should load pkg including license text from license.md file ignoring case of license file', () => {
       const id = path.join(__dirname, 'fixtures', 'fake-package-8', 'src', 'index.js');
-      const result = plugin.scanDependency(id);
 
-      expect(result).not.toBeDefined();
+      plugin.scanDependency(id);
+
       expect(addDependency).toHaveBeenCalled();
       expect(plugin._dependencies).toEqual({
         'fake-package': Object.assign(fakePackage, {
@@ -206,9 +206,9 @@ describe('LicensePlugin', () => {
 
     it('should load pkg including license text from LICENSE.txt file', () => {
       const id = path.join(__dirname, 'fixtures', 'fake-package-3', 'src', 'index.js');
-      const result = plugin.scanDependency(id);
 
-      expect(result).not.toBeDefined();
+      plugin.scanDependency(id);
+
       expect(addDependency).toHaveBeenCalled();
       expect(plugin._dependencies).toEqual({
         'fake-package': Object.assign(fakePackage, {
@@ -219,9 +219,9 @@ describe('LicensePlugin', () => {
 
     it('should load pkg including license text from LICENSE file', () => {
       const id = path.join(__dirname, 'fixtures', 'fake-package-4', 'src', 'index.js');
-      const result = plugin.scanDependency(id);
 
-      expect(result).not.toBeDefined();
+      plugin.scanDependency(id);
+
       expect(addDependency).toHaveBeenCalled();
       expect(plugin._dependencies).toEqual({
         'fake-package': Object.assign(fakePackage, {
@@ -235,9 +235,8 @@ describe('LicensePlugin', () => {
         path.join(__dirname, 'fixtures', 'fake-package-1', 'src', 'index.js'),
       ];
 
-      const result = plugin.scanDependencies(modules);
+      plugin.scanDependencies(modules);
 
-      expect(result).not.toBeDefined();
       expect(scanDependency).toHaveBeenCalledWith(modules[0]);
       expect(addDependency).toHaveBeenCalled();
       expect(plugin._dependencies).toEqual({
@@ -247,9 +246,9 @@ describe('LicensePlugin', () => {
 
     it('should load pkg and stop on cwd', () => {
       const id = path.join(__dirname, '..', 'src', 'index.js');
-      const result = plugin.scanDependency(id);
 
-      expect(result).not.toBeDefined();
+      plugin.scanDependency(id);
+
       expect(addDependency).not.toHaveBeenCalled();
       expect(plugin._dependencies).toEqual({});
     });

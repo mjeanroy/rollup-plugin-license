@@ -280,7 +280,6 @@ class LicensePlugin {
    * - Warn for license violations.
    * - Generate summary.
    *
-   * @param {boolean} includePrivate Flag that can be used to include / exclude private dependencies.
    * @return {void}
    */
   scanThirdParties() {

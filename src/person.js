@@ -75,8 +75,6 @@ export class Person {
    * Serialize the person to a string with the following format:
    *   NAME <EMAIL> (URL)
    *
-   * @param {string} prefix Optional prefix prepended to the output string.
-   * @param {string} suffix Optional suffix appended to the output string.
    * @return {string} The person as a string.
    */
   text() {
