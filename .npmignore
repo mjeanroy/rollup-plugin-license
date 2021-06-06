@@ -36,6 +36,7 @@ node_modules/
 /.eslintignore
 /.gitattributes
 /.github
+/.idea
 /.npmrc
 /.nvmrc
 /.travis.yml
