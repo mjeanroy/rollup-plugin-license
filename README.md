@@ -309,6 +309,8 @@ license({
 
 ## Changelogs
 
+- 2.5.0
+  - Look for dependencies' license files case insensitively, thanks [@Luke-zhang-04](https://github.com/Luke-zhang-04)!
 - 2.4.0
   - Typings added
   - Update dependencies

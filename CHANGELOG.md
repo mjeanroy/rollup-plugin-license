@@ -1,3 +1,14 @@
+## 2.5.0 (2021-06-06)
+
+* release: prepare next release ([e6f76e3](https://github.com/mjeanroy/rollup-plugin-license/commit/e6f76e3))
+* release: release version ([542ae57](https://github.com/mjeanroy/rollup-plugin-license/commit/542ae57))
+* chore: clean code ([7484ccf](https://github.com/mjeanroy/rollup-plugin-license/commit/7484ccf))
+* chore: update npmignore ([70336ff](https://github.com/mjeanroy/rollup-plugin-license/commit/70336ff))
+* chore(docs): update README & changelog ([42908bc](https://github.com/mjeanroy/rollup-plugin-license/commit/42908bc))
+* use `nocase: true` for `licenseFile` (#824) ([6f58420](https://github.com/mjeanroy/rollup-plugin-license/commit/6f58420)), closes [#824](https://github.com/mjeanroy/rollup-plugin-license/issues/824)
+
+
+
 ## 2.4.0 (2021-05-31)
 
 * release: prepare next release ([3ee02b7](https://github.com/mjeanroy/rollup-plugin-license/commit/3ee02b7))
