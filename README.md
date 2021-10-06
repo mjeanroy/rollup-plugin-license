@@ -309,6 +309,9 @@ license({
 
 ## Changelogs
 
+- 2.6.0
+  - Improve case insensitive search ([PR](https://github.com/mjeanroy/rollup-plugin-license/pull/931)), thanks [@codepunkt](https://github.com/codepunkt)!
+  - Search for `LICENCE` or `LICENSE` files ([PR](https://github.com/mjeanroy/rollup-plugin-license/pull/931)), thanks [@codepunkt](https://github.com/codepunkt)!
 - 2.5.0
   - Look for dependencies' license files case insensitively, thanks [@Luke-zhang-04](https://github.com/Luke-zhang-04)!
 - 2.4.0
