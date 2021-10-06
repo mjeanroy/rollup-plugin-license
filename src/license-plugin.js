@@ -187,7 +187,7 @@ class LicensePlugin {
 
           // Read license file, if it exists.
           const cwd = this._cwd || process.cwd();
-          const absolutePath = path.join(dir, 'LICENSE*');
+          const absolutePath = path.join(dir, '[lL][iI][cC][eE][nN][cCsS][eE]*');
           const relativeToCwd = path.relative(cwd, absolutePath);
           const licenseFile = this._findGlob(relativeToCwd, cwd)[0];
           if (licenseFile) {
@@ -343,7 +343,6 @@ class LicensePlugin {
   _findGlob(pattern, cwd) {
     return glob.sync(pattern, {
       cwd,
-      nocase: true,
     });
   }
 
