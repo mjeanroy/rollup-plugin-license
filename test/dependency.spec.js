@@ -26,7 +26,7 @@ import {Dependency} from '../src/dependency.js';
 import {join} from './utils/join.js';
 
 describe('Dependency', () => {
-  it('should should extract package fields', () => {
+  it('should extract package fields', () => {
     const pkg = {
       name: 'foo',
       version: '1.0.0',
@@ -87,7 +87,7 @@ describe('Dependency', () => {
     });
   });
 
-  it('should should parse author field', () => {
+  it('should parse author field', () => {
     const pkg = {
       name: 'foo',
       version: '1.0.0',
@@ -105,7 +105,7 @@ describe('Dependency', () => {
     });
   });
 
-  it('should should parse contributors field', () => {
+  it('should parse contributors field', () => {
     const pkg = {
       name: 'foo',
       version: '1.0.0',
@@ -126,7 +126,7 @@ describe('Dependency', () => {
     });
   });
 
-  it('should should parse deprecated licenses field', () => {
+  it('should parse deprecated licenses field', () => {
     const pkg = {
       name: 'foo',
       version: '1.0.0',
