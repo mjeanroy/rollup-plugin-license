@@ -151,7 +151,7 @@ class LicensePlugin {
 
     const scannedDirs = [];
 
-    while (dir && dir !== this._cwd) {
+    while (dir && dir !== this._cwd && !scannedDirs.includes(dir)) {
       // Try the cache.
       if (_.has(this._cache, dir)) {
         pkg = this._cache[dir];

@@ -312,6 +312,12 @@ describe('LicensePlugin', () => {
       expect(plugin._dependencies).toEqual({});
       expect(existsSync).not.toHaveBeenCalled();
     });
+
+    it('should not run into an infinite loop for relative paths starting with a slash', () => {
+      const id = '/abc/efg';
+
+      plugin.scanDependency(id);
+    });
   });
 
   describe('when adding dependencies', () => {
