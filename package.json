@@ -39,7 +39,7 @@
     "commenting": "1.1.0",
     "glob": "7.2.0",
     "lodash": "4.17.21",
-    "magic-string": "0.25.7",
+    "magic-string": "0.26.1",
     "mkdirp": "1.0.4",
     "moment": "2.29.1",
     "package-name-regex": "2.0.6",
