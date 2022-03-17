@@ -49,7 +49,7 @@
   "devDependencies": {
     "@babel/core": "7.17.7",
     "@babel/preset-env": "7.16.11",
-    "@babel/register": "7.17.0",
+    "@babel/register": "7.17.7",
     "@rollup/plugin-babel": "5.3.1",
     "@rollup/plugin-commonjs": "21.0.2",
     "@rollup/plugin-node-resolve": "13.1.3",
