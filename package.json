@@ -68,7 +68,7 @@
     "gulp-git": "2.10.1",
     "gulp-jasmine": "4.0.0",
     "jasmine": "3.10.0",
-    "jasmine-core": "3.10.1",
+    "jasmine-core": "4.0.1",
     "prettier": "2.6.2",
     "rimraf": "3.0.2",
     "rollup": "2.70.1",
