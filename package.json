@@ -60,7 +60,7 @@
     "eslint-config-google": "0.14.0",
     "fancy-log": "2.0.0",
     "fs-extra": "10.1.0",
-    "globalthis": "1.0.2",
+    "globalthis": "1.0.3",
     "gulp": "4.0.2",
     "gulp-bump": "3.2.0",
     "gulp-conventional-changelog": "2.0.35",
