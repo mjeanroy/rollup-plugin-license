@@ -60,7 +60,7 @@ export interface Person {
 /**
  * @see {@link https://github.com/mjeanroy/rollup-plugin-license#comment-style}
  */
-export type CommentStyle = 'regular' | 'ignored' | 'slash';
+export type CommentStyle = 'regular' | 'ignored' | 'slash' | 'none';
 
 /**
  * Banner content descriptor.
