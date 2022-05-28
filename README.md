@@ -309,6 +309,11 @@ license({
 
 ## Changelogs
 
+- 2.8.0
+  - Relax production dependency versions ([#1128]()https://github.com/mjeanroy/rollup-plugin-license/issues/1128)
+  - Update dependencies
+- 2.7.0
+  - Update dependencies ([#1077](https://github.com/mjeanroy/rollup-plugin-license/issues/1077))
 - 2.6.0
   - Improve case insensitive search ([PR](https://github.com/mjeanroy/rollup-plugin-license/pull/931)), thanks [@codepunkt](https://github.com/codepunkt)!
   - Search for `LICENCE` or `LICENSE` files ([PR](https://github.com/mjeanroy/rollup-plugin-license/pull/931)), thanks [@codepunkt](https://github.com/codepunkt)!
