@@ -36,15 +36,15 @@
     "rollup": "^1.0.0 || ^2.0.0"
   },
   "dependencies": {
-    "commenting": "1.1.0",
-    "glob": "7.2.0",
-    "lodash": "4.17.21",
-    "magic-string": "0.26.2",
-    "mkdirp": "1.0.4",
-    "moment": "2.29.3",
-    "package-name-regex": "2.0.6",
-    "spdx-expression-validate": "2.0.0",
-    "spdx-satisfies": "5.0.1"
+    "commenting": "~1.1.0",
+    "glob": "~7.2.0",
+    "lodash": "~4.17.21",
+    "magic-string": "~0.26.2",
+    "mkdirp": "~1.0.4",
+    "moment": "~2.29.3",
+    "package-name-regex": "~2.0.6",
+    "spdx-expression-validate": "~2.0.0",
+    "spdx-satisfies": "~5.0.1"
   },
   "devDependencies": {
     "@babel/core": "7.18.2",
