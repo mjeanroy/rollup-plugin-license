@@ -180,8 +180,9 @@ class LicensePlugin {
         const license = pkgJson.license || pkgJson.licenses;
         const hasLicense = license && license.length > 0;
         const name = pkgJson.name;
+        const version = pkgJson.version;
         const isValidPackageName = name && packageNameRegex.test(name);
-        if (isValidPackageName || hasLicense) {
+        if ((isValidPackageName && version) || hasLicense) {
           // We found it!
           pkg = pkgJson;
 
