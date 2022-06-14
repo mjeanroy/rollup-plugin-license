@@ -69,7 +69,7 @@
     "gulp-jasmine": "4.0.0",
     "jasmine": "3.10.0",
     "jasmine-core": "3.10.1",
-    "prettier": "2.6.2",
+    "prettier": "2.7.0",
     "rimraf": "3.0.2",
     "rollup": "2.75.6",
     "rollup-plugin-prettier": "2.2.2",
