@@ -24,7 +24,7 @@ module.exports = {
   plugins: [
     license({
       sourcemap: true,
-      cwd: '.', // Default is process.cwd()
+      cwd: process.cwd(), // The default
 
       banner: {
         commentStyle: 'regular', // The default
