@@ -190,9 +190,11 @@ class LicensePlugin {
           const cwd = this._cwd || process.cwd();
           const absolutePath = path.join(dir, '[lL][iI][cC][eE][nN][cCsS][eE]*');
           const relativeToCwd = path.relative(cwd, absolutePath);
-          const licenseFile = this._findGlob(relativeToCwd, cwd)[0];
-          // Add the license text if a license file exists
-          if (fs.existsSync(licenseFile) && fs.lstatSync(licenseFile).isFile()) {
+          const licenseFile = this._findGlob(relativeToCwd, cwd).find((file) => (
+            fs.existsSync(file) && fs.lstatSync(file).isFile()
+          ));
+
+          if (licenseFile) {
             pkg.licenseText = fs.readFileSync(licenseFile, 'utf-8');
           }
 
