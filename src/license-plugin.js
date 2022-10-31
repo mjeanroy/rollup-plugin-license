@@ -215,13 +215,8 @@ class LicensePlugin {
       }
 
       // Go up in the directory tree.
-      const newDir = path.normalize(path.join(dir, '..'));
-      if (newDir === '.') {
-        break;
-      }
-
-      this.debug(`going up in the directory tree: ${newDir}`);
-      dir = newDir;
+      dir = path.resolve(path.join(dir, '..'));
+      this.debug(`going up in the directory tree: ${dir}`);
     }
 
     // Update the cache
