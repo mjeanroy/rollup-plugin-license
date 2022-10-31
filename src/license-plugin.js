@@ -143,6 +143,11 @@ class LicensePlugin {
       this.debug(`scanning internal module ${id}`);
     }
 
+    if (id.indexOf('virtual:') === 0) {
+      this.debug(`skipping virtual module: ${id}`);
+      return;
+    }
+
     this.debug(`scanning ${id}`);
 
     // Look for the `package.json` file
@@ -150,6 +155,8 @@ class LicensePlugin {
     let pkg = null;
 
     const scannedDirs = [];
+
+    this.debug(`iterative over directory tree, starting with: ${dir}`);
 
     while (dir && dir !== this._cwd && !scannedDirs.includes(dir)) {
       // Try the cache.
@@ -165,6 +172,7 @@ class LicensePlugin {
 
       scannedDirs.push(dir);
 
+      this.debug(`looking for package.json file in: ${dir}`);
       const pkgPath = path.join(dir, 'package.json');
       const exists = fs.existsSync(pkgPath);
       if (exists) {
@@ -207,7 +215,13 @@ class LicensePlugin {
       }
 
       // Go up in the directory tree.
-      dir = path.normalize(path.join(dir, '..'));
+      const newDir = path.normalize(path.join(dir, '..'));
+      if (newDir === '.') {
+        break;
+      }
+
+      this.debug(`going up in the directory tree: ${newDir}`);
+      dir = newDir;
     }
 
     // Update the cache
