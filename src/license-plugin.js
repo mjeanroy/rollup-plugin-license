@@ -151,7 +151,7 @@ class LicensePlugin {
     this.debug(`scanning ${id}`);
 
     // Look for the `package.json` file
-    let dir = path.parse(id).dir;
+    let dir = path.resolve(path.parse(id).dir);
     let pkg = null;
 
     const scannedDirs = [];
