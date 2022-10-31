@@ -29,6 +29,7 @@ import _ from 'lodash';
 import * as rollup from 'rollup';
 import nodeResolve from '@rollup/plugin-node-resolve';
 import commonjs from '@rollup/plugin-commonjs';
+import virtual from '@rollup/plugin-virtual';
 import licensePlugin from '../../src/index.js';
 import {join} from '../utils/join.js';
 
@@ -169,6 +170,39 @@ describe('rollup-plugin-license', () => {
     const rollupConfig = createRollupConfig({
       banner,
     });
+
+    writeBundle(rollupConfig).then(() => {
+      verifyFile(rollupConfig.output.file, done, (data) => {
+        expect(data.toString()).toContain(join([
+          `/**`,
+          ` * ${banner}`,
+          ` */`,
+        ]));
+      });
+    });
+  });
+
+  it('should generate bundle with license header ignoring virtual modules', (done) => {
+    const banner = 'test banner';
+    const rollupConfig = {
+      input: path.join(__dirname, 'bundle-virtual.js'),
+
+      output: {
+        file: path.join(tmpDir.name, 'bundle-virtual.js'),
+        format: 'es',
+      },
+
+      plugins: [
+        virtual({
+          'lodash/reduce': `
+            export default () => {};
+          `,
+        }),
+        licensePlugin({
+          banner,
+        }),
+      ],
+    };
 
     writeBundle(rollupConfig).then(() => {
       verifyFile(rollupConfig.output.file, done, (data) => {
