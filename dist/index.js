@@ -37,25 +37,6 @@ var commenting = require("commenting");
 var spdxExpressionValidate = require("spdx-expression-validate");
 var spdxSatisfies = require("spdx-satisfies");
 
-function _interopDefaultLegacy(e) {
-  return e && typeof e === "object" && "default" in e ? e : { default: e };
-}
-
-var ___default = /*#__PURE__*/ _interopDefaultLegacy(_);
-var fs__default = /*#__PURE__*/ _interopDefaultLegacy(fs);
-var path__default = /*#__PURE__*/ _interopDefaultLegacy(path);
-var mkdirp__default = /*#__PURE__*/ _interopDefaultLegacy(mkdirp);
-var moment__default = /*#__PURE__*/ _interopDefaultLegacy(moment);
-var MagicString__default = /*#__PURE__*/ _interopDefaultLegacy(MagicString);
-var glob__default = /*#__PURE__*/ _interopDefaultLegacy(glob);
-var packageNameRegex__default =
-  /*#__PURE__*/ _interopDefaultLegacy(packageNameRegex);
-var commenting__default = /*#__PURE__*/ _interopDefaultLegacy(commenting);
-var spdxExpressionValidate__default = /*#__PURE__*/ _interopDefaultLegacy(
-  spdxExpressionValidate
-);
-var spdxSatisfies__default = /*#__PURE__*/ _interopDefaultLegacy(spdxSatisfies);
-
 const EOL = "\n";
 
 /**
@@ -75,7 +56,7 @@ class Person {
    * @constructor
    */
   constructor(person) {
-    if (___default["default"].isString(person)) {
+    if (_.isString(person)) {
       const o = {};
       let current = "name";
       for (let i = 0, size = person.length; i < size; ++i) {
@@ -88,9 +69,9 @@ class Person {
           o[current] = (o[current] || "") + character;
         }
       }
-      ___default["default"].forEach(["name", "email", "url"], (prop) => {
-        if (___default["default"].has(o, prop)) {
-          o[prop] = ___default["default"].trim(o[prop]);
+      _.forEach(["name", "email", "url"], (prop) => {
+        if (_.has(o, prop)) {
+          o[prop] = _.trim(o[prop]);
         }
       });
       person = o;
@@ -143,8 +124,8 @@ class Dependency {
     this.author = pkg.author ? new Person(pkg.author) : null;
 
     // Parse the contributor array.
-    this.contributors = ___default["default"].map(
-      ___default["default"].castArray(pkg.contributors || []),
+    this.contributors = _.map(
+      _.castArray(pkg.contributors || []),
       (contributor) => new Person(contributor)
     );
 
@@ -153,8 +134,7 @@ class Dependency {
     if (!this.license && pkg.licenses) {
       // Map it to a valid license field.
       // See: https://docs.npmjs.com/files/package.json#license
-      this.license = `(${___default["default"]
-        .chain(pkg.licenses)
+      this.license = `(${_.chain(pkg.licenses)
         .map((license) => license.type || license)
         .join(" OR ")
         .value()})`;
@@ -184,10 +164,9 @@ class Dependency {
     if (this.author) {
       lines.push(`Author: ${this.author.text()}`);
     }
-    if (!___default["default"].isEmpty(this.contributors)) {
+    if (!_.isEmpty(this.contributors)) {
       lines.push(`Contributors:`);
-      const allContributors = ___default["default"]
-        .chain(this.contributors)
+      const allContributors = _.chain(this.contributors)
         .map((contributor) => contributor.text())
         .map((line) => `  ${line}`)
         .value();
@@ -215,13 +194,13 @@ function generateBlockComment(text, commentStyle) {
     extension: ".js",
   };
   if (commentStyle) {
-    options.style = new commenting__default["default"].Style(
+    options.style = new commenting.Style(
       commentStyle.body,
       commentStyle.start,
       commentStyle.end
     );
   }
-  return commenting__default["default"](text.trim(), options);
+  return commenting(text.trim(), options);
 }
 
 /**
@@ -237,7 +216,7 @@ const PLUGIN_NAME = "rollup-plugin-license";
  * @return {boolean} `true` if `value` is a string, `false` otherwise.
  */
 function isString(value) {
-  return ___default["default"].isString(value);
+  return _.isString(value);
 }
 
 /**
@@ -247,7 +226,7 @@ function isString(value) {
  * @return {boolean} `true` if `value` is a boolean, `false` otherwise.
  */
 function isBoolean(value) {
-  return ___default["default"].isBoolean(value);
+  return _.isBoolean(value);
 }
 
 /**
@@ -257,7 +236,7 @@ function isBoolean(value) {
  * @return {boolean} `true` if `value` is a function, `false` otherwise.
  */
 function isFunction(value) {
-  return ___default["default"].isFunction(value);
+  return _.isFunction(value);
 }
 
 /**
@@ -267,7 +246,7 @@ function isFunction(value) {
  * @return {boolean} `true` if `value` is a number, `false` otherwise.
  */
 function isNumber(value) {
-  return ___default["default"].isNumber(value);
+  return _.isNumber(value);
 }
 
 /**
@@ -277,7 +256,7 @@ function isNumber(value) {
  * @return {boolean} `true` if `value` is `null` or `undefined`, `false` otherwise.
  */
 function isNil(value) {
-  return ___default["default"].isNil(value);
+  return _.isNil(value);
 }
 
 /**
@@ -287,7 +266,7 @@ function isNil(value) {
  * @return {boolean} `true` if `value` is an array, `false` otherwise.
  */
 function isArray(value) {
-  return ___default["default"].isArray(value);
+  return _.isArray(value);
 }
 
 /**
@@ -298,7 +277,7 @@ function isArray(value) {
  */
 function isObject(value) {
   return (
-    ___default["default"].isObject(value) &&
+    _.isObject(value) &&
     !isArray(value) &&
     !isFunction(value) &&
     !isNil(value) &&
@@ -365,8 +344,8 @@ const validators = {
  */
 function formatPath(paths) {
   let str = "";
-  ___default["default"].forEach(paths, (p) => {
-    if (___default["default"].isNumber(p)) {
+  _.forEach(paths, (p) => {
+    if (_.isNumber(p)) {
       str += `[${p}]`;
     } else if (!str) {
       str += p;
@@ -387,30 +366,26 @@ function formatPath(paths) {
  * @returns {Array<Object>} Found errors.
  */
 function doItemValidation(value, schema, path) {
-  const validators = ___default["default"].castArray(schema);
-  const matchedValidators = ___default["default"].filter(
-    validators,
-    (validator) => validator.test(value)
+  const validators = _.castArray(schema);
+  const matchedValidators = _.filter(validators, (validator) =>
+    validator.test(value)
   );
 
   // No one matched, we can stop here and return an error with a proper message.
-  if (___default["default"].isEmpty(matchedValidators)) {
+  if (_.isEmpty(matchedValidators)) {
     return [
       {
         path,
-        message: ___default["default"]
-          .map(
-            validators,
-            (validator) => `"${formatPath(path)}" ${validator.message}`
-          )
-          .join(" OR "),
+        message: _.map(
+          validators,
+          (validator) => `"${formatPath(path)}" ${validator.message}`
+        ).join(" OR "),
       },
     ];
   }
 
   // Run "sub-validators"
-  return ___default["default"]
-    .chain(matchedValidators)
+  return _.chain(matchedValidators)
     .filter((validator) => validator.schema)
     .map((validator) => validate(value, validator.schema, path))
     .flatten()
@@ -428,12 +403,12 @@ function doItemValidation(value, schema, path) {
  */
 function validateObject(obj, schema, current) {
   const errors = [];
-  ___default["default"].forEach(obj, (value, k) => {
-    if (___default["default"].isNil(value)) {
+  _.forEach(obj, (value, k) => {
+    if (_.isNil(value)) {
       return;
     }
     const path = [...current, k];
-    if (!___default["default"].has(schema, k)) {
+    if (!_.has(schema, k)) {
       errors.push({
         type: "object.allowUnknown",
         path,
@@ -459,7 +434,7 @@ function validateObject(obj, schema, current) {
  */
 function validateArrayItem(item, idx, schema, current) {
   const path = [...current, idx];
-  if (___default["default"].isUndefined(item)) {
+  if (_.isUndefined(item)) {
     return [
       {
         path,
@@ -467,7 +442,7 @@ function validateArrayItem(item, idx, schema, current) {
       },
     ];
   }
-  if (___default["default"].isNull(item)) {
+  if (_.isNull(item)) {
     return [
       {
         path,
@@ -487,8 +462,7 @@ function validateArrayItem(item, idx, schema, current) {
  * @return {Array<Object>} Found errors.
  */
 function validateArray(array, schema, current) {
-  return ___default["default"]
-    .chain(array)
+  return _.chain(array)
     .map((item, idx) => validateArrayItem(item, idx, schema, current))
     .flatten()
     .value();
@@ -510,7 +484,7 @@ function validateArray(array, schema, current) {
  * @return {Array<Object>} Found errors.
  */
 function validate(obj, schema, current = []) {
-  return ___default["default"].isArray(obj)
+  return _.isArray(obj)
     ? validateArray(obj, schema, current)
     : validateObject(obj, schema, current);
 }
@@ -614,24 +588,22 @@ function doValidation(options) {
  */
 function validateOptions(options) {
   const errors = doValidation(options);
-  if (___default["default"].isEmpty(errors)) {
+  if (_.isEmpty(errors)) {
     return;
   }
   const messages = [];
-  ___default["default"].forEach(errors, (e) => {
+  _.forEach(errors, (e) => {
     if (e.type === "object.allowUnknown") {
       warn(
         `Unknown property: "${formatPath(
           e.path
-        )}", allowed options are: ${___default["default"]
-          .keys(SCHEMA)
-          .join(", ")}.`
+        )}", allowed options are: ${_.keys(SCHEMA).join(", ")}.`
       );
     } else {
       messages.push(e.message);
     }
   });
-  if (!___default["default"].isEmpty(messages)) {
+  if (!_.isEmpty(messages)) {
     throw new Error(
       `[${PLUGIN_NAME}] -- Error during validation of option object: ${messages.join(
         " ; "
@@ -699,10 +671,7 @@ function isValid(dependency, allow) {
   if (checkUnlicensed(license)) {
     return false;
   }
-  return (
-    spdxExpressionValidate__default["default"](license) &&
-    spdxSatisfies__default["default"](license, allow)
-  );
+  return spdxExpressionValidate(license) && spdxSatisfies(license, allow);
 }
 const licenseValidator = {
   isUnlicensed,
@@ -771,10 +740,7 @@ class LicensePlugin {
     this._options = options;
     this._cwd = this._options.cwd || process.cwd();
     this._dependencies = {};
-    this._pkg = require(path__default["default"].join(
-      this._cwd,
-      "package.json"
-    ));
+    this._pkg = require(path.join(this._cwd, "package.json"));
     this._debug = this._options.debug || false;
 
     // SourceMap can now be disable/enable on the plugin.
@@ -813,15 +779,20 @@ class LicensePlugin {
       id = id.replace(/^\0/, "");
       this.debug(`scanning internal module ${id}`);
     }
+    if (id.indexOf("virtual:") === 0) {
+      this.debug(`skipping virtual module: ${id}`);
+      return;
+    }
     this.debug(`scanning ${id}`);
 
     // Look for the `package.json` file
-    let dir = path__default["default"].parse(id).dir;
+    let dir = path.resolve(path.parse(id).dir);
     let pkg = null;
     const scannedDirs = [];
+    this.debug(`iterative over directory tree, starting with: ${dir}`);
     while (dir && dir !== this._cwd && !scannedDirs.includes(dir)) {
       // Try the cache.
-      if (___default["default"].has(this._cache, dir)) {
+      if (_.has(this._cache, dir)) {
         pkg = this._cache[dir];
         if (pkg) {
           this.debug(`found package.json in cache (package: ${pkg.name})`);
@@ -830,15 +801,14 @@ class LicensePlugin {
         break;
       }
       scannedDirs.push(dir);
-      const pkgPath = path__default["default"].join(dir, "package.json");
-      const exists = fs__default["default"].existsSync(pkgPath);
+      this.debug(`looking for package.json file in: ${dir}`);
+      const pkgPath = path.join(dir, "package.json");
+      const exists = fs.existsSync(pkgPath);
       if (exists) {
         this.debug(`found package.json at: ${pkgPath}, read it`);
 
         // Read `package.json` file
-        const pkgJson = JSON.parse(
-          fs__default["default"].readFileSync(pkgPath, "utf-8")
-        );
+        const pkgJson = JSON.parse(fs.readFileSync(pkgPath, "utf-8"));
 
         // We are probably in a package.json specifying the type of package (module, cjs).
         // Nevertheless, if the package name is not defined, we must not use this `package.json` descriptor.
@@ -846,32 +816,23 @@ class LicensePlugin {
         const hasLicense = license && license.length > 0;
         const name = pkgJson.name;
         const version = pkgJson.version;
-        const isValidPackageName =
-          name && packageNameRegex__default["default"].test(name);
+        const isValidPackageName = name && packageNameRegex.test(name);
         if ((isValidPackageName && version) || hasLicense) {
           // We found it!
           pkg = pkgJson;
 
           // Read license file, if it exists.
           const cwd = this._cwd || process.cwd();
-          const absolutePath = path__default["default"].join(
+          const absolutePath = path.join(
             dir,
             "[lL][iI][cC][eE][nN][cCsS][eE]*"
           );
-          const relativeToCwd = path__default["default"].relative(
-            cwd,
-            absolutePath
-          );
+          const relativeToCwd = path.relative(cwd, absolutePath);
           const licenseFile = this._findGlob(relativeToCwd, cwd).find(
-            (file) =>
-              fs__default["default"].existsSync(file) &&
-              fs__default["default"].lstatSync(file).isFile()
+            (file) => fs.existsSync(file) && fs.lstatSync(file).isFile()
           );
           if (licenseFile) {
-            pkg.licenseText = fs__default["default"].readFileSync(
-              licenseFile,
-              "utf-8"
-            );
+            pkg.licenseText = fs.readFileSync(licenseFile, "utf-8");
           }
 
           // Add the new dependency to the set of third-party dependencies.
@@ -883,13 +844,12 @@ class LicensePlugin {
       }
 
       // Go up in the directory tree.
-      dir = path__default["default"].normalize(
-        path__default["default"].join(dir, "..")
-      );
+      dir = path.resolve(path.join(dir, ".."));
+      this.debug(`going up in the directory tree: ${dir}`);
     }
 
     // Update the cache
-    ___default["default"].forEach(scannedDirs, (scannedDir) => {
+    _.forEach(scannedDirs, (scannedDir) => {
       this._cache[scannedDir] = pkg;
     });
   }
@@ -902,7 +862,7 @@ class LicensePlugin {
    */
   scanDependencies(dependencies) {
     this.debug(`Scanning: ${dependencies}`);
-    ___default["default"].forEach(dependencies, (dependency) => {
+    _.forEach(dependencies, (dependency) => {
       this.scanDependency(dependency);
     });
   }
@@ -919,7 +879,7 @@ class LicensePlugin {
   prependBanner(code, sourcemap) {
     // Create a magicString: do not manipulate the string directly since it
     // will be used to generate the sourcemap.
-    const magicString = new MagicString__default["default"](code);
+    const magicString = new MagicString(code);
     const banner = this._options.banner;
     const content = this._readBanner(banner);
     if (content) {
@@ -947,7 +907,7 @@ class LicensePlugin {
     const name = pkg.name;
     if (!name) {
       this.warn("Trying to add dependency without any name, skipping it.");
-    } else if (!___default["default"].has(this._dependencies, name)) {
+    } else if (!_.has(this._dependencies, name)) {
       this._dependencies[name] = new Dependency(pkg);
     }
   }
@@ -965,12 +925,11 @@ class LicensePlugin {
       return;
     }
     const includePrivate = thirdParty.includePrivate || false;
-    const outputDependencies = ___default["default"]
-      .chain(this._dependencies)
+    const outputDependencies = _.chain(this._dependencies)
       .values()
       .filter((dependency) => includePrivate || !dependency.private)
       .value();
-    if (___default["default"].isFunction(thirdParty)) {
+    if (_.isFunction(thirdParty)) {
       thirdParty(outputDependencies);
       return;
     }
@@ -1015,7 +974,7 @@ class LicensePlugin {
    * @private
    */
   _findGlob(pattern, cwd) {
-    return glob__default["default"].sync(pattern, {
+    return glob.sync(pattern, {
       cwd,
     });
   }
@@ -1028,27 +987,27 @@ class LicensePlugin {
    * @private
    */
   _readBanner(banner) {
-    if (___default["default"].isNil(banner)) {
+    if (_.isNil(banner)) {
       return null;
     }
 
     // Banner can be defined as a simple inline string.
-    if (___default["default"].isString(banner)) {
+    if (_.isString(banner)) {
       this.debug("prepend banner from raw string");
       return banner;
     }
 
     // Extract banner content.
-    const content = ___default["default"].result(banner, "content");
+    const content = _.result(banner, "content");
 
     // Content can be an inline string.
-    if (___default["default"].isString(content)) {
+    if (_.isString(content)) {
       this.debug("prepend banner from content raw string");
       return content;
     }
 
     // Otherwise, file must be defined (if not, that's an error).
-    if (!___default["default"].has(content, "file")) {
+    if (!_.has(content, "file")) {
       throw new Error(
         `[${this.name}] -- Cannot find banner content, please specify an inline content, or a path to a file`
       );
@@ -1057,8 +1016,8 @@ class LicensePlugin {
     const encoding = content.encoding || "utf-8";
     this.debug(`prepend banner from file: ${file}`);
     this.debug(`use encoding: ${encoding}`);
-    const filePath = path__default["default"].resolve(file);
-    const exists = fs__default["default"].existsSync(filePath);
+    const filePath = path.resolve(file);
+    const exists = fs.existsSync(filePath);
 
     // Fail fast if file does not exist.
     if (!exists) {
@@ -1066,7 +1025,7 @@ class LicensePlugin {
         `[${this.name}] -- Template file ${filePath} does not exist, or cannot be read`
       );
     }
-    return fs__default["default"].readFileSync(filePath, encoding);
+    return fs.readFileSync(filePath, encoding);
   }
 
   /**
@@ -1082,33 +1041,31 @@ class LicensePlugin {
    */
   _generateBanner(content, banner) {
     // Create the template function with lodash.
-    const tmpl = ___default["default"].template(content);
+    const tmpl = _.template(content);
 
     // Generate the banner.
     const pkg = this._pkg;
-    const dependencies = ___default["default"].values(this._dependencies);
-    const data = banner.data
-      ? ___default["default"].result(banner, "data")
-      : {};
+    const dependencies = _.values(this._dependencies);
+    const data = banner.data ? _.result(banner, "data") : {};
     const text = tmpl({
-      _: ___default["default"],
-      moment: moment__default["default"],
+      _,
+      moment,
       pkg,
       dependencies,
       data,
     });
 
     // Compute comment style to use.
-    const style = ___default["default"].has(banner, "commentStyle")
+    const style = _.has(banner, "commentStyle")
       ? banner.commentStyle
       : computeDefaultCommentStyle(text);
 
     // Ensure given style name is valid.
-    if (!___default["default"].has(COMMENT_STYLES, style)) {
+    if (!_.has(COMMENT_STYLES, style)) {
       throw new Error(
-        `Unknown comment style ${style}, please use one of: ${___default[
-          "default"
-        ].keys(COMMENT_STYLES)}`
+        `Unknown comment style ${style}, please use one of: ${_.keys(
+          COMMENT_STYLES
+        )}`
       );
     }
     this.debug(`generate banner using comment style: ${style}`);
@@ -1125,7 +1082,7 @@ class LicensePlugin {
    * @return {void}
    */
   _scanLicenseViolations(outputDependencies, allow) {
-    ___default["default"].forEach(outputDependencies, (dependency) => {
+    _.forEach(outputDependencies, (dependency) => {
       this._scanLicenseViolation(dependency, allow);
     });
   }
@@ -1139,11 +1096,8 @@ class LicensePlugin {
    */
   _scanLicenseViolation(dependency, allow) {
     const testFn =
-      ___default["default"].isString(allow) ||
-      ___default["default"].isFunction(allow)
-        ? allow
-        : allow.test;
-    const isValid = ___default["default"].isFunction(testFn)
+      _.isString(allow) || _.isFunction(allow) ? allow : allow.test;
+    const isValid = _.isFunction(testFn)
       ? testFn(dependency)
       : licenseValidator.isValid(dependency, testFn);
     if (!isValid) {
@@ -1215,12 +1169,9 @@ class LicensePlugin {
    * @return {void}
    */
   _exportThirdParties(outputDependencies, outputs) {
-    ___default["default"].forEach(
-      ___default["default"].castArray(outputs),
-      (output) => {
-        this._exportThirdPartiesToOutput(outputDependencies, output);
-      }
-    );
+    _.forEach(_.castArray(outputs), (output) => {
+      this._exportThirdPartiesToOutput(outputDependencies, output);
+    });
   }
 
   /**
@@ -1232,7 +1183,7 @@ class LicensePlugin {
    * @return {void}
    */
   _exportThirdPartiesToOutput(outputDependencies, output) {
-    if (___default["default"].isFunction(output)) {
+    if (_.isFunction(output)) {
       output(outputDependencies);
       return;
     }
@@ -1240,32 +1191,32 @@ class LicensePlugin {
     // Default is to export to given file.
 
     // Allow custom formatting of output using given template option.
-    const template = ___default["default"].isString(output.template)
+    const template = _.isString(output.template)
       ? (dependencies) =>
-          ___default["default"].template(output.template)({
+          _.template(output.template)({
             dependencies,
-            _: ___default["default"],
-            moment: moment__default["default"],
+            _,
+            moment,
           })
       : output.template;
     const defaultTemplate = (dependencies) =>
-      ___default["default"].isEmpty(dependencies)
+      _.isEmpty(dependencies)
         ? "No third parties dependencies"
-        : ___default["default"]
-            .map(dependencies, (d) => d.text())
-            .join(`${EOL}${EOL}---${EOL}${EOL}`);
-    const text = ___default["default"].isFunction(template)
+        : _.map(dependencies, (d) => d.text()).join(
+            `${EOL}${EOL}---${EOL}${EOL}`
+          );
+    const text = _.isFunction(template)
       ? template(outputDependencies)
       : defaultTemplate(outputDependencies);
-    const isOutputFile = ___default["default"].isString(output);
+    const isOutputFile = _.isString(output);
     const file = isOutputFile ? output : output.file;
     const encoding = isOutputFile ? "utf-8" : output.encoding || "utf-8";
     this.debug(`exporting third-party summary to ${file}`);
     this.debug(`use encoding: ${encoding}`);
 
     // Create directory if it does not already exist.
-    mkdirp__default["default"].sync(path__default["default"].parse(file).dir);
-    fs__default["default"].writeFileSync(file, (text || "").trim(), {
+    mkdirp.sync(path.parse(file).dir);
+    fs.writeFileSync(file, (text || "").trim(), {
       encoding,
     });
   }
@@ -1307,8 +1258,7 @@ function rollupPluginLicense(options = {}) {
      */
     renderChunk(code, chunk, outputOptions = {}) {
       plugin.scanDependencies(
-        ___default["default"]
-          .chain(chunk.modules)
+        _.chain(chunk.modules)
           .toPairs()
           .reject((mod) => mod[1].isAsset)
           .filter((mod) => mod[1].renderedLength > 0)
