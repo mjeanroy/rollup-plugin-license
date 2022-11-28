@@ -94,6 +94,16 @@ function isObject(value) {
   return _.isObject(value) && !isArray(value) && !isFunction(value) && !isNil(value) && !isString(value) && !isNumber(value);
 }
 
+/**
+ * Check if given value is a `RegExp`.
+ *
+ * @param {*} value The value to check.
+ * @return {boolean} `true` if `value` is a plain object. `false` otherwise.
+ */
+function isRegExp(value) {
+  return _.isRegExp(value);
+}
+
 export const validators = {
   string() {
     return {
@@ -137,6 +147,15 @@ export const validators = {
       message: 'must be an array',
       schema,
       test: isArray,
+    };
+  },
+
+  regExp(schema) {
+    return {
+      type: 'object.type.RegExp',
+      message: 'must be an array',
+      schema,
+      test: isRegExp,
     };
   },
 

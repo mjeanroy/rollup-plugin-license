@@ -301,10 +301,29 @@ class LicensePlugin {
       return;
     }
 
+    const exclude = thirdParty.exclude || [];
     const includePrivate = thirdParty.includePrivate || false;
     const outputDependencies = _.chain(this._dependencies)
         .values()
-        .filter((dependency) => includePrivate || !dependency.private)
+        .filter((dependency) => {
+          // Check if the dependency is in the exclude list.
+          // The exclude list supports strings and regex, check for each.
+          if (
+            exclude.some((e) => {
+              if (
+                (typeof e === 'string' && dependency.name.includes(e)) ||
+                (e instanceof RegExp && e.test(dependency.name))
+              ) {
+                return true;
+              }
+              return false;
+            })
+          ) {
+            // Exclude the dependency if the name matched anything in the exclude list.
+            return false;
+          }
+          return includePrivate || !dependency.private;
+        })
         .value();
 
     if (_.isFunction(thirdParty)) {

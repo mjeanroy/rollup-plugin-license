@@ -281,6 +281,17 @@ interface ThirdPartyOptions {
   includePrivate?: boolean;
 
   /**
+   * List of strings and regular expressions to match against the dependency names to exclude from the output.
+   * Checks for partial string match.
+   *
+   * @example
+   *   {
+   *     exclude: ['rollup-plugin', /^my-[c|C]ustom-package$/]
+   *   }
+   */
+  exclude?: (string | RegExp)[]
+
+  /**
    * Ensures that dependencies does not violate any license restriction.
    *
    * For example, suppose you want to limit dependencies with MIT or Apache-2.0
