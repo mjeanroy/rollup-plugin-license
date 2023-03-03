@@ -71,7 +71,7 @@
     "jasmine": "3.10.0",
     "jasmine-core": "3.10.1",
     "prettier": "2.8.4",
-    "rimraf": "3.0.2",
+    "rimraf": "4.2.0",
     "rollup": "3.17.2",
     "rollup-plugin-prettier": "3.0.0",
     "rollup-plugin-strip-banner": "3.0.0",
