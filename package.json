@@ -57,7 +57,7 @@
     "@typescript-eslint/eslint-plugin": "5.54.1",
     "@typescript-eslint/parser": "5.54.1",
     "babel-plugin-add-module-exports": "1.0.4",
-    "eslint": "8.35.0",
+    "eslint": "8.36.0",
     "eslint-config-google": "0.14.0",
     "fancy-log": "2.0.0",
     "fs-extra": "11.1.0",
