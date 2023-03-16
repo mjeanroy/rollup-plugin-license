@@ -68,7 +68,7 @@
     "gulp-eslint": "6.0.0",
     "gulp-git": "2.10.1",
     "gulp-jasmine": "4.0.0",
-    "jasmine": "3.10.0",
+    "jasmine": "4.6.0",
     "jasmine-core": "3.10.1",
     "prettier": "2.8.4",
     "rimraf": "4.4.0",
