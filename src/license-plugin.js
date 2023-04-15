@@ -24,7 +24,7 @@
 
 import fs from 'fs';
 import path from 'path';
-import mkdirp from 'mkdirp';
+import {mkdirp} from 'mkdirp';
 import _ from 'lodash';
 import moment from 'moment';
 import MagicString from 'magic-string';
