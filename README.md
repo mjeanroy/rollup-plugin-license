@@ -44,6 +44,8 @@ module.exports = {
 
       thirdParty: {
         includePrivate: true, // Default is false.
+        // Optional.  Accepts strings and RegExp.
+        exclude: ["packageName", /rollup-plugin.*/],
         output: {
           file: path.join(__dirname, 'dist', 'dependencies.txt'),
           encoding: 'utf-8', // Default is utf-8.
