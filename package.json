@@ -1,5 +1,5 @@
 {
-  "name": "rollup-plugin-license",
+  "name": "@vertigis/rollup-plugin-license",
   "version": "3.0.1",
   "description": "Rollup plugin to add license banner to the final bundle and output third party licenses",
   "main": "dist/index.js",
@@ -12,11 +12,7 @@
     "watch": "gulp watch",
     "test": "gulp test",
     "tdd": "gulp tdd",
-    "changelog": "gulp changelog",
-    "release": "gulp release:minor",
-    "release:patch": "gulp release:patch",
-    "release:minor": "gulp release:minor",
-    "release:major": "gulp release:major"
+    "changelog": "gulp changelog"
   },
   "keywords": [
     "rollup",
