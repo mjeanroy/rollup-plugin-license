@@ -20,13 +20,13 @@
   ],
   "author": "Mickael Jeanroy <mickael.jeanroy@gmail.com>",
   "license": "MIT",
-  "homepage": "https://github.com/mjeanroy/rollup-plugin-license",
+  "homepage": "https://github.com/vertigis/rollup-plugin-license",
   "bugs": {
-    "url": "https://github.com/mjeanroy/rollup-plugin-license/issues"
+    "url": "https://github.com/vertigis/rollup-plugin-license/issues"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/mjeanroy/rollup-plugin-license"
+    "url": "https://github.com/vertigis/rollup-plugin-license"
   },
   "peerDependencies": {
     "rollup": "^1.0.0 || ^2.0.0 || ^3.0.0"
