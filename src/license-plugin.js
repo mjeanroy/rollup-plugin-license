@@ -280,7 +280,9 @@ class LicensePlugin {
    * @return {void}
    */
   addDependency(pkg) {
-    const name = pkg.name;
+    const name = (this._options.thirdParty && this._options.thirdParty.multipleVersions) ?
+      `${pkg.name}@${pkg.version}` :
+      pkg.name;
     if (!name) {
       this.warn('Trying to add dependency without any name, skipping it.');
     } else if (!_.has(this._dependencies, name)) {
