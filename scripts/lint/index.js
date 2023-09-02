@@ -30,7 +30,7 @@ const config = require('../config');
 module.exports = function lint() {
   const nodeVersion = process.versions.node;
   const major = Number(nodeVersion.split('.')[0]);
-  if (major < 12) {
+  if (major <= 14) {
     log.debug(`Skipping ESLint because of node version compatibility (currenly in used: ${nodeVersion})`);
     return Promise.resolve();
   }
