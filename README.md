@@ -44,6 +44,7 @@ module.exports = {
 
       thirdParty: {
         includePrivate: true, // Default is false.
+        multipleVersions: true, // Default is false.
         output: {
           file: path.join(__dirname, 'dist', 'dependencies.txt'),
           encoding: 'utf-8', // Default is utf-8.
@@ -307,8 +308,33 @@ license({
 })
 ```
 
+Starting with version `3.1.0`, you can also use the `multipleVersions` option to track dependencies in different version as a different dependency.
+It can be particularly useful in case a dependency changed its license between two versions.
+
+Note that this option is `false` by default (mainly to keep backward compatibility).
+
+```javascript
+license({
+  thirdParty: {
+    includePrivate: false,
+    multipleVersions: true,
+    output: {
+      file: path.join(__dirname, 'dist', 'dependencies.txt'), // Path of the license report
+      encoding: 'utf-8', // default is UTF-8
+      template(dependencies) {
+        return dependencies.map((dependency) => `${dependency.name}:${dependency.version} -- ${dependency.license}`).join('\n');
+      },
+    },
+  },
+})
+```
+
 ## Changelogs
 
+- 3.1.0
+  - Add `thirdParty.multipleVersions` option ([#1528](https://github.com/mjeanroy/rollup-plugin-license/pull/1528))
+- 3.0.0
+  - Support rollup^3.0.0
 - 2.8.0
   - Relax production dependency versions ([#1128]()https://github.com/mjeanroy/rollup-plugin-license/issues/1128)
   - Update dependencies
