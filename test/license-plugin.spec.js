@@ -80,7 +80,7 @@ describe('LicensePlugin', () => {
       });
 
       expect(warn).toHaveBeenCalledWith(
-          '[rollup-plugin-license] -- Unknown property: "foobar", allowed options are: sourcemap, debug, cwd, banner, thirdParty.'
+          '[rollup-plugin-license] -- Unknown property: "foobar", allowed options are: sourcemap, debug, cwd, banner, thirdParty.',
       );
     });
 
@@ -438,7 +438,7 @@ describe('LicensePlugin', () => {
 
       expect(plugin._dependencies).toEqual({});
       expect(warn).toHaveBeenCalledWith(
-          '[rollup-plugin-license] -- Trying to add dependency without any name, skipping it.'
+          '[rollup-plugin-license] -- Trying to add dependency without any name, skipping it.',
       );
     });
 
@@ -592,7 +592,7 @@ describe('LicensePlugin', () => {
       });
 
       expect(() => instance.prependBanner('var foo = 0;')).toThrow(new Error(
-          '[rollup-plugin-license] -- Cannot find banner content, please specify an inline content, or a path to a file'
+          '[rollup-plugin-license] -- Cannot find banner content, please specify an inline content, or a path to a file',
       ));
     });
 
@@ -645,7 +645,7 @@ describe('LicensePlugin', () => {
       });
 
       expect(() => instance.prependBanner(code)).toThrow(new Error(
-          `[rollup-plugin-license] -- Template file ${file} does not exist, or cannot be read`
+          `[rollup-plugin-license] -- Template file ${file} does not exist, or cannot be read`,
       ));
     });
 
@@ -744,7 +744,7 @@ describe('LicensePlugin', () => {
       });
 
       expect(() => instance.prependBanner(code)).toThrow(new Error(
-          'Unknown comment style foobar, please use one of: regular,ignored,slash,none'
+          'Unknown comment style foobar, please use one of: regular,ignored,slash,none',
       ));
     });
 
@@ -1460,7 +1460,7 @@ describe('LicensePlugin', () => {
       instance.addDependency(mitDependency);
 
       expect(() => instance.scanThirdParties()).toThrow(new Error(
-          'Dependency "baz" does not specify any license.'
+          'Dependency "baz" does not specify any license.',
       ));
     });
 
@@ -1480,7 +1480,7 @@ describe('LicensePlugin', () => {
       instance.addDependency(mitDependency);
 
       expect(() => instance.scanThirdParties()).toThrow(new Error(
-          'Dependency "foo" has a license (Apache-2.0) which is not compatible with requirement, looks like a license violation to fix.'
+          'Dependency "foo" has a license (Apache-2.0) which is not compatible with requirement, looks like a license violation to fix.',
       ));
     });
 
@@ -1488,13 +1488,13 @@ describe('LicensePlugin', () => {
       expect(warn).toHaveBeenCalledWith(
           '[rollup-plugin-license] -- ' +
           'Dependency "foo" has a license (Apache-2.0) which is not compatible with requirement, ' +
-          'looks like a license violation to fix.'
+          'looks like a license violation to fix.',
       );
     }
 
     function verifyWarnAboutUnlicensedLicense() {
       expect(warn).toHaveBeenCalledWith(
-          '[rollup-plugin-license] -- Dependency "baz" does not specify any license.'
+          '[rollup-plugin-license] -- Dependency "baz" does not specify any license.',
       );
     }
   });

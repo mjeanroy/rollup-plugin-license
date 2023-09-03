@@ -40,7 +40,7 @@ export function generateBlockComment(text, commentStyle) {
     options.style = new commenting.Style(
         commentStyle.body,
         commentStyle.start,
-        commentStyle.end
+        commentStyle.end,
     );
   }
 

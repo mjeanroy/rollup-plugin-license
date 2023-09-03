@@ -297,7 +297,7 @@ describe('rollup-plugin-license', () => {
         nodeResolve(),
         commonjs(),
         licensePlugin(
-            licensePluginOptions
+            licensePluginOptions,
         ),
       ],
     };

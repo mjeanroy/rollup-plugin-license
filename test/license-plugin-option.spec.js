@@ -62,11 +62,11 @@ describe('licensePluginOptions', () => {
     expect(result).toEqual(options);
 
     expect(warn).toHaveBeenCalledWith(
-        '[rollup-plugin-license] -- Unknown property: "foo", allowed options are: sourcemap, debug, cwd, banner, thirdParty.'
+        '[rollup-plugin-license] -- Unknown property: "foo", allowed options are: sourcemap, debug, cwd, banner, thirdParty.',
     );
 
     expect(warn).toHaveBeenCalledWith(
-        '[rollup-plugin-license] -- Unknown property: "banner.bar", allowed options are: sourcemap, debug, cwd, banner, thirdParty.'
+        '[rollup-plugin-license] -- Unknown property: "banner.bar", allowed options are: sourcemap, debug, cwd, banner, thirdParty.',
     );
   });
 
@@ -77,7 +77,7 @@ describe('licensePluginOptions', () => {
     };
 
     expect(() => licensePluginOptions(options)).toThrow(new Error(
-        '[rollup-plugin-license] -- Error during validation of option object: "debug" must be a boolean'
+        '[rollup-plugin-license] -- Error during validation of option object: "debug" must be a boolean',
     ));
 
     expect(warn).not.toHaveBeenCalledWith();
@@ -91,7 +91,7 @@ describe('licensePluginOptions', () => {
     };
 
     expect(() => licensePluginOptions(options)).toThrow(new Error(
-        '[rollup-plugin-license] -- Error during validation of option object: "debug" must be a boolean ; "cwd" must be a string'
+        '[rollup-plugin-license] -- Error during validation of option object: "debug" must be a boolean ; "cwd" must be a string',
     ));
 
     expect(warn).not.toHaveBeenCalledWith();
@@ -127,7 +127,7 @@ describe('licensePluginOptions', () => {
     };
 
     expect(() => licensePluginOptions(options)).toThrow(new Error(
-        '[rollup-plugin-license] -- Error during validation of option object: "thirdParty.output[0]" is null.'
+        '[rollup-plugin-license] -- Error during validation of option object: "thirdParty.output[0]" is null.',
     ));
   });
 
@@ -141,7 +141,7 @@ describe('licensePluginOptions', () => {
     };
 
     expect(() => licensePluginOptions(options)).toThrow(new Error(
-        '[rollup-plugin-license] -- Error during validation of option object: "thirdParty.output[0]" is undefined.'
+        '[rollup-plugin-license] -- Error during validation of option object: "thirdParty.output[0]" is undefined.',
     ));
   });
 
@@ -158,7 +158,7 @@ describe('licensePluginOptions', () => {
         '[rollup-plugin-license] -- Error during validation of option object: ' +
         '"thirdParty.output[0]" must be a function OR ' +
         '"thirdParty.output[0]" must be a string OR ' +
-        '"thirdParty.output[0]" must be an object'
+        '"thirdParty.output[0]" must be an object',
     ));
   });
 });

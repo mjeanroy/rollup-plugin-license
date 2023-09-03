@@ -57,7 +57,7 @@ export default function rollupPluginLicense(options = {}) {
               .reject((mod) => mod[1].isAsset)
               .filter((mod) => mod[1].renderedLength > 0)
               .map((mod) => mod[0])
-              .value()
+              .value(),
       );
 
       return plugin.prependBanner(code, outputOptions.sourcemap !== false);

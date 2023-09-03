@@ -150,7 +150,7 @@ function validateOptions(options) {
 
   if (!_.isEmpty(messages)) {
     throw new Error(
-        `[${PLUGIN_NAME}] -- Error during validation of option object: ${messages.join(' ; ')}`
+        `[${PLUGIN_NAME}] -- Error during validation of option object: ${messages.join(' ; ')}`,
     );
   }
 }

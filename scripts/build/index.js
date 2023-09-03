@@ -30,7 +30,7 @@ const config = require('../config');
 
 module.exports = gulp.series(
     buildOutput,
-    copyTypings
+    copyTypings,
 );
 
 // eslint-disable-next-line require-jsdoc

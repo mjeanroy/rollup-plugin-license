@@ -109,7 +109,7 @@ function createReleaseTask(level) {
       prepareRelease,
       performRelease,
       tagRelease,
-      prepareNextRelease
+      prepareNextRelease,
   );
 }
 

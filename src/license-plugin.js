@@ -180,7 +180,7 @@ class LicensePlugin {
 
         // Read `package.json` file
         const pkgJson = JSON.parse(
-            fs.readFileSync(pkgPath, 'utf-8')
+            fs.readFileSync(pkgPath, 'utf-8'),
         );
 
         // We are probably in a package.json specifying the type of package (module, cjs).
@@ -591,6 +591,6 @@ class LicensePlugin {
  */
 export function licensePlugin(options) {
   return new LicensePlugin(
-      licensePluginOptions(options)
+      licensePluginOptions(options),
   );
 }
