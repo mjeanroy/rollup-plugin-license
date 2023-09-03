@@ -280,13 +280,16 @@ class LicensePlugin {
    * @return {void}
    */
   addDependency(pkg) {
-    const name = (this._options.thirdParty && this._options.thirdParty.multipleVersions) ?
-      `${pkg.name}@${pkg.version}` :
-      pkg.name;
+    const name = pkg.name || '';
     if (!name) {
       this.warn('Trying to add dependency without any name, skipping it.');
-    } else if (!_.has(this._dependencies, name)) {
-      this._dependencies[name] = new Dependency(pkg);
+      return;
+    }
+
+    const version = pkg.version || '';
+    const key = this._options.thirdParty?.multipleVersions ? `${name}@${version}` : name;
+    if (!_.has(this._dependencies, key)) {
+      this._dependencies[key] = new Dependency(pkg);
     }
   }
 
