@@ -296,6 +296,13 @@ interface ThirdPartyOptions {
    *   }
    */
   allow?: ThirdPartyValidator | ThirdPartyAllowOptions;
+
+  /**
+   * Track each dependency version as a different dependency.
+   * Particularly useful when a dependency changed its licensing between versions.
+   * Default is `false` far backward compatibility.
+   */
+  multipleVersions?: boolean;
 }
 
 export type ThirdParty = ThirdPartyOutputGeneratorFn | ThirdPartyOptions;
