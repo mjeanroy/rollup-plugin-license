@@ -133,6 +133,23 @@ describe('LicensePlugin', () => {
       });
     });
 
+    it('should load pkg with version in key when multipleVersions option is truthy', () => {
+      const id = path.join(__dirname, 'fixtures', 'fake-package-1', 'src', 'index.js');
+
+      plugin._options = {
+        thirdParty: {
+          multipleVersions: true,
+        },
+      };
+
+      plugin.scanDependency(id);
+
+      expect(addDependency).toHaveBeenCalled();
+      expect(plugin._dependencies).toEqual({
+        [`${fakePackage.name}@${fakePackage.version}`]: fakePackage,
+      });
+    });
+
     it('should load pkg and going up directories until a package name is found', () => {
       const id = path.join(__dirname, 'fixtures', 'fake-package-5', 'esm', 'index.js');
 
