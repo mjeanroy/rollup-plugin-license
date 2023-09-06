@@ -22,37 +22,37 @@
  * SOFTWARE.
  */
 
-const fs = require('node:fs');
+const util = require('node:util');
+const exec = util.promisify(require('node:child_process').exec);
 const gulp = require('gulp');
-const git = require('gulp-git');
-const bump = require('gulp-bump');
 const log = require('../log');
 const config = require('../config');
 
 /**
- * Update version in number in `package.json` file.
+ * Run command with a pre-configured `cwd` (current working directory)
+ * and an encoding set to `utf-8'.
  *
- * @param {string} level The semver level identifier (`major`, `minor` or `patch`).
- * @return {WritableStream} The stream pipeline.
+ * @param {string} cmd Command to run.
+ * @return {Promise<void>} A promise resolved when the command has been executed.
  */
-function bumpLevel(level) {
-  return gulp.src(config.pkg)
-      .pipe(bump({type: level}))
-      .on('error', (e) => log.error(e))
-      .pipe(gulp.dest(config.root));
+function run(cmd) {
+  log.debug(`  ${cmd}...`);
+  return exec(cmd, {
+    cwd: config.root,
+    encoding: 'utf-8',
+  });
 }
 
 /**
- * Commit the current changes:
- * - The `dist` directory containing final bundle.
- * - The `package.json` containing the new version number.
+ * Update version in number in `package.json` file.
  *
- * @return {WritableStream} The stream pipeline.
+ * @param {'major'|'minor'|'patch'} type The semver level identifier (`major`, `minor` or `patch`).
+ * @return {Promise<void>} A promise resolved when the version bumped has been executed.
  */
-function performRelease() {
-  return gulp.src([config.pkg, config.dist])
-      .pipe(git.add({args: '-f'}))
-      .pipe(git.commit('release: release version'));
+function bumpVersion(type) {
+  return run(`git add -f "${config.dist}"`).then(() => (
+    run(`npm version "${type}" -f -m 'release: release version'`)
+  ));
 }
 
 /**
@@ -60,38 +60,18 @@ function performRelease() {
  * - Remove the `dist` directory containing bundle tagged on given version.
  * - Create a new commit preparing the next release.
  *
- * @return {WritableStream} The stream pipeline.
+ * @return {Promise<void>} A promise resolved when the task has been executed.
  */
 function prepareNextRelease() {
-  return gulp.src(config.dist)
-      .pipe(git.rm({args: '-r'}))
-      .pipe(git.commit('release: prepare next release'));
-}
-
-/**
- * Tag current version: the tag name will be extracted from
- * the `version` field in the `package.json` file.
- *
- * @param {function} done The `done` callback.
- * @return {void}
- */
-function tagRelease(done) {
-  fs.readFile(config.pkg, 'utf-8', (err, content) => {
-    if (err) {
-      done(err);
-      return;
-    }
-
-    const pkg = JSON.parse(content);
-    const version = pkg.version;
-    git.tag(`v${version}`, `release: tag version ${version}`, done);
-  });
+  return run(`git rm -r "${config.dist}"`).then(() => (
+    run(`git commit -m 'release: prepare next release'`)
+  ));
 }
 
 /**
  * Create the release task.
  *
- * @param {string} level The version level upgrade.
+ * @param {'major'|'minor'|'patch'} level The version level upgrade.
  * @return {function} The release task function.
  */
 function createReleaseTask(level) {
@@ -99,17 +79,15 @@ function createReleaseTask(level) {
    * Prepare the release: upgrade version number according to
    * the specified level.
    *
- * @return {WritableStream} The stream pipeline.
+   * @return {Promise<void>} A promise resolved when the release is done.
    */
-  function prepareRelease() {
-    return bumpLevel(level);
+  function doRelease() {
+    return bumpVersion(level);
   }
 
   return gulp.series(
-      prepareRelease,
-      performRelease,
-      tagRelease,
-      prepareNextRelease,
+    doRelease,
+    prepareNextRelease
   );
 }
 
