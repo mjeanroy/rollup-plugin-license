@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-const path = require('path');
+const path = require('node:path');
 const log = require('../log');
 const config = require('../config');
 

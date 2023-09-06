@@ -25,8 +25,8 @@
 // Required with prettier >= 2.3.0 with node 11
 require('globalthis').shim();
 
-const path = require('path');
-const fs = require('fs');
+const path = require('node:path');
+const fs = require('node:fs');
 const commenting = require('commenting');
 const babel = require('@rollup/plugin-babel').default;
 const stripBanner = require('rollup-plugin-strip-banner');

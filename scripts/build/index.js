@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-const path = require('path');
+const path = require('node:path');
 const gulp = require('gulp');
 const rollup = require('rollup');
 const rollupConfig = require('./rollup.config');

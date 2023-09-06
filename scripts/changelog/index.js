@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-const path = require('path');
+const path = require('node:path');
 const gulp = require('gulp');
 const conventionalChangelog = require('gulp-conventional-changelog');
 const config = require('../config');
