@@ -37,7 +37,7 @@
   },
   "dependencies": {
     "commenting": "~1.1.0",
-    "glob": "~7.2.0",
+    "glob": "~10.3.9",
     "lodash": "~4.17.21",
     "magic-string": "~0.30.0",
     "mkdirp": "~3.0.0",
