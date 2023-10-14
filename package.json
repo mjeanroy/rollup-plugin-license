@@ -71,7 +71,7 @@
     "rimraf": "5.0.5",
     "rollup": "3.29.4",
     "rollup-plugin-prettier": "4.0.0",
-    "rollup-plugin-strip-banner": "3.0.0",
+    "rollup-plugin-strip-banner": "3.1.0",
     "tmp": "0.2.1",
     "typescript": "5.2.2"
   },
