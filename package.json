@@ -13,6 +13,7 @@
     "test": "gulp test",
     "tdd": "gulp tdd",
     "changelog": "gulp changelog",
+    "prepare": "npm run build",
     "release": "gulp release:minor",
     "release:patch": "gulp release:patch",
     "release:minor": "gulp release:minor",
@@ -33,7 +34,7 @@
     "url": "https://github.com/mjeanroy/rollup-plugin-license"
   },
   "peerDependencies": {
-    "rollup": "^1.0.0 || ^2.0.0 || ^3.0.0"
+    "rollup": "^1.0.0 || ^2.0.0 || ^3.0.0 || ^4.0.0"
   },
   "dependencies": {
     "commenting": "~1.1.0",
@@ -69,7 +70,7 @@
     "jasmine-core": "3.10.1",
     "prettier": "3.0.3",
     "rimraf": "5.0.5",
-    "rollup": "3.29.4",
+    "rollup": "4.0.2",
     "rollup-plugin-prettier": "4.1.0",
     "rollup-plugin-strip-banner": "3.1.0",
     "tmp": "0.2.1",
