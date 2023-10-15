@@ -331,6 +331,9 @@ license({
 
 ## Changelogs
 
+- 3.2.0
+  - Support rollup ^4.0.0
+  - Dependency upgrades
 - 3.1.0
   - Add `thirdParty.multipleVersions` option ([#1528](https://github.com/mjeanroy/rollup-plugin-license/pull/1528))
 - 3.0.0
