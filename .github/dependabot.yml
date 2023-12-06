@@ -29,3 +29,10 @@ updates:
   schedule:
     interval: daily
   open-pull-requests-limit: 10
+  groups:
+    typescript-eslint:
+      patterns:
+        - "@typescript-eslint/*"
+    babel:
+      patterns:
+        - "@babel/*"
