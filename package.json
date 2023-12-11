@@ -48,8 +48,8 @@
     "spdx-satisfies": "~5.0.1"
   },
   "devDependencies": {
-    "@babel/core": "7.23.5",
-    "@babel/preset-env": "7.23.5",
+    "@babel/core": "7.23.6",
+    "@babel/preset-env": "7.23.6",
     "@babel/register": "7.22.15",
     "@rollup/plugin-babel": "6.0.4",
     "@rollup/plugin-commonjs": "25.0.7",
