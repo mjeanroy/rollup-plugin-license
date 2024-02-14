@@ -1,5 +1,5 @@
 {
-  "name": "rollup-plugin-license",
+  "name": "@vertigis/rollup-plugin-license",
   "version": "3.0.1",
   "description": "Rollup plugin to add license banner to the final bundle and output third party licenses",
   "main": "dist/index.js",
@@ -12,11 +12,7 @@
     "watch": "gulp watch",
     "test": "gulp test",
     "tdd": "gulp tdd",
-    "changelog": "gulp changelog",
-    "release": "gulp release:minor",
-    "release:patch": "gulp release:patch",
-    "release:minor": "gulp release:minor",
-    "release:major": "gulp release:major"
+    "changelog": "gulp changelog"
   },
   "keywords": [
     "rollup",
@@ -24,13 +20,13 @@
   ],
   "author": "Mickael Jeanroy <mickael.jeanroy@gmail.com>",
   "license": "MIT",
-  "homepage": "https://github.com/mjeanroy/rollup-plugin-license",
+  "homepage": "https://github.com/vertigis/rollup-plugin-license",
   "bugs": {
-    "url": "https://github.com/mjeanroy/rollup-plugin-license/issues"
+    "url": "https://github.com/vertigis/rollup-plugin-license/issues"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/mjeanroy/rollup-plugin-license"
+    "url": "https://github.com/vertigis/rollup-plugin-license"
   },
   "peerDependencies": {
     "rollup": "^1.0.0 || ^2.0.0 || ^3.0.0"

@@ -834,7 +834,7 @@ describe('LicensePlugin', () => {
       expect(result).toBeDefined();
       expect(result.code).toEqual(join([
         '/**',
-        ' * Name: rollup-plugin-license',
+        ' * Name: @vertigis/rollup-plugin-license',
         ' */',
         '',
         code,
@@ -858,7 +858,7 @@ describe('LicensePlugin', () => {
       expect(result).toBeDefined();
       expect(result.code).toEqual(join([
         '/**',
-        ' * Name: rollup-plugin-license',
+        ' * Name: @vertigis/rollup-plugin-license',
         ' *',
         ' * Dependencies:',
         ' * ',
