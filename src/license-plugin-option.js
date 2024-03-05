@@ -62,6 +62,11 @@ const SCHEMA = {
     validators.func(),
     validators.object({
       includePrivate: validators.boolean(),
+      alwaysInclude: [
+        validators.func(),
+        validators.array(),
+      ],
+      filter: validators.func(),
 
       allow: [
         validators.string(),
