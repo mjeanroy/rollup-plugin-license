@@ -39,7 +39,7 @@ function doItemValidation(value, schema, path) {
   const matchedValidators = _.filter(validators, (validator) => validator.test(value));
 
   // No one matched, we can stop here and return an error with a proper message.
-  if (_.isEmpty(matchedValidators)) {
+  if (matchedValidators.length === 0) {
     return [
       {
         path,

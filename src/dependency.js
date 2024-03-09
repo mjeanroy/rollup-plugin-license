@@ -96,7 +96,7 @@ export class Dependency {
       lines.push(`Author: ${this.author.text()}`);
     }
 
-    if (!_.isEmpty(this.contributors)) {
+    if (this.contributors.length > 0) {
       lines.push(`Contributors:`);
 
       const allContributors = _.chain(this.contributors)

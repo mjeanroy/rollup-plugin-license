@@ -134,7 +134,7 @@ function doValidation(options) {
  */
 function validateOptions(options) {
   const errors = doValidation(options);
-  if (_.isEmpty(errors)) {
+  if (errors.length === 0) {
     return;
   }
 
@@ -148,7 +148,7 @@ function validateOptions(options) {
     }
   });
 
-  if (!_.isEmpty(messages)) {
+  if (messages.length > 0) {
     throw new Error(
         `[${PLUGIN_NAME}] -- Error during validation of option object: ${messages.join(' ; ')}`,
     );
