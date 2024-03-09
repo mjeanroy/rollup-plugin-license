@@ -104,7 +104,7 @@ function validateArrayItem(item, idx, schema, current) {
     return [{path, message: `"${formatPath(path)}" is undefined.`}];
   }
 
-  if (_.isNull(item)) {
+  if (item === null) {
     return [{path, message: `"${formatPath(path)}" is null.`}];
   }
 
