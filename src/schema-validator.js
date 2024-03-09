@@ -142,7 +142,7 @@ function validateArray(array, schema, current) {
  * @return {Array<Object>} Found errors.
  */
 function validate(obj, schema, current = []) {
-  return _.isArray(obj) ? validateArray(obj, schema, current) : validateObject(obj, schema, current);
+  return Array.isArray(obj) ? validateArray(obj, schema, current) : validateObject(obj, schema, current);
 }
 
 /**

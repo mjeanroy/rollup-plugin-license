@@ -81,7 +81,7 @@ function isNil(value) {
  * @return {boolean} `true` if `value` is an array, `false` otherwise.
  */
 function isArray(value) {
-  return _.isArray(value);
+  return Array.isArray(value);
 }
 
 /**
