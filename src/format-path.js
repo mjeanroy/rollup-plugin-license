@@ -33,7 +33,7 @@ import _ from 'lodash';
 export function formatPath(paths) {
   let str = '';
 
-  _.forEach(paths, (p) => {
+  paths.forEach((p) => {
     if (_.isNumber(p)) {
       str += `[${p}]`;
     } else if (!str) {

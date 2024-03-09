@@ -68,7 +68,12 @@ function doItemValidation(value, schema, path) {
 function validateObject(obj, schema, current) {
   const errors = [];
 
-  _.forEach(obj, (value, k) => {
+  if (!obj) {
+    return errors;
+  }
+
+  Object.keys(obj).forEach((k) => {
+    const value = obj[k];
     if (value == null) {
       return;
     }

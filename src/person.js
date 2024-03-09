@@ -57,7 +57,7 @@ export class Person {
         }
       }
 
-      _.forEach(['name', 'email', 'url'], (prop) => {
+      ['name', 'email', 'url'].forEach((prop) => {
         if (_.has(o, prop)) {
           o[prop] = _.trim(o[prop]);
         }

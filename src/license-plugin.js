@@ -220,7 +220,7 @@ class LicensePlugin {
     }
 
     // Update the cache
-    _.forEach(scannedDirs, (scannedDir) => {
+    scannedDirs.forEach((scannedDir) => {
       this._cache[scannedDir] = pkg;
     });
   }
@@ -234,7 +234,7 @@ class LicensePlugin {
   scanDependencies(dependencies) {
     this.debug(`Scanning: ${dependencies}`);
 
-    _.forEach(dependencies, (dependency) => {
+    dependencies.forEach((dependency) => {
       this.scanDependency(dependency);
     });
   }
@@ -455,7 +455,7 @@ class LicensePlugin {
    * @return {void}
    */
   _scanLicenseViolations(outputDependencies, allow) {
-    _.forEach(outputDependencies, (dependency) => {
+    outputDependencies.forEach((dependency) => {
       this._scanLicenseViolation(dependency, allow);
     });
   }
@@ -541,7 +541,7 @@ class LicensePlugin {
    * @return {void}
    */
   _exportThirdParties(outputDependencies, outputs) {
-    _.forEach(_.castArray(outputs), (output) => {
+    _.castArray(outputs).forEach((output) => {
       this._exportThirdPartiesToOutput(outputDependencies, output);
     });
   }

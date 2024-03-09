@@ -140,7 +140,7 @@ function validateOptions(options) {
 
   const messages = [];
 
-  _.forEach(errors, (e) => {
+  errors.forEach((e) => {
     if (e.type === 'object.allowUnknown') {
       warn(`Unknown property: "${formatPath(e.path)}", allowed options are: ${_.keys(SCHEMA).join(', ')}.`);
     } else {
