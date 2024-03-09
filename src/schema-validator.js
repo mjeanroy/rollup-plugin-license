@@ -100,7 +100,7 @@ function validateObject(obj, schema, current) {
 function validateArrayItem(item, idx, schema, current) {
   const path = [...current, idx];
 
-  if (_.isUndefined(item)) {
+  if (typeof item === 'undefined') {
     return [{path, message: `"${formatPath(path)}" is undefined.`}];
   }
 
