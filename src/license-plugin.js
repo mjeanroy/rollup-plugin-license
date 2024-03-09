@@ -372,7 +372,7 @@ class LicensePlugin {
    * @private
    */
   _readBanner(banner) {
-    if (_.isNil(banner)) {
+    if (banner == null) {
       return null;
     }
 

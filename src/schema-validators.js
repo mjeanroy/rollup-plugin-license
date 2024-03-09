@@ -71,7 +71,7 @@ function isNumber(value) {
  * @return {boolean} `true` if `value` is `null` or `undefined`, `false` otherwise.
  */
 function isNil(value) {
-  return _.isNil(value);
+  return value == null;
 }
 
 /**

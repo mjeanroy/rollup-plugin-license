@@ -69,7 +69,7 @@ function validateObject(obj, schema, current) {
   const errors = [];
 
   _.forEach(obj, (value, k) => {
-    if (_.isNil(value)) {
+    if (value == null) {
       return;
     }
 
