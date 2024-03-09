@@ -51,7 +51,7 @@ export class Dependency {
     this.author = pkg.author ? new Person(pkg.author) : null;
 
     // Parse the contributor array.
-    this.contributors = _.map(_.castArray(pkg.contributors || []), (contributor) => (
+    this.contributors = _.castArray(pkg.contributors || []).map((contributor) => (
       new Person(contributor)
     ));
 

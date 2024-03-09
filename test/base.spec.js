@@ -44,14 +44,14 @@ beforeEach(() => {
         o1.author = _.toPlainObject(o1.author);
       }
       if (o1.contributors) {
-        o1.contributors = _.map(o1.contributors, _.toPlainObject);
+        o1.contributors = o1.contributors.map((o) => _.toPlainObject(o));
       }
 
       if (o2.author) {
         o2.author = _.toPlainObject(o2.author);
       }
       if (o2.contributors) {
-        o2.contributors = _.map(o2.contributors, _.toPlainObject);
+        o2.contributors = o2.contributors.map((o) => _.toPlainObject(o));
       }
 
       return _.isEqual(o1, o2);

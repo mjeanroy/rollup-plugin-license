@@ -43,7 +43,7 @@ function doItemValidation(value, schema, path) {
     return [
       {
         path,
-        message: _.map(validators, (validator) => `"${formatPath(path)}" ${validator.message}`).join(' OR '),
+        message: validators.map((validator) => `"${formatPath(path)}" ${validator.message}`).join(' OR '),
       },
     ];
   }

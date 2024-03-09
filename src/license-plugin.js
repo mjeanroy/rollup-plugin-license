@@ -565,7 +565,7 @@ class LicensePlugin {
     // Allow custom formatting of output using given template option.
     const template = _.isString(output.template) ? (dependencies) => _.template(output.template)({dependencies, _, moment}) : output.template;
     const defaultTemplate = (dependencies) => (
-      dependencies.length === 0 ? 'No third parties dependencies' : _.map(dependencies, (d) => d.text()).join(`${EOL}${EOL}---${EOL}${EOL}`)
+      dependencies.length === 0 ? 'No third parties dependencies' : dependencies.map((d) => d.text()).join(`${EOL}${EOL}---${EOL}${EOL}`)
     );
 
     const text = _.isFunction(template) ? template(outputDependencies) : defaultTemplate(outputDependencies);
