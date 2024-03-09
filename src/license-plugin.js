@@ -307,7 +307,7 @@ class LicensePlugin {
     }
 
     const includePrivate = thirdParty.includePrivate || false;
-    const outputDependencies = _.values(this._dependencies).filter((dependency) => (
+    const outputDependencies = Object.values(this._dependencies).filter((dependency) => (
       includePrivate || !dependency.private
     ));
 
@@ -429,7 +429,7 @@ class LicensePlugin {
 
     // Generate the banner.
     const pkg = this._pkg;
-    const dependencies = _.values(this._dependencies);
+    const dependencies = Object.values(this._dependencies);
     const data = banner.data ? _.result(banner, 'data') : {};
     const text = tmpl({_, moment, pkg, dependencies, data});
 
