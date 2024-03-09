@@ -169,6 +169,11 @@ export interface Dependency {
   readonly licenseText: string | null;
 
   /**
+   * Full notice file text.
+   */
+  readonly noticeText: string | null;
+
+  /**
    * Author information.
    */
   readonly author: Person | null;

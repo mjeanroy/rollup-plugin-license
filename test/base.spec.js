@@ -26,6 +26,32 @@ import _ from 'lodash';
 import {Dependency} from '../src/dependency.js';
 import {Person} from '../src/person.js';
 
+/**
+ * Normalize input dependency object, so it can be safely compared with another
+ * normalized dependency object.
+ *
+ * @param {Dependency|object} input Input.
+ * @returns {object} Normalized output.
+ */
+function normalizeDependencyObject(input) {
+  const output = _.toPlainObject(input);
+
+  if (output.author) {
+    output.author = _.toPlainObject(output.author);
+  }
+  if (output.contributors) {
+    output.contributors = output.contributors.map((o) => _.toPlainObject(o));
+  }
+  if (output.licenseText) {
+    output.licenseText = output.licenseText.trim();
+  }
+  if (output.noticeText) {
+    output.noticeText = output.noticeText.trim();
+  }
+
+  return output;
+}
+
 beforeEach(() => {
   jasmine.addCustomEqualityTester((first, second) => {
     if ((first instanceof Person) || (second instanceof Person)) {
@@ -37,23 +63,8 @@ beforeEach(() => {
 
   jasmine.addCustomEqualityTester((first, second) => {
     if ((first instanceof Dependency) || (second instanceof Dependency)) {
-      const o1 = _.toPlainObject(first);
-      const o2 = _.toPlainObject(second);
-
-      if (o1.author) {
-        o1.author = _.toPlainObject(o1.author);
-      }
-      if (o1.contributors) {
-        o1.contributors = o1.contributors.map((o) => _.toPlainObject(o));
-      }
-
-      if (o2.author) {
-        o2.author = _.toPlainObject(o2.author);
-      }
-      if (o2.contributors) {
-        o2.contributors = o2.contributors.map((o) => _.toPlainObject(o));
-      }
-
+      const o1 = normalizeDependencyObject(first);
+      const o2 = normalizeDependencyObject(second);
       return _.isEqual(o1, o2);
     }
   });

@@ -59,6 +59,7 @@ describe('Dependency', () => {
       version: '1.0.0',
       license: 'MIT',
       licenseText: null,
+      noticeText: null,
       description: 'Desc',
       private: false,
       homepage: 'https://github.com/mjeanroy',
@@ -343,6 +344,38 @@ describe('Dependency', () => {
       `===`,
       ``,
       `The MIT License (MIT) -- Copyright (c) Mickael Jeanroy`,
+    ]));
+  });
+
+  it('should format dependency with notice text', () => {
+    const pkg = {
+      name: 'foo',
+      version: '1.0.0',
+      license: 'MIT',
+      licenseText: 'The MIT License (MIT) -- Copyright (c) Mickael Jeanroy',
+      noticeText: 'Software libraries under third_party',
+      description: 'Desc',
+      homepage: 'https://github.com/mjeanroy',
+    };
+
+    const dependency = new Dependency(pkg);
+
+    expect(dependency.text()).toEqual(join([
+      `Name: ${pkg.name}`,
+      `Version: ${pkg.version}`,
+      `License: ${pkg.license}`,
+      `Private: false`,
+      `Description: ${pkg.description}`,
+      `Homepage: ${pkg.homepage}`,
+      `License Copyright:`,
+      `===`,
+      ``,
+      `The MIT License (MIT) -- Copyright (c) Mickael Jeanroy`,
+      ``,
+      `Notice:`,
+      `===`,
+      ``,
+      `Software libraries under third_party`,
     ]));
   });
 });

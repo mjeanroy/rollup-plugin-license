@@ -28,7 +28,6 @@ import tmp from 'tmp';
 import moment from 'moment';
 import {licensePlugin} from '../src/license-plugin.js';
 import {join} from './utils/join.js';
-import {pkg} from '../scripts/config';
 
 describe('LicensePlugin', () => {
   let tmpDir;
@@ -110,6 +109,7 @@ describe('LicensePlugin', () => {
         description: 'Fake package used in unit tests',
         license: 'MIT',
         licenseText: null,
+        noticeText: null,
         private: true,
         homepage: null,
         repository: null,
@@ -190,6 +190,7 @@ describe('LicensePlugin', () => {
           private: true,
           license: 'MIT',
           licenseText: null,
+          noticeText: null,
           author: null,
           contributors: [],
         },
@@ -234,6 +235,21 @@ describe('LicensePlugin', () => {
         'fake-package': {
           ...fakePackage,
           licenseText: 'license.md file',
+        },
+      });
+    });
+
+    it('should load pkg and find notice file', () => {
+      const id = path.join(__dirname, 'fixtures', 'fake-package-11', 'src', 'index.js');
+
+      plugin.scanDependency(id);
+
+      expect(addDependency).toHaveBeenCalled();
+      expect(plugin._dependencies).toEqual({
+        'fake-package': {
+          ...fakePackage,
+          licenseText: 'license.md file',
+          noticeText: 'notice.md file',
         },
       });
     });
@@ -415,6 +431,7 @@ describe('LicensePlugin', () => {
           description: 'Fake Description',
           license: 'MIT',
           licenseText: null,
+          noticeText: null,
           homepage: 'https://www.google.fr',
           private: true,
           maintainers: [],
@@ -1205,6 +1222,7 @@ describe('LicensePlugin', () => {
           description: 'Foo Package',
           license: 'MIT',
           licenseText: null,
+          noticeText: null,
           private: false,
           homepage: null,
           repository: null,
@@ -1242,6 +1260,7 @@ describe('LicensePlugin', () => {
           description: 'Foo Package',
           license: 'MIT',
           licenseText: null,
+          noticeText: null,
           private: false,
           homepage: null,
           repository: null,
@@ -1281,6 +1300,7 @@ describe('LicensePlugin', () => {
           description: 'Foo Package',
           license: 'MIT',
           licenseText: null,
+          noticeText: null,
           private: false,
           maintainers: [],
           contributors: [],
@@ -1298,6 +1318,7 @@ describe('LicensePlugin', () => {
           description: 'Bar Package',
           license: 'Apache 2.0',
           licenseText: null,
+          noticeText: null,
           maintainers: [],
           contributors: [],
           author: null,

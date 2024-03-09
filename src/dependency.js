@@ -46,6 +46,7 @@ export class Dependency {
     this.private = pkg.private || false;
     this.license = pkg.license || null;
     this.licenseText = pkg.licenseText || null;
+    this.noticeText = pkg.noticeText || null;
 
     // Parse the author field to get an object.
     this.author = pkg.author ? new Person(pkg.author) : null;
@@ -105,8 +106,17 @@ export class Dependency {
       lines.push('===');
       lines.push('');
       lines.push(this.licenseText);
+      lines.push('');
     }
 
-    return lines.join(EOL);
+    if (this.noticeText) {
+      lines.push('Notice:');
+      lines.push('===');
+      lines.push('');
+      lines.push(this.noticeText);
+      lines.push('');
+    }
+
+    return lines.join(EOL).trim();
   }
 }

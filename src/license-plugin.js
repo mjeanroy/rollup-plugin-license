@@ -194,11 +194,17 @@ class LicensePlugin {
           // We found it!
           pkg = pkgJson;
 
-          // Read license file, if it exists.
+          // Read license & notice files, if it exists.
           const cwd = this._cwd || process.cwd();
+
           const licenseText = readFile(dir, cwd, ['license', 'licence']);
           if (licenseText) {
             pkg.licenseText = licenseText;
+          }
+
+          const noticeText = readFile(dir, cwd, 'notice');
+          if (noticeText) {
+            pkg.noticeText = noticeText;
           }
 
           // Add the new dependency to the set of third-party dependencies.
