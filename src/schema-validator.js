@@ -36,7 +36,7 @@ import {formatPath} from './format-path.js';
  */
 function doItemValidation(value, schema, path) {
   const validators = _.castArray(schema);
-  const matchedValidators = _.filter(validators, (validator) => validator.test(value));
+  const matchedValidators = validators.filter((validator) => validator.test(value));
 
   // No one matched, we can stop here and return an error with a proper message.
   if (matchedValidators.length === 0) {
