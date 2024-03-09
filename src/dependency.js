@@ -60,10 +60,7 @@ export class Dependency {
     if (!this.license && pkg.licenses) {
       // Map it to a valid license field.
       // See: https://docs.npmjs.com/files/package.json#license
-      this.license = `(${_.chain(pkg.licenses)
-          .map((license) => license.type || license)
-          .join(' OR ')
-          .value()})`;
+      this.license = `(${pkg.licenses.map((license) => license.type || license).join(' OR ')})`;
     }
   }
 
@@ -98,13 +95,9 @@ export class Dependency {
 
     if (this.contributors.length > 0) {
       lines.push(`Contributors:`);
-
-      const allContributors = _.chain(this.contributors)
-          .map((contributor) => contributor.text())
-          .map((line) => `  ${line}`)
-          .value();
-
-      lines.push(...allContributors);
+      lines.push(
+          ...this.contributors.map((contributor) => `  ${contributor.text()}`),
+      );
     }
 
     if (this.licenseText) {

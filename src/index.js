@@ -22,7 +22,6 @@
  * SOFTWARE.
  */
 
-import _ from 'lodash';
 import {licensePlugin} from './license-plugin.js';
 
 /**
@@ -51,13 +50,19 @@ export default function rollupPluginLicense(options = {}) {
      * @return {void}
      */
     renderChunk(code, chunk, outputOptions = {}) {
+      const dependencies = [];
+
+      if (chunk.modules) {
+        Object.keys(chunk.modules).forEach((id) => {
+          const mod = chunk.modules[id];
+          if (mod && !mod.isAsset && mod.renderedLength > 0) {
+            dependencies.push(id);
+          }
+        });
+      }
+
       plugin.scanDependencies(
-          _.chain(chunk.modules)
-              .toPairs()
-              .reject((mod) => mod[1].isAsset)
-              .filter((mod) => mod[1].renderedLength > 0)
-              .map((mod) => mod[0])
-              .value(),
+          dependencies,
       );
 
       return plugin.prependBanner(code, outputOptions.sourcemap !== false);

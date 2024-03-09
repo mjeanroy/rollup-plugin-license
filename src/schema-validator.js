@@ -48,12 +48,18 @@ function doItemValidation(value, schema, path) {
     ];
   }
 
-  // Run "sub-validators"
-  return _.chain(matchedValidators)
-      .filter((validator) => validator.schema)
-      .map((validator) => validate(value, validator.schema, path))
-      .flatten()
-      .value();
+  const outputs = [];
+
+  for (let i = 0; i < matchedValidators.length; ++i) {
+    const validator = matchedValidators[i];
+    if (validator.schema) {
+      outputs.push(
+          ...validate(value, validator.schema, path),
+      );
+    }
+  }
+
+  return outputs;
 }
 
 /**
@@ -125,10 +131,15 @@ function validateArrayItem(item, idx, schema, current) {
  * @return {Array<Object>} Found errors.
  */
 function validateArray(array, schema, current) {
-  return _.chain(array)
-      .map((item, idx) => validateArrayItem(item, idx, schema, current))
-      .flatten()
-      .value();
+  const outputs = [];
+
+  for (let idx = 0; idx < array.length; ++idx) {
+    outputs.push(
+        ...validateArrayItem(array[idx], idx, schema, current),
+    );
+  }
+
+  return outputs;
 }
 
 /**

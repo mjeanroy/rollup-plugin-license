@@ -307,10 +307,9 @@ class LicensePlugin {
     }
 
     const includePrivate = thirdParty.includePrivate || false;
-    const outputDependencies = _.chain(this._dependencies)
-        .values()
-        .filter((dependency) => includePrivate || !dependency.private)
-        .value();
+    const outputDependencies = _.values(this._dependencies).filter((dependency) => (
+      includePrivate || !dependency.private
+    ));
 
     if (_.isFunction(thirdParty)) {
       thirdParty(outputDependencies);
