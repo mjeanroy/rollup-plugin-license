@@ -28,6 +28,7 @@ import tmp from 'tmp';
 import moment from 'moment';
 import {licensePlugin} from '../src/license-plugin.js';
 import {join} from './utils/join.js';
+import {pkg} from '../scripts/config';
 
 describe('LicensePlugin', () => {
   let tmpDir;
@@ -202,9 +203,10 @@ describe('LicensePlugin', () => {
 
       expect(addDependency).toHaveBeenCalled();
       expect(plugin._dependencies).toEqual({
-        'fake-package': Object.assign(fakePackage, {
+        'fake-package': {
+          ...fakePackage,
           licenseText: 'LICENSE.md file',
-        }),
+        },
       });
     });
 
@@ -215,9 +217,10 @@ describe('LicensePlugin', () => {
 
       expect(addDependency).toHaveBeenCalled();
       expect(plugin._dependencies).toEqual({
-        'fake-package': Object.assign(fakePackage, {
+        'fake-package': {
+          ...fakePackage,
           licenseText: null,
-        }),
+        },
       });
     });
 
@@ -228,9 +231,10 @@ describe('LicensePlugin', () => {
 
       expect(addDependency).toHaveBeenCalled();
       expect(plugin._dependencies).toEqual({
-        'fake-package': Object.assign(fakePackage, {
+        'fake-package': {
+          ...fakePackage,
           licenseText: 'license.md file',
-        }),
+        },
       });
     });
 
@@ -241,9 +245,10 @@ describe('LicensePlugin', () => {
 
       expect(addDependency).toHaveBeenCalled();
       expect(plugin._dependencies).toEqual({
-        'fake-package': Object.assign(fakePackage, {
+        'fake-package': {
+          ...fakePackage,
           licenseText: 'license.md file',
-        }),
+        },
       });
     });
 
@@ -254,9 +259,10 @@ describe('LicensePlugin', () => {
 
       expect(addDependency).toHaveBeenCalled();
       expect(plugin._dependencies).toEqual({
-        'fake-package': Object.assign(fakePackage, {
+        'fake-package': {
+          ...fakePackage,
           licenseText: 'LICENSE.txt file',
-        }),
+        },
       });
     });
 
@@ -267,9 +273,10 @@ describe('LicensePlugin', () => {
 
       expect(addDependency).toHaveBeenCalled();
       expect(plugin._dependencies).toEqual({
-        'fake-package': Object.assign(fakePackage, {
+        'fake-package': {
+          ...fakePackage,
           licenseText: 'LICENSE file',
-        }),
+        },
       });
     });
 
@@ -443,9 +450,10 @@ describe('LicensePlugin', () => {
     });
 
     it('should add dependency and parse author field', () => {
-      const dependency = Object.assign(pkg, {
+      const dependency = {
+        ...pkg,
         author: 'Mickael Jeanroy <mickael.jeanroy@gmail.com> (https://mjeanroy.com)',
-      });
+      };
 
       plugin.addDependency(dependency);
 
@@ -458,9 +466,10 @@ describe('LicensePlugin', () => {
     });
 
     it('should add dependency and parse contributors field as a string', () => {
-      const dependency = Object.assign(pkg, {
+      const dependency = {
+        ...pkg,
         contributors: 'Mickael Jeanroy <mickael.jeanroy@gmail.com> (https://mjeanroy.com)',
-      });
+      };
 
       plugin.addDependency(dependency);
 
@@ -477,12 +486,13 @@ describe('LicensePlugin', () => {
     it('should add dependency and parse contributors field', () => {
       const contributor1 = 'Mickael Jeanroy <mickael.jeanroy@gmail.com> (https://mjeanroy.com)';
       const contributor2 = {name: 'John Doe', email: 'johndoe@doe.com'};
-      const dependency = Object.assign(pkg, {
+      const dependency = {
+        ...pkg,
         contributors: [
           contributor1,
           contributor2,
         ],
-      });
+      };
 
       plugin.addDependency(dependency);
 
@@ -506,13 +516,14 @@ describe('LicensePlugin', () => {
     it('should add dependency and parse licenses field', () => {
       const mit = {type: 'MIT', url: 'http://www.opensource.org/licenses/mit-license.php'};
       const apache2 = {type: 'Apache-2.0', url: 'http://opensource.org/licenses/apache2.0.php'};
-      const dependency = Object.assign(pkg, {
+      const dependency = {
+        ...pkg,
         license: null,
         licenses: [
           mit,
           apache2,
         ],
-      });
+      };
 
       plugin.addDependency(dependency);
 
@@ -1042,9 +1053,10 @@ describe('LicensePlugin', () => {
       });
 
       instance.addDependency(pkg1);
-      instance.addDependency(Object.assign(pkg2, {
+      instance.addDependency({
+        ...pkg2,
         private: true,
-      }));
+      });
 
       instance.scanThirdParties();
 
@@ -1063,9 +1075,10 @@ describe('LicensePlugin', () => {
       });
 
       instance.addDependency(pkg1);
-      instance.addDependency(Object.assign(pkg2, {
+      instance.addDependency({
+        ...pkg2,
         private: true,
-      }));
+      });
 
       instance.scanThirdParties();
 
@@ -1178,9 +1191,10 @@ describe('LicensePlugin', () => {
       });
 
       instance.addDependency(pkg1);
-      instance.addDependency(Object.assign(pkg2, {
+      instance.addDependency({
+        ...pkg2,
         private: true,
-      }));
+      });
 
       instance.scanThirdParties();
 
@@ -1214,9 +1228,10 @@ describe('LicensePlugin', () => {
       });
 
       instance.addDependency(pkg1);
-      instance.addDependency(Object.assign(pkg2, {
+      instance.addDependency({
+        ...pkg2,
         private: true,
-      }));
+      });
 
       instance.scanThirdParties();
 
@@ -1252,9 +1267,10 @@ describe('LicensePlugin', () => {
       });
 
       instance.addDependency(pkg1);
-      instance.addDependency(Object.assign(pkg2, {
+      instance.addDependency({
+        ...pkg2,
         private: true,
-      }));
+      });
 
       instance.scanThirdParties();
 
