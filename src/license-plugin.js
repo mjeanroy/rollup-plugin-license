@@ -28,13 +28,13 @@ import {mkdirp} from 'mkdirp';
 import _ from 'lodash';
 import moment from 'moment';
 import MagicString from 'magic-string';
-import glob from 'glob';
 import packageNameRegex from 'package-name-regex';
 
 import {Dependency} from './dependency.js';
 import {generateBlockComment} from './generate-block-comment.js';
 import {licensePluginOptions} from './license-plugin-option.js';
 import {licenseValidator} from './license-validator';
+import {readFile} from './read-file';
 import {PLUGIN_NAME} from './license-plugin-name.js';
 import {EOL} from './eol.js';
 
@@ -196,14 +196,9 @@ class LicensePlugin {
 
           // Read license file, if it exists.
           const cwd = this._cwd || process.cwd();
-          const absolutePath = path.join(dir, '[lL][iI][cC][eE][nN][cCsS][eE]*');
-          const relativeToCwd = path.relative(cwd, absolutePath);
-          const licenseFile = this._findGlob(relativeToCwd, cwd).find((file) => (
-            fs.existsSync(file) && fs.lstatSync(file).isFile()
-          ));
-
-          if (licenseFile) {
-            pkg.licenseText = fs.readFileSync(licenseFile, 'utf-8');
+          const licenseText = readFile(dir, cwd, ['license', 'licence']);
+          if (licenseText) {
+            pkg.licenseText = licenseText;
           }
 
           // Add the new dependency to the set of third-party dependencies.
@@ -347,20 +342,6 @@ class LicensePlugin {
    */
   warn(msg) {
     console.warn(`[${this.name}] -- ${msg}`);
-  }
-
-  /**
-   * Find given file, matching given pattern.
-   *
-   * @param {string} pattern Pattern to look for.
-   * @param {string} cwd Working directory.
-   * @returns {*} All match.
-   * @private
-   */
-  _findGlob(pattern, cwd) {
-    return glob.sync(pattern, {
-      cwd,
-    });
   }
 
   /**
