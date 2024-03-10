@@ -48,6 +48,7 @@ jobs:
         name: Set up NodeJS
         with:
           node-version: 18
+          registry-url: 'https://registry.npmjs.org'
       - name: Fetch all tags
         run: |
           git fetch --prune --unshallow --tags
