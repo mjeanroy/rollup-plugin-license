@@ -33,7 +33,7 @@ jobs:
         node: [ 18, 19, 20 ]
     steps:
       - uses: actions/checkout@v4.1.1
-      - uses: actions/setup-node@v3.8.1
+      - uses: actions/setup-node@v4.0.2
         name: Set up NodeJS
         with:
           node-version: ${{ matrix.node }}
