@@ -112,7 +112,7 @@ class LicensePlugin {
     // This is a cache storing a directory path to associated package.
     // This is an improvement to avoid looking for package information for
     // already scanned directory.
-    this._cache = {};
+    this._cache = new Map();
   }
 
   /**
@@ -160,8 +160,8 @@ class LicensePlugin {
 
     while (dir && dir !== this._cwd && !scannedDirs.includes(dir)) {
       // Try the cache.
-      if (_.has(this._cache, dir)) {
-        pkg = this._cache[dir];
+      if (this._cache.has(dir)) {
+        pkg = this._cache.get(dir);
         if (pkg) {
           this.debug(`found package.json in cache (package: ${pkg.name})`);
           this.addDependency(pkg);
@@ -222,7 +222,7 @@ class LicensePlugin {
 
     // Update the cache
     scannedDirs.forEach((scannedDir) => {
-      this._cache[scannedDir] = pkg;
+      this._cache.set(scannedDir, pkg);
     });
   }
 

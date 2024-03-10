@@ -330,10 +330,9 @@ describe('LicensePlugin', () => {
         'fake-package': fakePackage,
       });
 
-      expect(plugin._cache).toEqual({
-        [path.join(__dirname, 'fixtures', 'fake-package-1', 'src')]: pkg,
-        [path.join(__dirname, 'fixtures', 'fake-package-1')]: pkg,
-      });
+      expect(plugin._cache.size).toBe(2);
+      expect(plugin._cache.get(path.join(__dirname, 'fixtures', 'fake-package-1', 'src'))).toEqual(pkg);
+      expect(plugin._cache.get(path.join(__dirname, 'fixtures', 'fake-package-1'))).toEqual(pkg);
     });
 
     it('should load pkg and put null without package', () => {
@@ -342,9 +341,8 @@ describe('LicensePlugin', () => {
       plugin.scanDependency(id);
 
       expect(plugin._dependencies).toEqual({});
-      expect(plugin._cache).toEqual({
-        [path.normalize(path.join(__dirname, '..', 'src'))]: null,
-      });
+      expect(plugin._cache.size).toBe(1);
+      expect(plugin._cache.get(path.normalize(path.join(__dirname, '..', 'src')))).toBeNull();
     });
 
     it('should try to load pkg without leading NULL character ', () => {
@@ -359,10 +357,9 @@ describe('LicensePlugin', () => {
         'fake-package': fakePackage,
       });
 
-      expect(plugin._cache).toEqual({
-        [path.join(__dirname, 'fixtures', 'fake-package-1', 'src')]: pkg,
-        [path.join(__dirname, 'fixtures', 'fake-package-1')]: pkg,
-      });
+      expect(plugin._cache.size).toBe(2);
+      expect(plugin._cache.get(path.join(__dirname, 'fixtures', 'fake-package-1', 'src'))).toEqual(pkg);
+      expect(plugin._cache.get(path.join(__dirname, 'fixtures', 'fake-package-1'))).toEqual(pkg);
     });
 
     it('should load pkg and use the cache if available', () => {
@@ -370,8 +367,8 @@ describe('LicensePlugin', () => {
       const pkgPath = path.join(__dirname, 'fixtures', 'fake-package-1');
       const id = path.join(pkgPath, 'src', 'index.js');
 
-      plugin._cache[path.join(pkgPath, 'src')] = null;
-      plugin._cache[pkgPath] = null;
+      plugin._cache.set(path.join(pkgPath, 'src'), null);
+      plugin._cache.set(pkgPath, null);
 
       plugin.scanDependency(id);
 
