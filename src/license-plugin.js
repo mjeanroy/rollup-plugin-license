@@ -102,7 +102,7 @@ class LicensePlugin {
     // Initialize main options.
     this._options = options;
     this._cwd = this._options.cwd || process.cwd();
-    this._dependencies = {};
+    this._dependencies = new Map();
     this._pkg = require(path.join(this._cwd, 'package.json'));
     this._debug = this._options.debug || false;
 
@@ -289,8 +289,8 @@ class LicensePlugin {
 
     const version = pkg.version || '';
     const key = this._options.thirdParty?.multipleVersions ? `${name}@${version}` : name;
-    if (!_.has(this._dependencies, key)) {
-      this._dependencies[key] = new Dependency(pkg);
+    if (!this._dependencies.has(key)) {
+      this._dependencies.set(key, new Dependency(pkg));
     }
   }
 
@@ -308,7 +308,7 @@ class LicensePlugin {
     }
 
     const includePrivate = thirdParty.includePrivate || false;
-    const outputDependencies = Object.values(this._dependencies).filter((dependency) => (
+    const outputDependencies = [...this._dependencies.values()].filter((dependency) => (
       includePrivate || !dependency.private
     ));
 
@@ -416,7 +416,7 @@ class LicensePlugin {
 
     // Generate the banner.
     const pkg = this._pkg;
-    const dependencies = Object.values(this._dependencies);
+    const dependencies = [...this._dependencies.values()];
     const data = banner.data ? _.result(banner, 'data') : {};
     const text = tmpl({_, moment, pkg, dependencies, data});
 

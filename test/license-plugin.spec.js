@@ -48,7 +48,7 @@ describe('LicensePlugin', () => {
       expect(plugin._cwd).toBeDefined();
       expect(plugin._pkg).toBeDefined();
       expect(plugin._sourcemap).toBe(true);
-      expect(plugin._dependencies).toEqual({});
+      expect(plugin._dependencies).toEqual(new Map());
     });
 
     it('should initialize instance with custom cwd', () => {
@@ -69,7 +69,7 @@ describe('LicensePlugin', () => {
       expect(plugin._cwd).toBeDefined();
       expect(plugin._pkg).toBeDefined();
       expect(plugin._sourcemap).toBe(false);
-      expect(plugin._dependencies).toEqual({});
+      expect(plugin._dependencies).toEqual(new Map());
     });
 
     it('should print warning with unknown options', () => {
@@ -129,9 +129,9 @@ describe('LicensePlugin', () => {
       plugin.scanDependency(id);
 
       expect(addDependency).toHaveBeenCalled();
-      expect(plugin._dependencies).toEqual({
-        'fake-package': fakePackage,
-      });
+      expect(plugin._dependencies.size).toBe(1);
+      expect(plugin._dependencies.has('fake-package')).toBe(true);
+      expect(plugin._dependencies.get('fake-package')).toEqual(fakePackage);
     });
 
     it('should load pkg with version in key when multipleVersions option is truthy', () => {
@@ -146,9 +146,11 @@ describe('LicensePlugin', () => {
       plugin.scanDependency(id);
 
       expect(addDependency).toHaveBeenCalled();
-      expect(plugin._dependencies).toEqual({
-        [`${fakePackage.name}@${fakePackage.version}`]: fakePackage,
-      });
+
+      const key = `${fakePackage.name}@${fakePackage.version}`;
+      expect(plugin._dependencies.size).toBe(1);
+      expect(plugin._dependencies.has(key)).toBe(true);
+      expect(plugin._dependencies.get(key)).toEqual(fakePackage);
     });
 
     it('should load pkg and going up directories until a package name is found', () => {
@@ -157,9 +159,9 @@ describe('LicensePlugin', () => {
       plugin.scanDependency(id);
 
       expect(addDependency).toHaveBeenCalled();
-      expect(plugin._dependencies).toEqual({
-        'fake-package': fakePackage,
-      });
+      expect(plugin._dependencies.size).toBe(1);
+      expect(plugin._dependencies.has('fake-package')).toBe(true);
+      expect(plugin._dependencies.get('fake-package')).toEqual(fakePackage);
     });
 
     it('should load pkg and going up directories until a valid package name is found', () => {
@@ -168,9 +170,10 @@ describe('LicensePlugin', () => {
       plugin.scanDependency(id);
 
       expect(addDependency).toHaveBeenCalled();
-      expect(plugin._dependencies).toEqual({
-        'fake-package': fakePackage,
-      });
+
+      expect(plugin._dependencies.size).toBe(1);
+      expect(plugin._dependencies.has('fake-package')).toBe(true);
+      expect(plugin._dependencies.get('fake-package')).toEqual(fakePackage);
     });
 
     it('should load pkg and going up directories until a package name with a license is found even with a non valid package name', () => {
@@ -179,21 +182,22 @@ describe('LicensePlugin', () => {
       plugin.scanDependency(id);
 
       expect(addDependency).toHaveBeenCalled();
-      expect(plugin._dependencies).toEqual({
-        '@fake-package/core/internal': {
-          name: '@fake-package/core/internal',
-          maintainers: [],
-          version: null,
-          description: null,
-          repository: null,
-          homepage: null,
-          private: true,
-          license: 'MIT',
-          licenseText: null,
-          noticeText: null,
-          author: null,
-          contributors: [],
-        },
+
+      expect(plugin._dependencies.size).toBe(1);
+      expect(plugin._dependencies.has('@fake-package/core/internal')).toBe(true);
+      expect(plugin._dependencies.get('@fake-package/core/internal')).toEqual({
+        name: '@fake-package/core/internal',
+        maintainers: [],
+        version: null,
+        description: null,
+        repository: null,
+        homepage: null,
+        private: true,
+        license: 'MIT',
+        licenseText: null,
+        noticeText: null,
+        author: null,
+        contributors: [],
       });
     });
 
@@ -203,11 +207,11 @@ describe('LicensePlugin', () => {
       plugin.scanDependency(id);
 
       expect(addDependency).toHaveBeenCalled();
-      expect(plugin._dependencies).toEqual({
-        'fake-package': {
-          ...fakePackage,
-          licenseText: 'LICENSE.md file',
-        },
+      expect(plugin._dependencies.size).toBe(1);
+      expect(plugin._dependencies.has('fake-package')).toBe(true);
+      expect(plugin._dependencies.get('fake-package')).toEqual({
+        ...fakePackage,
+        licenseText: 'LICENSE.md file',
       });
     });
 
@@ -217,11 +221,11 @@ describe('LicensePlugin', () => {
       plugin.scanDependency(id);
 
       expect(addDependency).toHaveBeenCalled();
-      expect(plugin._dependencies).toEqual({
-        'fake-package': {
-          ...fakePackage,
-          licenseText: null,
-        },
+      expect(plugin._dependencies.size).toBe(1);
+      expect(plugin._dependencies.has('fake-package')).toBe(true);
+      expect(plugin._dependencies.get('fake-package')).toEqual({
+        ...fakePackage,
+        licenseText: null,
       });
     });
 
@@ -231,11 +235,11 @@ describe('LicensePlugin', () => {
       plugin.scanDependency(id);
 
       expect(addDependency).toHaveBeenCalled();
-      expect(plugin._dependencies).toEqual({
-        'fake-package': {
-          ...fakePackage,
-          licenseText: 'license.md file',
-        },
+      expect(plugin._dependencies.size).toBe(1);
+      expect(plugin._dependencies.has('fake-package')).toBe(true);
+      expect(plugin._dependencies.get('fake-package')).toEqual({
+        ...fakePackage,
+        licenseText: 'license.md file',
       });
     });
 
@@ -245,12 +249,12 @@ describe('LicensePlugin', () => {
       plugin.scanDependency(id);
 
       expect(addDependency).toHaveBeenCalled();
-      expect(plugin._dependencies).toEqual({
-        'fake-package': {
-          ...fakePackage,
-          licenseText: 'license.md file',
-          noticeText: 'notice.md file',
-        },
+      expect(plugin._dependencies.size).toBe(1);
+      expect(plugin._dependencies.has('fake-package')).toBe(true);
+      expect(plugin._dependencies.get('fake-package')).toEqual({
+        ...fakePackage,
+        licenseText: 'license.md file',
+        noticeText: 'notice.md file',
       });
     });
 
@@ -260,11 +264,12 @@ describe('LicensePlugin', () => {
       plugin.scanDependency(id);
 
       expect(addDependency).toHaveBeenCalled();
-      expect(plugin._dependencies).toEqual({
-        'fake-package': {
-          ...fakePackage,
-          licenseText: 'license.md file',
-        },
+
+      expect(plugin._dependencies.size).toBe(1);
+      expect(plugin._dependencies.has('fake-package')).toBe(true);
+      expect(plugin._dependencies.get('fake-package')).toEqual({
+        ...fakePackage,
+        licenseText: 'license.md file',
       });
     });
 
@@ -274,11 +279,11 @@ describe('LicensePlugin', () => {
       plugin.scanDependency(id);
 
       expect(addDependency).toHaveBeenCalled();
-      expect(plugin._dependencies).toEqual({
-        'fake-package': {
-          ...fakePackage,
-          licenseText: 'LICENSE.txt file',
-        },
+      expect(plugin._dependencies.size).toBe(1);
+      expect(plugin._dependencies.has('fake-package')).toBe(true);
+      expect(plugin._dependencies.get('fake-package')).toEqual({
+        ...fakePackage,
+        licenseText: 'LICENSE.txt file',
       });
     });
 
@@ -288,11 +293,11 @@ describe('LicensePlugin', () => {
       plugin.scanDependency(id);
 
       expect(addDependency).toHaveBeenCalled();
-      expect(plugin._dependencies).toEqual({
-        'fake-package': {
-          ...fakePackage,
-          licenseText: 'LICENSE file',
-        },
+      expect(plugin._dependencies.size).toBe(1);
+      expect(plugin._dependencies.has('fake-package')).toBe(true);
+      expect(plugin._dependencies.get('fake-package')).toEqual({
+        ...fakePackage,
+        licenseText: 'LICENSE file',
       });
     });
 
@@ -305,9 +310,9 @@ describe('LicensePlugin', () => {
 
       expect(scanDependency).toHaveBeenCalledWith(modules[0]);
       expect(addDependency).toHaveBeenCalled();
-      expect(plugin._dependencies).toEqual({
-        'fake-package': fakePackage,
-      });
+      expect(plugin._dependencies.size).toBe(1);
+      expect(plugin._dependencies.has('fake-package')).toBe(true);
+      expect(plugin._dependencies.get('fake-package')).toEqual(fakePackage);
     });
 
     it('should load pkg and stop on cwd', () => {
@@ -316,7 +321,7 @@ describe('LicensePlugin', () => {
       plugin.scanDependency(id);
 
       expect(addDependency).not.toHaveBeenCalled();
-      expect(plugin._dependencies).toEqual({});
+      expect(plugin._dependencies.size).toBe(0);
     });
 
     it('should load pkg and update cache', () => {
@@ -326,9 +331,9 @@ describe('LicensePlugin', () => {
 
       plugin.scanDependency(id);
 
-      expect(plugin._dependencies).toEqual({
-        'fake-package': fakePackage,
-      });
+      expect(plugin._dependencies.size).toBe(1);
+      expect(plugin._dependencies.has('fake-package')).toBe(true);
+      expect(plugin._dependencies.get('fake-package')).toEqual(fakePackage);
 
       expect(plugin._cache.size).toBe(2);
       expect(plugin._cache.get(path.join(__dirname, 'fixtures', 'fake-package-1', 'src'))).toEqual(pkg);
@@ -340,7 +345,7 @@ describe('LicensePlugin', () => {
 
       plugin.scanDependency(id);
 
-      expect(plugin._dependencies).toEqual({});
+      expect(plugin._dependencies.size).toBe(0);
       expect(plugin._cache.size).toBe(1);
       expect(plugin._cache.get(path.normalize(path.join(__dirname, '..', 'src')))).toBeNull();
     });
@@ -353,9 +358,9 @@ describe('LicensePlugin', () => {
 
       plugin.scanDependency(id);
 
-      expect(plugin._dependencies).toEqual({
-        'fake-package': fakePackage,
-      });
+      expect(plugin._dependencies.size).toBe(1);
+      expect(plugin._dependencies.has('fake-package')).toBe(true);
+      expect(plugin._dependencies.get('fake-package')).toEqual(fakePackage);
 
       expect(plugin._cache.size).toBe(2);
       expect(plugin._cache.get(path.join(__dirname, 'fixtures', 'fake-package-1', 'src'))).toEqual(pkg);
@@ -372,7 +377,7 @@ describe('LicensePlugin', () => {
 
       plugin.scanDependency(id);
 
-      expect(plugin._dependencies).toEqual({});
+      expect(plugin._dependencies.size).toBe(0);
       expect(existsSync).not.toHaveBeenCalled();
     });
 
@@ -419,36 +424,38 @@ describe('LicensePlugin', () => {
     it('should add dependency', () => {
       plugin.addDependency(pkg);
 
-      expect(plugin._dependencies.foo).toBeDefined();
-      expect(plugin._dependencies.foo).not.toBe(pkg);
-      expect(plugin._dependencies).toEqual({
-        foo: {
-          name: 'foo',
-          version: '0.0.0',
-          description: 'Fake Description',
-          license: 'MIT',
-          licenseText: null,
-          noticeText: null,
-          homepage: 'https://www.google.fr',
-          private: true,
-          maintainers: [],
-          repository: {
-            type: 'GIT',
-            url: 'https://github.com/npm/npm.git',
-          },
-          author: {
+      expect(plugin._dependencies.size).toBe(1);
+      expect(plugin._dependencies.has(pkg.name)).toBe(true);
+
+      const dep = plugin._dependencies.get(pkg.name);
+      expect(dep).toBeDefined();
+      expect(dep).not.toBe(pkg);
+      expect(dep).toEqual({
+        name: 'foo',
+        version: '0.0.0',
+        description: 'Fake Description',
+        license: 'MIT',
+        licenseText: null,
+        noticeText: null,
+        homepage: 'https://www.google.fr',
+        private: true,
+        maintainers: [],
+        repository: {
+          type: 'GIT',
+          url: 'https://github.com/npm/npm.git',
+        },
+        author: {
+          name: 'Mickael Jeanroy',
+          email: 'mickael.jeanroy@gmail.com',
+          url: null,
+        },
+        contributors: [
+          {
             name: 'Mickael Jeanroy',
             email: 'mickael.jeanroy@gmail.com',
             url: null,
           },
-          contributors: [
-            {
-              name: 'Mickael Jeanroy',
-              email: 'mickael.jeanroy@gmail.com',
-              url: null,
-            },
-          ],
-        },
+        ],
       });
     });
 
@@ -457,7 +464,7 @@ describe('LicensePlugin', () => {
         type: 'module',
       });
 
-      expect(plugin._dependencies).toEqual({});
+      expect(plugin._dependencies.size).toBe(0);
       expect(warn).toHaveBeenCalledWith(
           '[rollup-plugin-license] -- Trying to add dependency without any name, skipping it.',
       );
@@ -471,8 +478,9 @@ describe('LicensePlugin', () => {
 
       plugin.addDependency(dependency);
 
-      expect(plugin._dependencies.foo).toBeDefined();
-      expect(plugin._dependencies.foo.author).toEqual({
+      expect(plugin._dependencies.size).toBe(1);
+      expect(plugin._dependencies.has(pkg.name)).toBe(true);
+      expect(plugin._dependencies.get(pkg.name).author).toEqual({
         name: 'Mickael Jeanroy',
         url: 'https://mjeanroy.com',
         email: 'mickael.jeanroy@gmail.com',
@@ -487,10 +495,14 @@ describe('LicensePlugin', () => {
 
       plugin.addDependency(dependency);
 
-      expect(plugin._dependencies.foo).toBeDefined();
-      expect(plugin._dependencies.foo.contributors).toBeDefined();
-      expect(plugin._dependencies.foo.contributors.length).toBe(1);
-      expect(plugin._dependencies.foo.contributors[0]).toEqual({
+      expect(plugin._dependencies.size).toBe(1);
+      expect(plugin._dependencies.has(pkg.name)).toBe(true);
+
+      const dep = plugin._dependencies.get(pkg.name);
+      expect(dep).toBeDefined();
+      expect(dep.contributors).toBeDefined();
+      expect(dep.contributors.length).toBe(1);
+      expect(dep.contributors[0]).toEqual({
         name: 'Mickael Jeanroy',
         url: 'https://mjeanroy.com',
         email: 'mickael.jeanroy@gmail.com',
@@ -510,17 +522,19 @@ describe('LicensePlugin', () => {
 
       plugin.addDependency(dependency);
 
-      expect(plugin._dependencies.foo).toBeDefined();
-      expect(plugin._dependencies.foo.contributors).toBeDefined();
-      expect(plugin._dependencies.foo.contributors.length).toBe(2);
+      expect(plugin._dependencies.size).toBe(1);
+      expect(plugin._dependencies.has(pkg.name)).toBe(true);
 
-      expect(plugin._dependencies.foo.contributors[0]).toEqual({
+      const dep = plugin._dependencies.get(pkg.name);
+      expect(dep.contributors).toBeDefined();
+      expect(dep.contributors.length).toBe(2);
+      expect(dep.contributors[0]).toEqual({
         name: 'Mickael Jeanroy',
         url: 'https://mjeanroy.com',
         email: 'mickael.jeanroy@gmail.com',
       });
 
-      expect(plugin._dependencies.foo.contributors[1]).toEqual({
+      expect(dep.contributors[1]).toEqual({
         name: 'John Doe',
         email: 'johndoe@doe.com',
         url: null,
@@ -541,27 +555,27 @@ describe('LicensePlugin', () => {
 
       plugin.addDependency(dependency);
 
-      expect(plugin._dependencies.foo).toBeDefined();
-      expect(plugin._dependencies.foo.licenses).not.toBeDefined();
-      expect(plugin._dependencies.foo.license).toBe('(MIT OR Apache-2.0)');
+      expect(plugin._dependencies.size).toBe(1);
+      expect(plugin._dependencies.has(pkg.name)).toBe(true);
+      expect(plugin._dependencies.get(pkg.name).licenses).not.toBeDefined();
+      expect(plugin._dependencies.get(pkg.name).license).toBe('(MIT OR Apache-2.0)');
     });
 
     it('should not add dependency twice', () => {
       plugin.addDependency(pkg);
 
-      expect(plugin._dependencies.foo).toBeDefined();
-      expect(plugin._dependencies.foo).not.toBe(pkg);
-      expect(plugin._dependencies).toEqual({
-        foo: jasmine.anything(),
-      });
+      expect(plugin._dependencies.size).toBe(1);
+      expect(plugin._dependencies.has(pkg.name)).toBe(true);
+
+      const dep = plugin._dependencies.get(pkg.name);
+      expect(dep).toBeDefined();
+      expect(dep).not.toBe(pkg);
 
       // Try to add the same pkg id
 
       plugin.addDependency(pkg);
-
-      expect(plugin._dependencies).toEqual({
-        foo: jasmine.anything(),
-      });
+      expect(plugin._dependencies.size).toBe(1);
+      expect(plugin._dependencies.has(pkg.name)).toBe(true);
     });
   });
 
@@ -1050,7 +1064,7 @@ describe('LicensePlugin', () => {
         },
       });
 
-      instance._dependencies = {};
+      instance._dependencies.clear();
       instance.scanThirdParties();
 
       verifyFile(file, done, (content) => {
