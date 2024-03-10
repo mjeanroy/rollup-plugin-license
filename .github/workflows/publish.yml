@@ -41,7 +41,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3.6.0
+      - uses: actions/checkout@v4.1.1
         with:
           fetch-tags: true
       - uses: actions/setup-node@v3.8.1
