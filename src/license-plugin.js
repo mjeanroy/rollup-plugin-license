@@ -154,11 +154,11 @@ class LicensePlugin {
     let dir = path.resolve(path.parse(id).dir);
     let pkg = null;
 
-    const scannedDirs = [];
+    const scannedDirs = new Set();
 
     this.debug(`iterative over directory tree, starting with: ${dir}`);
 
-    while (dir && dir !== this._cwd && !scannedDirs.includes(dir)) {
+    while (dir && dir !== this._cwd && !scannedDirs.has(dir)) {
       // Try the cache.
       if (this._cache.has(dir)) {
         pkg = this._cache.get(dir);
@@ -170,7 +170,7 @@ class LicensePlugin {
         break;
       }
 
-      scannedDirs.push(dir);
+      scannedDirs.add(dir);
 
       this.debug(`looking for package.json file in: ${dir}`);
       const pkgPath = path.join(dir, 'package.json');
