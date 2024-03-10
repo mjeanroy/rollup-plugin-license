@@ -284,6 +284,26 @@ describe('rollup-plugin-license', () => {
     });
   });
 
+  it('should generate bundle with multipleVersion flag', (done) => {
+    const thirdPartyOutput = path.join(tmpDir.name, 'dependencies.txt');
+    const rollupConfig = createRollupConfig({
+      thirdParty: {
+        includePrivate: false,
+        multipleVersions: true,
+        output: {
+          file: thirdPartyOutput,
+        },
+      },
+    });
+
+    writeBundle(rollupConfig).then(() => {
+      verifyFile(thirdPartyOutput, done, (data) => {
+        expect(warn).not.toHaveBeenCalled();
+        expect(data.toString()).toContain('lodash');
+      });
+    });
+  });
+
   function createRollupConfig(licensePluginOptions) {
     return {
       input: path.join(__dirname, 'bundle.js'),
