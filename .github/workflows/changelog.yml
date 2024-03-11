@@ -35,7 +35,6 @@ jobs:
       - uses: actions/setup-node@v4.0.2
         name: Set up NodeJS
         with:
-          fetch-depth: 0
           node-version: 18
       - name: Configure Git User
         run: |
