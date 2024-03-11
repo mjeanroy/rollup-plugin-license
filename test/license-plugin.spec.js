@@ -324,6 +324,20 @@ describe('LicensePlugin', () => {
       expect(plugin._dependencies.size).toBe(0);
     });
 
+    it('should load pkg and include self dependency if specified', () => {
+      const id = path.join(__dirname, '..', 'src', 'index.js');
+
+      plugin._options.thirdParty = {
+        includeSelf: true,
+      };
+
+      plugin.scanDependency(id);
+
+      expect(addDependency).toHaveBeenCalled();
+      expect(plugin._dependencies.size).toBe(1);
+      expect(plugin._dependencies.has('rollup-plugin-license')).toBe(true);
+    });
+
     it('should load pkg and update cache', () => {
       const pkgPath = path.join(__dirname, 'fixtures', 'fake-package-1');
       const id = path.join(pkgPath, 'src', 'index.js');

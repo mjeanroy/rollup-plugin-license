@@ -62,6 +62,7 @@ describe('rollup-plugin-license', () => {
     writeBundle(rollupConfig).then(() => {
       verifyFile(thirdPartyOutput, done, (data) => {
         expect(data.toString()).toContain('lodash');
+        expect(data.toString()).not.toContain('rollup-plugin-license');
       });
     });
   });
@@ -299,6 +300,26 @@ describe('rollup-plugin-license', () => {
     writeBundle(rollupConfig).then(() => {
       verifyFile(thirdPartyOutput, done, (data) => {
         expect(warn).not.toHaveBeenCalled();
+        expect(data.toString()).toContain('lodash');
+      });
+    });
+  });
+
+  it('should include self dependency', (done) => {
+    const thirdPartyOutput = path.join(tmpDir.name, 'dependencies.txt');
+    const rollupConfig = createRollupConfig({
+      thirdParty: {
+        includeSelf: true,
+        output: {
+          file: thirdPartyOutput,
+        },
+      },
+    });
+
+    writeBundle(rollupConfig).then(() => {
+      verifyFile(thirdPartyOutput, done, (data) => {
+        expect(warn).not.toHaveBeenCalled();
+        expect(data.toString()).toContain('rollup-plugin-license');
         expect(data.toString()).toContain('lodash');
       });
     });

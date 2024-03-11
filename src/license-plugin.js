@@ -154,11 +154,17 @@ class LicensePlugin {
     let dir = path.resolve(path.parse(id).dir);
     let pkg = null;
 
+    const includeSelf = !!this._options.thirdParty?.includeSelf;
     const scannedDirs = new Set();
 
     this.debug(`iterative over directory tree, starting with: ${dir}`);
 
-    while (dir && dir !== this._cwd && !scannedDirs.has(dir)) {
+    while (dir) {
+      if (!includeSelf && dir === this._cwd) {
+        // No need to scan "self" if it's not explicitly allowed.
+        break;
+      }
+
       // Try the cache.
       if (this._cache.has(dir)) {
         pkg = this._cache.get(dir);
@@ -215,8 +221,18 @@ class LicensePlugin {
         }
       }
 
+      if (dir === this._cwd) {
+        // If "self" has been scanned, no need to go up in the directory tree.
+        break;
+      }
+
       // Go up in the directory tree.
       dir = path.resolve(path.join(dir, '..'));
+
+      if (!dir || scannedDirs.has(dir)) {
+        break;
+      }
+
       this.debug(`going up in the directory tree: ${dir}`);
     }
 

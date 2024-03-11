@@ -286,6 +286,13 @@ interface ThirdPartyOptions {
   includePrivate?: boolean;
 
   /**
+   * If "self" should be checked and included in the output.
+   * In this context, "self" means the package being built.
+   * @default false
+   */
+  includeSelf?: boolean;
+
+  /**
    * Ensures that dependencies does not violate any license restriction.
    *
    * For example, suppose you want to limit dependencies with MIT or Apache-2.0
