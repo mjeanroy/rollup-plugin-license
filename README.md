@@ -331,6 +331,11 @@ license({
 
 ## Changelogs
 
+- 3.3.1
+  - Ensure the `multipleVersions` option is correctly validated ([#1682](https://github.com/mjeanroy/rollup-plugin-license/issues/1682))
+- 3.3.0
+  - Include notice file in the third party output ([#1683](https://github.com/mjeanroy/rollup-plugin-license/issues/1683))
+  - Dependency upgrades
 - 3.2.0
   - Support rollup ^4.0.0
   - Dependency upgrades
