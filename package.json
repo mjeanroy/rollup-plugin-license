@@ -63,7 +63,7 @@
     "fancy-log": "2.0.0",
     "fs-extra": "11.2.0",
     "globalthis": "1.0.3",
-    "gulp": "4.0.2",
+    "gulp": "5.0.0",
     "gulp-conventional-changelog": "4.0.0",
     "gulp-jasmine": "4.0.0",
     "jasmine": "3.10.0",
