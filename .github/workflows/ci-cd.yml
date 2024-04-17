@@ -1,0 +1,64 @@
+name: CI/CD
+
+on:
+    push:
+        branches:
+            - master
+    pull_request:
+        branches:
+            - master
+
+env:
+    CI: true
+
+jobs:
+    test:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v3
+
+            - name: Use Node.js 18
+              uses: actions/setup-node@v3
+              with:
+                  node-version: 18.x
+
+            - run: npm install
+
+            - run: npm run build
+
+            - run: npm run lint
+
+    release:
+        runs-on: ubuntu-latest
+        needs:
+            - test
+        if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/beta'
+        steps:
+            - uses: actions/checkout@v3
+              with:
+                  # Pulls all commits (needed for semantic release to correctly version)
+                  # See https://github.com/semantic-release/semantic-release/issues/1526
+                  fetch-depth: "0"
+                  persist-credentials: false
+
+            # Pulls all tags (needed for semantic release to correctly version)
+            - name: Fetch git tags
+              run: git fetch --depth=1 origin +refs/tags/*:refs/tags/*
+
+            - name: Use Node.js 18
+              uses: actions/setup-node@v3
+              with:
+                  node-version: 18.x
+
+            - run: npm install
+
+            - run: npm run build
+
+            - run: cp LICENSE package.json README.md build
+
+            - name: Release 🚀
+              env:
+                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+                  NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+              run: npx semantic-release --dry-run
+              working-directory: ./build
