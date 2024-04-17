@@ -1,8 +1,8 @@
 # rollup-plugin-license
 
-[![Greenkeeper badge](https://badges.greenkeeper.io/mjeanroy/rollup-plugin-license.svg)](https://greenkeeper.io/)
-[![Build Status](https://travis-ci.org/mjeanroy/rollup-plugin-license.svg?branch=master)](https://travis-ci.org/mjeanroy/rollup-plugin-license)
-[![Npm version](https://badge.fury.io/js/rollup-plugin-license.svg)](https://badge.fury.io/js/rollup-plugin-license)
+### Forked from https://github.com/mjeanroy/rollup-plugin-license
+
+Adds exclude property to the third party options.
 
 Rollup plugin that can be used to:
 - Prepend a banner from a file.
