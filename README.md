@@ -44,6 +44,7 @@ module.exports = {
 
       thirdParty: {
         includePrivate: true, // Default is false.
+        includeSelf: true, // Default is false.
         multipleVersions: true, // Default is false.
         output: {
           file: path.join(__dirname, 'dist', 'dependencies.txt'),
@@ -265,6 +266,22 @@ license({
 })
 ```
 
+By default, the "self" package is ignored (by "self", we mean the package being built), but startint with version 3.4.0, you can force inclusion using the `includeSelf` option:
+
+```javascript
+license({
+  thirdParty: {
+    includeSelf: true,
+    output: {
+      file: path.join(__dirname, 'dist', 'dependencies.json'),
+      template(dependencies) {
+        return JSON.stringify(dependencies);
+      }
+    },
+  },
+})
+```
+
 ## License Checks
 
 Starting with version 0.13, it is possible to ensure that dependencies does not violate any license restriction.
@@ -331,6 +348,9 @@ license({
 
 ## Changelogs
 
+- 3.4.0
+  - Allow adding the license for the package itself into the thirdParty output [#1685](https://github.com/mjeanroy/rollup-plugin-license/issues/1685)
+  - Dependency upgrades
 - 3.3.1
   - Ensure the `multipleVersions` option is correctly validated ([#1682](https://github.com/mjeanroy/rollup-plugin-license/issues/1682))
 - 3.3.0
