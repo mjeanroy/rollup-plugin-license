@@ -12,13 +12,17 @@
     "watch": "gulp watch",
     "test": "gulp test",
     "tdd": "gulp tdd",
-    "changelog": "gulp changelog"
+    "changelog": "gulp changelog",
+    "release": "gulp release:minor",
+    "release:patch": "gulp release:patch",
+    "release:minor": "gulp release:minor",
+    "release:major": "gulp release:major"
   },
   "keywords": [
     "rollup",
     "rollup-plugin"
   ],
-  "author": "Mickael Jeanroy <mickael.jeanroy@gmail.com>",
+  "author": "VertiGIS North America Ltd.",
   "license": "MIT",
   "homepage": "https://github.com/vertigis/rollup-plugin-license",
   "bugs": {
@@ -53,6 +57,7 @@
     "@typescript-eslint/eslint-plugin": "5.59.6",
     "@typescript-eslint/parser": "5.59.6",
     "babel-plugin-add-module-exports": "1.0.4",
+    "conventional-changelog-conventionalcommits": "^6.1.0",
     "eslint": "8.40.0",
     "eslint-config-google": "0.14.0",
     "fancy-log": "2.0.0",
@@ -71,6 +76,7 @@
     "rollup": "3.22.0",
     "rollup-plugin-prettier": "3.0.0",
     "rollup-plugin-strip-banner": "3.0.0",
+    "semantic-release": "23.0.8",
     "tmp": "0.2.1",
     "typescript": "5.0.4"
   },

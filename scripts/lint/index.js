@@ -31,7 +31,7 @@ module.exports = function lint() {
   const nodeVersion = process.versions.node;
   const major = Number(nodeVersion.split('.')[0]);
   if (major < 12) {
-    log.debug(`Skipping ESLint because of node version compatibility (currenly in used: ${nodeVersion})`);
+    log.debug(`Skipping ESLint because of node version compatibility (currently in use: ${nodeVersion})`);
     return Promise.resolve();
   }
 
