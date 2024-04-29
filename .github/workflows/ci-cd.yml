@@ -54,11 +54,8 @@ jobs:
 
             - run: npm run build
 
-            - run: cp LICENSE package.json README.md build
-
             - name: Release 🚀
               env:
                   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
                   NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
               run: npx semantic-release --dry-run
-              working-directory: ./build
