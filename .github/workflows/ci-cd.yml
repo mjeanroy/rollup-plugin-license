@@ -15,7 +15,7 @@ jobs:
     test:
         runs-on: ubuntu-latest
         steps:
-            - uses: actions/checkout@v3
+            - uses: actions/checkout@v4
 
             - name: Use Node.js 20
               uses: actions/setup-node@v4
@@ -34,7 +34,7 @@ jobs:
             - test
         if: github.ref == 'refs/heads/master'
         steps:
-            - uses: actions/checkout@v3
+            - uses: actions/checkout@v4
               with:
                   # Pulls all commits (needed for semantic release to correctly version)
                   # See https://github.com/semantic-release/semantic-release/issues/1526
@@ -58,4 +58,4 @@ jobs:
               env:
                   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
                   NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-              run: npx semantic-release --dry-run
+              run: npx semantic-release
