@@ -62,7 +62,7 @@
     "eslint-config-google": "0.14.0",
     "fancy-log": "2.0.0",
     "fs-extra": "11.2.0",
-    "globalthis": "1.0.3",
+    "globalthis": "1.0.4",
     "gulp": "5.0.0",
     "gulp-conventional-changelog": "4.0.0",
     "gulp-jasmine": "4.0.0",
