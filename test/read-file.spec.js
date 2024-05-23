@@ -23,7 +23,7 @@
  */
 
 import path from 'path';
-import {readFile} from '../src/read-file.js';
+import { readFile } from '../src/read-file';
 
 describe('readFile', () => {
   it('should read file using exact name', () => {

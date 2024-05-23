@@ -30,8 +30,8 @@ import * as rollup from 'rollup';
 import nodeResolve from '@rollup/plugin-node-resolve';
 import commonjs from '@rollup/plugin-commonjs';
 import virtual from '@rollup/plugin-virtual';
-import licensePlugin from '../../src/index.js';
-import {join} from '../utils/join.js';
+import licensePlugin from '../../src/index';
+import { join } from '../utils/join';
 
 describe('rollup-plugin-license', () => {
   let warn;
@@ -175,9 +175,9 @@ describe('rollup-plugin-license', () => {
     writeBundle(rollupConfig).then(() => {
       verifyFile(rollupConfig.output.file, done, (data) => {
         expect(data.toString()).toContain(join([
-          `/**`,
+          '/**',
           ` * ${banner}`,
-          ` */`,
+          ' */',
         ]));
       });
     });
@@ -208,9 +208,9 @@ describe('rollup-plugin-license', () => {
     writeBundle(rollupConfig).then(() => {
       verifyFile(rollupConfig.output.file, done, (data) => {
         expect(data.toString()).toContain(join([
-          `/**`,
+          '/**',
           ` * ${banner}`,
-          ` */`,
+          ' */',
         ]));
       });
     });
@@ -218,7 +218,7 @@ describe('rollup-plugin-license', () => {
 
   it('should generate bundle with license header from content as a raw string', (done) => {
     const content = 'Banner from inline content';
-    const banner = {content};
+    const banner = { content };
     const rollupConfig = createRollupConfig({
       banner,
     });
@@ -227,9 +227,9 @@ describe('rollup-plugin-license', () => {
       verifyFile(rollupConfig.output.file, done, (data) => {
         expect(warn).not.toHaveBeenCalled();
         expect(data.toString()).toContain(join([
-          `/**`,
+          '/**',
           ` * ${content}`,
-          ` */`,
+          ' */',
         ]));
       });
     });
@@ -251,9 +251,9 @@ describe('rollup-plugin-license', () => {
       verifyFile(rollupConfig.output.file, done, (data) => {
         expect(warn).not.toHaveBeenCalled();
         expect(data.toString()).toContain(join([
-          `/**`,
+          '/**',
           ` * ${content}`,
-          ` */`,
+          ' */',
         ]));
       });
     });
@@ -338,7 +338,7 @@ describe('rollup-plugin-license', () => {
         nodeResolve(),
         commonjs(),
         licensePlugin(
-            licensePluginOptions,
+          licensePluginOptions,
         ),
       ],
     };

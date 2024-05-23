@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-import type {Plugin} from 'rollup';
+import type { Plugin } from 'rollup';
 
 type FilePath = string;
 type FileEncoding = string;
@@ -198,7 +198,7 @@ type SpdxId = string;
 /**
  * Function checking dependency license validity.
  */
-type ThirdPartyDependencyValidatorFn = (Dependency: Dependency) => boolean;
+type ThirdPartyDependencyValidatorFn = (dependency: Dependency) => boolean;
 
 type ThirdPartyValidator = SpdxId | ThirdPartyDependencyValidatorFn;
 

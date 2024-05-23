@@ -38,9 +38,9 @@ export function generateBlockComment(text, commentStyle) {
 
   if (commentStyle) {
     options.style = new commenting.Style(
-        commentStyle.body,
-        commentStyle.start,
-        commentStyle.end,
+      commentStyle.body,
+      commentStyle.start,
+      commentStyle.end,
     );
   }
 

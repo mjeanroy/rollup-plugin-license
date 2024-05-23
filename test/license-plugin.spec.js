@@ -22,12 +22,14 @@
  * SOFTWARE.
  */
 
+/* eslint-disable import/no-dynamic-require, global-require */
+
 import fs from 'fs';
 import path from 'path';
 import tmp from 'tmp';
 import moment from 'moment';
-import {licensePlugin} from '../src/license-plugin.js';
-import {join} from './utils/join.js';
+import { licensePlugin } from '../src/license-plugin';
+import { join } from './utils/join';
 
 describe('LicensePlugin', () => {
   let tmpDir;
@@ -80,7 +82,7 @@ describe('LicensePlugin', () => {
       });
 
       expect(warn).toHaveBeenCalledWith(
-          '[rollup-plugin-license] -- Unknown property: "foobar", allowed options are: sourcemap, debug, cwd, banner, thirdParty.',
+        '[rollup-plugin-license] -- Unknown property: "foobar", allowed options are: sourcemap, debug, cwd, banner, thirdParty.',
       );
     });
 
@@ -367,7 +369,7 @@ describe('LicensePlugin', () => {
     it('should try to load pkg without leading NULL character ', () => {
       const pkgPath = path.join(__dirname, 'fixtures', 'fake-package-1');
       const idNoNull = path.join(pkgPath, 'src', 'index.js');
-      const id = '\0' + idNoNull;
+      const id = `\0${idNoNull}`;
       const pkg = require(path.join(pkgPath, 'package.json'));
 
       plugin.scanDependency(id);
@@ -480,7 +482,7 @@ describe('LicensePlugin', () => {
 
       expect(plugin._dependencies.size).toBe(0);
       expect(warn).toHaveBeenCalledWith(
-          '[rollup-plugin-license] -- Trying to add dependency without any name, skipping it.',
+        '[rollup-plugin-license] -- Trying to add dependency without any name, skipping it.',
       );
     });
 
@@ -525,7 +527,7 @@ describe('LicensePlugin', () => {
 
     it('should add dependency and parse contributors field', () => {
       const contributor1 = 'Mickael Jeanroy <mickael.jeanroy@gmail.com> (https://mjeanroy.com)';
-      const contributor2 = {name: 'John Doe', email: 'johndoe@doe.com'};
+      const contributor2 = { name: 'John Doe', email: 'johndoe@doe.com' };
       const dependency = {
         ...pkg,
         contributors: [
@@ -556,8 +558,8 @@ describe('LicensePlugin', () => {
     });
 
     it('should add dependency and parse licenses field', () => {
-      const mit = {type: 'MIT', url: 'http://www.opensource.org/licenses/mit-license.php'};
-      const apache2 = {type: 'Apache-2.0', url: 'http://opensource.org/licenses/apache2.0.php'};
+      const mit = { type: 'MIT', url: 'http://www.opensource.org/licenses/mit-license.php' };
+      const apache2 = { type: 'Apache-2.0', url: 'http://opensource.org/licenses/apache2.0.php' };
       const dependency = {
         ...pkg,
         license: null,
@@ -645,7 +647,7 @@ describe('LicensePlugin', () => {
       });
 
       expect(() => instance.prependBanner('var foo = 0;')).toThrow(new Error(
-          '[rollup-plugin-license] -- Cannot find banner content, please specify an inline content, or a path to a file',
+        '[rollup-plugin-license] -- Cannot find banner content, please specify an inline content, or a path to a file',
       ));
     });
 
@@ -698,7 +700,7 @@ describe('LicensePlugin', () => {
       });
 
       expect(() => instance.prependBanner(code)).toThrow(new Error(
-          `[rollup-plugin-license] -- Template file ${file} does not exist, or cannot be read`,
+        `[rollup-plugin-license] -- Template file ${file} does not exist, or cannot be read`,
       ));
     });
 
@@ -797,7 +799,7 @@ describe('LicensePlugin', () => {
       });
 
       expect(() => instance.prependBanner(code)).toThrow(new Error(
-          'Unknown comment style foobar, please use one of: regular,ignored,slash,none',
+        'Unknown comment style foobar, please use one of: regular,ignored,slash,none',
       ));
     });
 
@@ -1016,7 +1018,6 @@ describe('LicensePlugin', () => {
         verifyDefaultOutput(content);
       });
     });
-
 
     it('should export list of dependencies to given file', (done) => {
       const file = path.join(tmpDir.name, 'third-party.txt');
@@ -1522,7 +1523,7 @@ describe('LicensePlugin', () => {
       instance.addDependency(mitDependency);
 
       expect(() => instance.scanThirdParties()).toThrow(new Error(
-          'Dependency "baz" does not specify any license.',
+        'Dependency "baz" does not specify any license.',
       ));
     });
 
@@ -1542,21 +1543,21 @@ describe('LicensePlugin', () => {
       instance.addDependency(mitDependency);
 
       expect(() => instance.scanThirdParties()).toThrow(new Error(
-          'Dependency "foo" has a license (Apache-2.0) which is not compatible with requirement, looks like a license violation to fix.',
+        'Dependency "foo" has a license (Apache-2.0) which is not compatible with requirement, looks like a license violation to fix.',
       ));
     });
 
     function verifyWarnAboutApache2License() {
       expect(warn).toHaveBeenCalledWith(
-          '[rollup-plugin-license] -- ' +
-          'Dependency "foo" has a license (Apache-2.0) which is not compatible with requirement, ' +
-          'looks like a license violation to fix.',
+        '[rollup-plugin-license] -- ' +
+        'Dependency "foo" has a license (Apache-2.0) which is not compatible with requirement, ' +
+        'looks like a license violation to fix.',
       );
     }
 
     function verifyWarnAboutUnlicensedLicense() {
       expect(warn).toHaveBeenCalledWith(
-          '[rollup-plugin-license] -- Dependency "baz" does not specify any license.',
+        '[rollup-plugin-license] -- Dependency "baz" does not specify any license.',
       );
     }
   });

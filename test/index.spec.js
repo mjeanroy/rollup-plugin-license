@@ -25,8 +25,8 @@
 import path from 'path';
 import fs from 'fs';
 import tmp from 'tmp';
-import rollupPluginLicense from '../src/index.js';
-import {join} from './utils/join.js';
+import rollupPluginLicense from '../src/index';
+import { join } from './utils/join';
 
 describe('rollup-plugin-license', () => {
   let tmpDir;
@@ -66,7 +66,7 @@ describe('rollup-plugin-license', () => {
     };
 
     const code = 'var foo = 0;';
-    const chunk = {code, modules};
+    const chunk = { code, modules };
     const outputOptions = {};
 
     instance.renderChunk(code, chunk, outputOptions);
@@ -113,7 +113,7 @@ describe('rollup-plugin-license', () => {
     };
 
     const code = 'var foo = 0;';
-    const chunk = {code, modules};
+    const chunk = { code, modules };
     const outputOptions = {};
 
     instance.renderChunk(code, chunk, outputOptions);
@@ -174,7 +174,7 @@ describe('rollup-plugin-license', () => {
     };
 
     const code = 'var foo = 0;';
-    const chunk = {code, modules};
+    const chunk = { code, modules };
     const outputOptions = {};
 
     instance.renderChunk(code, chunk, outputOptions);

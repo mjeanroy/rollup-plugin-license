@@ -41,13 +41,15 @@ export class Person {
    * @constructor
    */
   constructor(person) {
-    if (_.isString(person)) {
+    let result = person;
+
+    if (_.isString(result)) {
       const o = {};
 
       let current = 'name';
 
-      for (let i = 0, size = person.length; i < size; ++i) {
-        const character = person.charAt(i);
+      for (let i = 0, size = result.length; i < size; ++i) {
+        const character = result.charAt(i);
         if (character === '<') {
           current = 'email';
         } else if (character === '(') {
@@ -63,12 +65,12 @@ export class Person {
         }
       });
 
-      person = o;
+      result = o;
     }
 
-    this.name = person.name || null;
-    this.email = person.email || null;
-    this.url = person.url || null;
+    this.name = result.name || null;
+    this.email = result.email || null;
+    this.url = result.url || null;
   }
 
   /**

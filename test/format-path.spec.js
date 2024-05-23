@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-import {formatPath} from '../src/format-path.js';
+import { formatPath } from '../src/format-path';
 
 describe('formatPath', () => {
   it('should format path of object', () => {

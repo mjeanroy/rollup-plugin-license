@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-import {licensePlugin} from './license-plugin.js';
+import { licensePlugin } from './license-plugin';
 
 /**
  * Create rollup plugin compatible with rollup >= 1.0.0
@@ -62,7 +62,7 @@ export default function rollupPluginLicense(options = {}) {
       }
 
       plugin.scanDependencies(
-          dependencies,
+        dependencies,
       );
 
       return plugin.prependBanner(code, outputOptions.sourcemap !== false);

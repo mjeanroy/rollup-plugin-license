@@ -22,8 +22,8 @@
  * SOFTWARE.
  */
 
-import {generateBlockComment} from '../src/generate-block-comment.js';
-import {join} from './utils/join.js';
+import { generateBlockComment } from '../src/generate-block-comment';
+import { join } from './utils/join';
 
 describe('generateBlockComment', () => {
   it('should generate block comment from given text', () => {

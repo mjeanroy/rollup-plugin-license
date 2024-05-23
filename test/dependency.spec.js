@@ -22,8 +22,8 @@
  * SOFTWARE.
  */
 
-import {Dependency} from '../src/dependency.js';
-import {join} from './utils/join.js';
+import { Dependency } from '../src/dependency';
+import { join } from './utils/join';
 
 describe('Dependency', () => {
   it('should extract package fields', () => {
@@ -133,8 +133,8 @@ describe('Dependency', () => {
       version: '1.0.0',
       main: 'src/index.js',
       licenses: [
-        {type: 'MIT'},
-        {type: 'Apache 2.0'},
+        { type: 'MIT' },
+        { type: 'Apache 2.0' },
       ],
     };
 
@@ -157,7 +157,7 @@ describe('Dependency', () => {
       `Name: ${pkg.name}`,
       `Version: ${pkg.version}`,
       `License: ${pkg.license}`,
-      `Private: false`,
+      'Private: false',
     ]));
   });
 
@@ -175,7 +175,7 @@ describe('Dependency', () => {
       `Name: ${pkg.name}`,
       `Version: ${pkg.version}`,
       `License: ${pkg.license}`,
-      `Private: false`,
+      'Private: false',
       `Description: ${pkg.description}`,
     ]));
   });
@@ -197,7 +197,7 @@ describe('Dependency', () => {
       `Name: ${pkg.name}`,
       `Version: ${pkg.version}`,
       `License: ${pkg.license}`,
-      `Private: false`,
+      'Private: false',
       `Author: ${pkg.author.name} <${pkg.author.email}>`,
     ]));
   });
@@ -219,7 +219,7 @@ describe('Dependency', () => {
       `Name: ${pkg.name}`,
       `Version: ${pkg.version}`,
       `License: ${pkg.license}`,
-      `Private: false`,
+      'Private: false',
       `Repository: ${pkg.repository.url}`,
     ]));
   });
@@ -238,7 +238,7 @@ describe('Dependency', () => {
       `Name: ${pkg.name}`,
       `Version: ${pkg.version}`,
       `License: ${pkg.license}`,
-      `Private: false`,
+      'Private: false',
       `Homepage: ${pkg.homepage}`,
     ]));
   });
@@ -249,8 +249,8 @@ describe('Dependency', () => {
       version: '1.0.0',
       license: 'MIT',
       contributors: [
-        {name: 'Mickael Jeanroy', email: 'mickael.jeanroy@gmail.com'},
-        {name: 'John Doe'},
+        { name: 'Mickael Jeanroy', email: 'mickael.jeanroy@gmail.com' },
+        { name: 'John Doe' },
       ],
     };
 
@@ -260,8 +260,8 @@ describe('Dependency', () => {
       `Name: ${pkg.name}`,
       `Version: ${pkg.version}`,
       `License: ${pkg.license}`,
-      `Private: false`,
-      `Contributors:`,
+      'Private: false',
+      'Contributors:',
       `  ${pkg.contributors[0].name} <${pkg.contributors[0].email}>`,
       `  ${pkg.contributors[1].name}`,
     ]));
@@ -274,11 +274,11 @@ describe('Dependency', () => {
       license: 'MIT',
       description: 'Desc',
       homepage: 'https://github.com/mjeanroy',
-      repository: {type: 'GIT', url: 'git@github.com/mjeanroy'},
-      author: {name: 'Mickael Jeanroy', email: 'mickael.jeanroy@gmail.com'},
+      repository: { type: 'GIT', url: 'git@github.com/mjeanroy' },
+      author: { name: 'Mickael Jeanroy', email: 'mickael.jeanroy@gmail.com' },
       contributors: [
-        {name: 'Mickael Jeanroy', email: 'mickael.jeanroy@gmail.com'},
-        {name: 'John Doe'},
+        { name: 'Mickael Jeanroy', email: 'mickael.jeanroy@gmail.com' },
+        { name: 'John Doe' },
       ],
     };
 
@@ -288,12 +288,12 @@ describe('Dependency', () => {
       `Name: ${pkg.name}`,
       `Version: ${pkg.version}`,
       `License: ${pkg.license}`,
-      `Private: false`,
+      'Private: false',
       `Description: ${pkg.description}`,
       `Repository: ${pkg.repository.url}`,
       `Homepage: ${pkg.homepage}`,
       `Author: ${pkg.author.name} <${pkg.author.email}>`,
-      `Contributors:`,
+      'Contributors:',
       `  ${pkg.contributors[0].name} <${pkg.contributors[0].email}>`,
       `  ${pkg.contributors[1].name}`,
     ]));
@@ -332,18 +332,18 @@ describe('Dependency', () => {
       `Name: ${pkg.name}`,
       `Version: ${pkg.version}`,
       `License: ${pkg.license}`,
-      `Private: false`,
+      'Private: false',
       `Description: ${pkg.description}`,
       `Repository: ${pkg.repository.url}`,
       `Homepage: ${pkg.homepage}`,
       `Author: ${pkg.author.name} <${pkg.author.email}>`,
-      `Contributors:`,
+      'Contributors:',
       `  ${pkg.contributors[0].name} <${pkg.contributors[0].email}>`,
       `  ${pkg.contributors[1].name}`,
-      `License Copyright:`,
-      `===`,
-      ``,
-      `The MIT License (MIT) -- Copyright (c) Mickael Jeanroy`,
+      'License Copyright:',
+      '===',
+      '',
+      'The MIT License (MIT) -- Copyright (c) Mickael Jeanroy',
     ]));
   });
 
@@ -364,18 +364,18 @@ describe('Dependency', () => {
       `Name: ${pkg.name}`,
       `Version: ${pkg.version}`,
       `License: ${pkg.license}`,
-      `Private: false`,
+      'Private: false',
       `Description: ${pkg.description}`,
       `Homepage: ${pkg.homepage}`,
-      `License Copyright:`,
-      `===`,
-      ``,
-      `The MIT License (MIT) -- Copyright (c) Mickael Jeanroy`,
-      ``,
-      `Notice:`,
-      `===`,
-      ``,
-      `Software libraries under third_party`,
+      'License Copyright:',
+      '===',
+      '',
+      'The MIT License (MIT) -- Copyright (c) Mickael Jeanroy',
+      '',
+      'Notice:',
+      '===',
+      '',
+      'Software libraries under third_party',
     ]));
   });
 });

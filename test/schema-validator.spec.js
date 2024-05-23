@@ -22,8 +22,8 @@
  * SOFTWARE.
  */
 
-import {validateSchema} from '../src/schema-validator.js';
-import {validators} from '../src/schema-validators.js';
+import { validateSchema } from '../src/schema-validator';
+import { validators } from '../src/schema-validators';
 
 describe('validateSchema', () => {
   it('should validate simple object', () => {
@@ -56,9 +56,9 @@ describe('validateSchema', () => {
     };
 
     expect(validateSchema(o, schema)).toEqual([
-      {path: ['id'], message: '"id" must be a string'},
-      {path: ['active'], message: '"active" must be a boolean'},
-      {path: ['test'], message: '"test" must be a function'},
+      { path: ['id'], message: '"id" must be a string' },
+      { path: ['active'], message: '"active" must be a boolean' },
+      { path: ['test'], message: '"test" must be a function' },
     ]);
   });
 
@@ -80,9 +80,9 @@ describe('validateSchema', () => {
     };
 
     expect(validateSchema(o, schema)).toEqual([
-      {path: ['person', 'id'], message: '"person.id" must be a string'},
-      {path: ['person', 'active'], message: '"person.active" must be a boolean'},
-      {path: ['person', 'test'], message: '"person.test" must be a function'},
+      { path: ['person', 'id'], message: '"person.id" must be a string' },
+      { path: ['person', 'active'], message: '"person.active" must be a boolean' },
+      { path: ['person', 'test'], message: '"person.test" must be a function' },
     ]);
   });
 
@@ -123,7 +123,7 @@ describe('validateSchema', () => {
     };
 
     expect(validateSchema(o, schema)).toEqual([
-      {path: ['name'], type: 'object.allowUnknown'},
+      { path: ['name'], type: 'object.allowUnknown' },
     ]);
   });
 });

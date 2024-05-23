@@ -23,10 +23,10 @@
  */
 
 import _ from 'lodash';
-import {PLUGIN_NAME} from './license-plugin-name.js';
-import {validators} from './schema-validators.js';
-import {validateSchema} from './schema-validator.js';
-import {formatPath} from './format-path.js';
+import { PLUGIN_NAME } from './license-plugin-name';
+import { validators } from './schema-validators';
+import { validateSchema } from './schema-validator';
+import { formatPath } from './format-path';
 
 /**
  * The option object schema.
@@ -152,7 +152,7 @@ function validateOptions(options) {
 
   if (messages.length > 0) {
     throw new Error(
-        `[${PLUGIN_NAME}] -- Error during validation of option object: ${messages.join(' ; ')}`,
+      `[${PLUGIN_NAME}] -- Error during validation of option object: ${messages.join(' ; ')}`,
     );
   }
 }

@@ -22,23 +22,23 @@
  * SOFTWARE.
  */
 
-import {licenseValidator} from '../src/license-validator.js';
+import { licenseValidator } from '../src/license-validator';
 
 describe('licenseValidator', () => {
   it('should check for unlicensed dependency', () => {
     expect(licenseValidator.isUnlicensed({})).toBe(true);
-    expect(licenseValidator.isUnlicensed({license: null})).toBe(true);
-    expect(licenseValidator.isUnlicensed({license: ''})).toBe(true);
-    expect(licenseValidator.isUnlicensed({license: 'UNLICENSED'})).toBe(true);
-    expect(licenseValidator.isUnlicensed({license: 'unlicensed'})).toBe(true);
-    expect(licenseValidator.isUnlicensed({license: '  UNLICENSED  '})).toBe(true);
-    expect(licenseValidator.isUnlicensed({license: 'MIT'})).toBe(false);
+    expect(licenseValidator.isUnlicensed({ license: null })).toBe(true);
+    expect(licenseValidator.isUnlicensed({ license: '' })).toBe(true);
+    expect(licenseValidator.isUnlicensed({ license: 'UNLICENSED' })).toBe(true);
+    expect(licenseValidator.isUnlicensed({ license: 'unlicensed' })).toBe(true);
+    expect(licenseValidator.isUnlicensed({ license: '  UNLICENSED  ' })).toBe(true);
+    expect(licenseValidator.isUnlicensed({ license: 'MIT' })).toBe(false);
   });
 
   it('should check for valid dependency', () => {
-    expect(licenseValidator.isValid({license: 'MIT'}, 'MIT')).toBe(true);
-    expect(licenseValidator.isValid({license: '  MIT  '}, 'MIT')).toBe(true);
-    expect(licenseValidator.isValid({license: 'MIT'}, '(MIT OR Apache-2.0)')).toBe(true);
-    expect(licenseValidator.isValid({license: 'GPL'}, '(MIT OR Apache-2.0)')).toBe(false);
+    expect(licenseValidator.isValid({ license: 'MIT' }, 'MIT')).toBe(true);
+    expect(licenseValidator.isValid({ license: '  MIT  ' }, 'MIT')).toBe(true);
+    expect(licenseValidator.isValid({ license: 'MIT' }, '(MIT OR Apache-2.0)')).toBe(true);
+    expect(licenseValidator.isValid({ license: 'GPL' }, '(MIT OR Apache-2.0)')).toBe(false);
   });
 });

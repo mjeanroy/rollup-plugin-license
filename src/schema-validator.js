@@ -23,7 +23,7 @@
  */
 
 import _ from 'lodash';
-import {formatPath} from './format-path.js';
+import { formatPath } from './format-path';
 
 /**
  * Validate value against given schema.
@@ -54,7 +54,7 @@ function doItemValidation(value, schema, path) {
     const validator = matchedValidators[i];
     if (validator.schema) {
       outputs.push(
-          ...validate(value, validator.schema, path),
+        ...validate(value, validator.schema, path),
       );
     }
   }
@@ -87,7 +87,7 @@ function validateObject(obj, schema, current) {
     const path = [...current, k];
 
     if (!_.has(schema, k)) {
-      errors.push({type: 'object.allowUnknown', path});
+      errors.push({ type: 'object.allowUnknown', path });
     } else {
       errors.push(...doItemValidation(value, schema[k], path));
     }
@@ -112,11 +112,15 @@ function validateArrayItem(item, idx, schema, current) {
   const path = [...current, idx];
 
   if (typeof item === 'undefined') {
-    return [{path, message: `"${formatPath(path)}" is undefined.`}];
+    return [
+      { path, message: `"${formatPath(path)}" is undefined.` },
+    ];
   }
 
   if (item === null) {
-    return [{path, message: `"${formatPath(path)}" is null.`}];
+    return [
+      { path, message: `"${formatPath(path)}" is null.` },
+    ];
   }
 
   return doItemValidation(item, schema, path);
@@ -135,7 +139,7 @@ function validateArray(array, schema, current) {
 
   for (let idx = 0; idx < array.length; ++idx) {
     outputs.push(
-        ...validateArrayItem(array[idx], idx, schema, current),
+      ...validateArrayItem(array[idx], idx, schema, current),
     );
   }
 

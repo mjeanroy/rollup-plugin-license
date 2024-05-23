@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-import {validators} from '../src/schema-validators.js';
+import { validators } from '../src/schema-validators';
 
 describe('schema validators', () => {
   it('should validate string', () => {
@@ -59,10 +59,12 @@ describe('schema validators', () => {
     expect(funcValidator.message).toBe('must be a function');
 
     expect(funcValidator.test(() => {})).toBe(true);
-    expect(funcValidator.test(function test() {})).toBe(true);
     expect(funcValidator.test(null)).toBe(false);
     expect(funcValidator.test(undefined)).toBe(false);
     expect(funcValidator.test('')).toBe(false);
+
+    // eslint-disable-next-line prefer-arrow-callback
+    expect(funcValidator.test(function test() {})).toBe(true);
   });
 
   it('should validate array', () => {

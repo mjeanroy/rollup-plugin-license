@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-import {Person} from '../src/person.js';
+import { Person } from '../src/person';
 
 describe('Person', () => {
   it('should parse author name', () => {
@@ -112,7 +112,7 @@ describe('Person', () => {
     });
 
     expect(person.text()).toBe(
-        'Mickael Jeanroy <mickael.jeanroy@gmail.com> (https://mjeanroy.com)',
+      'Mickael Jeanroy <mickael.jeanroy@gmail.com> (https://mjeanroy.com)',
     );
   });
 });
