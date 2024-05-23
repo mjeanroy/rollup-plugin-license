@@ -62,9 +62,12 @@ module.exports = function lint() {
   const loadFormatter = eslint.loadFormatter('stylish');
 
   return Promise.all([lintFiles, loadFormatter]).then(([results, formatter]) => {
-    if (results.errorCount > 0 || results.warningCount > 0) {
-      fancyLog(formatter.format(results));
-      throw new Error('ESLintError');
+    for (let i = 0; i < results.length; i++) {
+      const lintResult = results[i];
+      if (lintResult.warningCount > 0 || lintResult.errorCount > 0 || lintResult.fatalErrorCount > 0) {
+        fancyLog(formatter.format(results));
+        throw new Error('ESLintError');
+      }
     }
   });
 };

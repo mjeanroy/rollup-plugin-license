@@ -86,8 +86,8 @@ function createReleaseTask(level) {
   }
 
   return gulp.series(
-    doRelease,
-    prepareNextRelease
+      doRelease,
+      prepareNextRelease,
   );
 }
 
