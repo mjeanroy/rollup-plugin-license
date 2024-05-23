@@ -1,10 +1,10 @@
 {
   "extends": [
     "eslint:recommended",
-    "google"
+    "airbnb-base"
   ],
   "parserOptions": {
-    "ecmaVersion": 2020
+    "ecmaVersion": "latest"
   },
   "env": {
     "es6": true,
@@ -12,7 +12,31 @@
   },
   "rules": {
     "max-len": [2, 150, 2],
+
+    "import/prefer-default-export": "off",
+
+    "import/no-extraneous-dependencies": ["error", {
+      "devDependencies": [
+        "scripts/**/*.js",
+        "test/**/*.js",
+        "gulpfile.js"
+      ]
+    }],
+
+    "operator-linebreak": "off",
+    "consistent-return": "off",
+    "no-underscore-dangle": "off",
+    "no-plusplus": "off",
+    "quote-props": ["error", "consistent-as-needed"],
+    "no-use-before-define": ["error", {
+      "functions": false,
+      "classes": true,
+      "variables": true,
+      "allowNamedExports": true
+    }],
+
     "no-console": [0],
+
     "valid-jsdoc": [2, {
       "requireReturn": true,
       "requireParamDescription": true,

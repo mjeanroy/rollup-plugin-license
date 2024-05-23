@@ -23,6 +23,7 @@
  */
 
 const path = require('node:path');
+
 const ROOT = path.join(__dirname, '..');
 
 module.exports = {

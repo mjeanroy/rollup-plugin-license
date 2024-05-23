@@ -34,6 +34,7 @@ const prettier = require('rollup-plugin-prettier');
 
 const config = require('../config');
 const pkg = require('../../package.json');
+
 const license = fs.readFileSync(path.join(config.root, 'LICENSE'), 'utf-8');
 
 module.exports = {

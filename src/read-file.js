@@ -43,7 +43,7 @@ export function readFile(dir, cwd, names) {
     const absolutePath = path.join(dir, input);
     const relativeToCwd = path.relative(cwd, absolutePath);
 
-    const findings = glob.sync(relativeToCwd, {cwd});
+    const findings = glob.sync(relativeToCwd, { cwd });
     for (let j = 0; j < findings.length; ++j) {
       const file = path.join(cwd, findings[j]);
       if (isFile(file)) {
@@ -81,5 +81,5 @@ function generatePattern(input) {
     pattern += up !== low ? `[${low}${up}]` : low;
   }
 
-  return pattern + '*';
+  return `${pattern}*`;
 }

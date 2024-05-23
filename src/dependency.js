@@ -23,8 +23,8 @@
  */
 
 import _ from 'lodash';
-import {EOL} from './eol.js';
-import {Person} from './person.js';
+import { EOL } from './eol';
+import { Person } from './person';
 
 /**
  * Dependency structure.
@@ -95,9 +95,9 @@ export class Dependency {
     }
 
     if (this.contributors.length > 0) {
-      lines.push(`Contributors:`);
+      lines.push('Contributors:');
       lines.push(
-          ...this.contributors.map((contributor) => `  ${contributor.text()}`),
+        ...this.contributors.map((contributor) => `  ${contributor.text()}`),
       );
     }
 

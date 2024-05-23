@@ -28,8 +28,8 @@ const conventionalChangelog = require('gulp-conventional-changelog');
 const config = require('../config');
 
 module.exports = function changelog() {
-  const changelog = path.join(config.root, 'CHANGELOG.md');
-  return gulp.src(changelog, {buffer: false})
-      .pipe(conventionalChangelog({releaseCount: 0}))
-      .pipe(gulp.dest(config.root));
+  const changelogFile = path.join(config.root, 'CHANGELOG.md');
+  return gulp.src(changelogFile, { buffer: false })
+    .pipe(conventionalChangelog({ releaseCount: 0 }))
+    .pipe(gulp.dest(config.root));
 };

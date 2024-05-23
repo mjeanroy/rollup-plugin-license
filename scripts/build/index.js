@@ -29,8 +29,8 @@ const rollupConfig = require('./rollup.config');
 const config = require('../config');
 
 module.exports = gulp.series(
-    buildOutput,
-    copyTypings,
+  buildOutput,
+  copyTypings,
 );
 
 // eslint-disable-next-line require-jsdoc

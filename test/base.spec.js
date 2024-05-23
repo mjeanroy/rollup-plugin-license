@@ -23,8 +23,8 @@
  */
 
 import _ from 'lodash';
-import {Dependency} from '../src/dependency.js';
-import {Person} from '../src/person.js';
+import { Dependency } from '../src/dependency';
+import { Person } from '../src/person';
 
 /**
  * Normalize input dependency object, so it can be safely compared with another

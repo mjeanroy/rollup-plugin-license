@@ -52,8 +52,12 @@ module.exports = function lint() {
     log.debug(`  ${input}`)
   ));
 
-  const {ESLint} = require('eslint');
+  // eslint-disable-next-line global-require
+  const { ESLint } = require('eslint');
+
+  // eslint-disable-next-line global-require
   const fancyLog = require('fancy-log');
+
   const eslint = new ESLint({
     errorOnUnmatchedPattern: false,
   });

@@ -24,19 +24,19 @@
 
 import fs from 'fs';
 import path from 'path';
-import {mkdirp} from 'mkdirp';
+import { mkdirp } from 'mkdirp';
 import _ from 'lodash';
 import moment from 'moment';
 import MagicString from 'magic-string';
 import packageNameRegex from 'package-name-regex';
 
-import {Dependency} from './dependency.js';
-import {generateBlockComment} from './generate-block-comment.js';
-import {licensePluginOptions} from './license-plugin-option.js';
-import {licenseValidator} from './license-validator';
-import {readFile} from './read-file';
-import {PLUGIN_NAME} from './license-plugin-name.js';
-import {EOL} from './eol.js';
+import { Dependency } from './dependency';
+import { generateBlockComment } from './generate-block-comment';
+import { licensePluginOptions } from './license-plugin-option';
+import { licenseValidator } from './license-validator';
+import { readFile } from './read-file';
+import { PLUGIN_NAME } from './license-plugin-name';
+import { EOL } from './eol';
 
 /**
  * Pre-Defined comment style:
@@ -103,8 +103,10 @@ class LicensePlugin {
     this._options = options;
     this._cwd = this._options.cwd || process.cwd();
     this._dependencies = new Map();
-    this._pkg = require(path.join(this._cwd, 'package.json'));
     this._debug = this._options.debug || false;
+
+    // eslint-disable-next-line import/no-dynamic-require, global-require
+    this._pkg = require(path.join(this._cwd, 'package.json'));
 
     // SourceMap can now be disable/enable on the plugin.
     this._sourcemap = this._options.sourcemap !== false;
@@ -139,6 +141,7 @@ class LicensePlugin {
    */
   scanDependency(id) {
     if (id.startsWith('\0')) {
+      // eslint-disable-next-line no-param-reassign
       id = id.replace(/^\0/, '');
       this.debug(`scanning internal module ${id}`);
     }
@@ -186,15 +189,14 @@ class LicensePlugin {
 
         // Read `package.json` file
         const pkgJson = JSON.parse(
-            fs.readFileSync(pkgPath, 'utf-8'),
+          fs.readFileSync(pkgPath, 'utf-8'),
         );
 
         // We are probably in a package.json specifying the type of package (module, cjs).
         // Nevertheless, if the package name is not defined, we must not use this `package.json` descriptor.
         const license = pkgJson.license || pkgJson.licenses;
         const hasLicense = license && license.length > 0;
-        const name = pkgJson.name;
-        const version = pkgJson.version;
+        const { name, version } = pkgJson;
         const isValidPackageName = name && packageNameRegex.test(name);
         if ((isValidPackageName && version) || hasLicense) {
           // We found it!
@@ -270,7 +272,7 @@ class LicensePlugin {
     // will be used to generate the sourcemap.
     const magicString = new MagicString(code);
 
-    const banner = this._options.banner;
+    const { banner } = this._options;
     const content = this._readBanner(banner);
     if (content) {
       magicString.prepend(EOL);
@@ -318,7 +320,7 @@ class LicensePlugin {
    * @return {void}
    */
   scanThirdParties() {
-    const thirdParty = this._options.thirdParty;
+    const { thirdParty } = this._options;
     if (!thirdParty) {
       return;
     }
@@ -333,12 +335,12 @@ class LicensePlugin {
       return;
     }
 
-    const allow = thirdParty.allow;
+    const { allow, output } = thirdParty;
+
     if (allow) {
       this._scanLicenseViolations(outputDependencies, allow);
     }
 
-    const output = thirdParty.output;
     if (output) {
       this._exportThirdParties(outputDependencies, output);
     }
@@ -398,7 +400,7 @@ class LicensePlugin {
       throw new Error(`[${this.name}] -- Cannot find banner content, please specify an inline content, or a path to a file`);
     }
 
-    const file = content.file;
+    const { file } = content;
     const encoding = content.encoding || 'utf-8';
 
     this.debug(`prepend banner from file: ${file}`);
@@ -434,7 +436,13 @@ class LicensePlugin {
     const pkg = this._pkg;
     const dependencies = [...this._dependencies.values()];
     const data = banner.data ? _.result(banner, 'data') : {};
-    const text = tmpl({_, moment, pkg, dependencies, data});
+    const text = tmpl({
+      _,
+      moment,
+      pkg,
+      dependencies,
+      data,
+    });
 
     // Compute comment style to use.
     const style = _.has(banner, 'commentStyle') ? banner.commentStyle : computeDefaultCommentStyle(text);
@@ -523,9 +531,10 @@ class LicensePlugin {
    * @return {void}
    */
   _handleLicenseViolation(dependency, fail) {
-    const message =
+    const message = (
       `Dependency "${dependency.name}" has a license (${dependency.license}) which is not compatible with ` +
-      `requirement, looks like a license violation to fix.`;
+      'requirement, looks like a license violation to fix.'
+    );
 
     if (!fail) {
       this.warn(message);
@@ -565,7 +574,7 @@ class LicensePlugin {
     // Default is to export to given file.
 
     // Allow custom formatting of output using given template option.
-    const template = _.isString(output.template) ? (dependencies) => _.template(output.template)({dependencies, _, moment}) : output.template;
+    const template = _.isString(output.template) ? (dependencies) => _.template(output.template)({ dependencies, _, moment }) : output.template;
     const defaultTemplate = (dependencies) => (
       dependencies.length === 0 ? 'No third parties dependencies' : dependencies.map((d) => d.text()).join(`${EOL}${EOL}---${EOL}${EOL}`)
     );
@@ -596,6 +605,6 @@ class LicensePlugin {
  */
 export function licensePlugin(options) {
   return new LicensePlugin(
-      licensePluginOptions(options),
+    licensePluginOptions(options),
   );
 }
