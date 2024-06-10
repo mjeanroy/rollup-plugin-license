@@ -52,7 +52,7 @@
     "@babel/preset-env": "7.24.6",
     "@babel/register": "7.24.6",
     "@rollup/plugin-babel": "6.0.4",
-    "@rollup/plugin-commonjs": "25.0.8",
+    "@rollup/plugin-commonjs": "26.0.1",
     "@rollup/plugin-node-resolve": "15.2.3",
     "@rollup/plugin-virtual": "3.0.2",
     "@typescript-eslint/eslint-plugin": "7.12.0",
