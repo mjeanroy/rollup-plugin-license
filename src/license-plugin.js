@@ -24,7 +24,6 @@
 
 import fs from 'fs';
 import path from 'path';
-import { mkdirp } from 'mkdirp';
 import _ from 'lodash';
 import moment from 'moment';
 import MagicString from 'magic-string';
@@ -588,7 +587,7 @@ class LicensePlugin {
     this.debug(`use encoding: ${encoding}`);
 
     // Create directory if it does not already exist.
-    mkdirp.sync(path.parse(file).dir);
+    fs.mkdirSync(path.parse(file).dir, { recursive: true });
 
     fs.writeFileSync(file, (text || '').trim(), {
       encoding,
