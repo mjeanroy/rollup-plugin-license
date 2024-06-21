@@ -34,9 +34,12 @@ export class Dependency {
    * Create new dependency from package description.
    *
    * @param {Object} pkg Package description.
+   * @param {boolean} self If the package is the "self" package.
    * @constructor
    */
-  constructor(pkg) {
+  constructor(pkg, self) {
+    this.self = self || false;
+
     this.name = pkg.name || null;
     this.maintainers = pkg.maintainers || [];
     this.version = pkg.version || null;
