@@ -160,7 +160,8 @@ class LicensePlugin {
     this.debug(`iterative over directory tree, starting with: ${dir}`);
 
     while (dir) {
-      if (!includeSelf && dir === this._cwd) {
+      const isSelf = dir === this._cwd;
+      if (isSelf && !includeSelf) {
         // No need to scan "self" if it's not explicitly allowed.
         break;
       }
@@ -170,7 +171,7 @@ class LicensePlugin {
         pkg = this._cache.get(dir);
         if (pkg) {
           this.debug(`found package.json in cache (package: ${pkg.name})`);
-          this.addDependency(pkg);
+          this.addDependency(pkg, isSelf);
         }
 
         break;
@@ -214,14 +215,14 @@ class LicensePlugin {
           }
 
           // Add the new dependency to the set of third-party dependencies.
-          this.addDependency(pkg);
+          this.addDependency(pkg, isSelf);
 
           // We can stop now.
           break;
         }
       }
 
-      if (dir === this._cwd) {
+      if (isSelf) {
         // If "self" has been scanned, no need to go up in the directory tree.
         break;
       }
@@ -294,9 +295,10 @@ class LicensePlugin {
    * Add new dependency to the bundle descriptor.
    *
    * @param {Object} pkg Dependency package information.
+   * @param {boolean} self If the package is the "self" package.
    * @return {void}
    */
-  addDependency(pkg) {
+  addDependency(pkg, self) {
     const name = pkg.name || '';
     if (!name) {
       this.warn('Trying to add dependency without any name, skipping it.');
@@ -306,7 +308,7 @@ class LicensePlugin {
     const version = pkg.version || '';
     const key = this._options.thirdParty?.multipleVersions ? `${name}@${version}` : name;
     if (!this._dependencies.has(key)) {
-      this._dependencies.set(key, new Dependency(pkg));
+      this._dependencies.set(key, new Dependency(pkg, self));
     }
   }
 
@@ -324,9 +326,18 @@ class LicensePlugin {
     }
 
     const includePrivate = thirdParty.includePrivate || false;
-    const outputDependencies = [...this._dependencies.values()].filter((dependency) => (
-      includePrivate || !dependency.private
-    ));
+    const includeSelf = thirdParty.includeSelf || false;
+    const outputDependencies = [...this._dependencies.values()].filter((dependency) => {
+      if (dependency.self && includeSelf) {
+        return true;
+      }
+
+      if (!dependency.private) {
+        return true;
+      }
+
+      return includePrivate;
+    });
 
     if (_.isFunction(thirdParty)) {
       thirdParty(outputDependencies);
@@ -452,7 +463,7 @@ class LicensePlugin {
   /**
    * Scan for dependency violations and print a warning if some violations are found.
    *
-   * @param {Array<Object>} outputDependencies The dependencies to scan.
+   * @param {Array<Dependency>} outputDependencies The dependencies to scan.
    * @param {string} allow The allowed licenses as a SPDX pattern.
    * @return {void}
    */
@@ -465,11 +476,18 @@ class LicensePlugin {
   /**
    * Scan dependency for a dependency violation.
    *
-   * @param {Object} dependency The dependency to scan.
+   * @param {Dependency} dependency The dependency to scan.
    * @param {string|function|object} allow The allowed licenses as a SPDX pattern, or a validator function.
    * @return {void}
    */
   _scanLicenseViolation(dependency, allow) {
+    if (dependency.self) {
+      // Do not validate license for the "self" package.
+      // It's likely this package will use a private/proprietary license, and we only want to detect
+      // violations for third party dependencies.
+      return;
+    }
+
     const testFn = _.isString(allow) || _.isFunction(allow) ? allow : allow.test;
     const isValid = _.isFunction(testFn) ? testFn(dependency) : licenseValidator.isValid(dependency, testFn);
     if (!isValid) {

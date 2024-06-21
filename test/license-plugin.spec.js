@@ -131,7 +131,10 @@ describe('LicensePlugin', () => {
       expect(addDependency).toHaveBeenCalled();
       expect(plugin._dependencies.size).toBe(1);
       expect(plugin._dependencies.has('fake-package')).toBe(true);
-      expect(plugin._dependencies.get('fake-package')).toEqual(fakePackage);
+      expect(plugin._dependencies.get('fake-package')).toEqual({
+        self: false,
+        ...fakePackage,
+      });
     });
 
     it('should load pkg with version in key when multipleVersions option is truthy', () => {
@@ -150,7 +153,10 @@ describe('LicensePlugin', () => {
       const key = `${fakePackage.name}@${fakePackage.version}`;
       expect(plugin._dependencies.size).toBe(1);
       expect(plugin._dependencies.has(key)).toBe(true);
-      expect(plugin._dependencies.get(key)).toEqual(fakePackage);
+      expect(plugin._dependencies.get(key)).toEqual({
+        self: false,
+        ...fakePackage,
+      });
     });
 
     it('should load pkg and going up directories until a package name is found', () => {
@@ -161,7 +167,10 @@ describe('LicensePlugin', () => {
       expect(addDependency).toHaveBeenCalled();
       expect(plugin._dependencies.size).toBe(1);
       expect(plugin._dependencies.has('fake-package')).toBe(true);
-      expect(plugin._dependencies.get('fake-package')).toEqual(fakePackage);
+      expect(plugin._dependencies.get('fake-package')).toEqual({
+        self: false,
+        ...fakePackage,
+      });
     });
 
     it('should load pkg and going up directories until a valid package name is found', () => {
@@ -173,7 +182,10 @@ describe('LicensePlugin', () => {
 
       expect(plugin._dependencies.size).toBe(1);
       expect(plugin._dependencies.has('fake-package')).toBe(true);
-      expect(plugin._dependencies.get('fake-package')).toEqual(fakePackage);
+      expect(plugin._dependencies.get('fake-package')).toEqual({
+        self: false,
+        ...fakePackage,
+      });
     });
 
     it('should load pkg and going up directories until a package name with a license is found even with a non valid package name', () => {
@@ -186,6 +198,7 @@ describe('LicensePlugin', () => {
       expect(plugin._dependencies.size).toBe(1);
       expect(plugin._dependencies.has('@fake-package/core/internal')).toBe(true);
       expect(plugin._dependencies.get('@fake-package/core/internal')).toEqual({
+        self: false,
         name: '@fake-package/core/internal',
         maintainers: [],
         version: null,
@@ -211,6 +224,7 @@ describe('LicensePlugin', () => {
       expect(plugin._dependencies.has('fake-package')).toBe(true);
       expect(plugin._dependencies.get('fake-package')).toEqual({
         ...fakePackage,
+        self: false,
         licenseText: 'LICENSE.md file',
       });
     });
@@ -225,6 +239,7 @@ describe('LicensePlugin', () => {
       expect(plugin._dependencies.has('fake-package')).toBe(true);
       expect(plugin._dependencies.get('fake-package')).toEqual({
         ...fakePackage,
+        self: false,
         licenseText: null,
       });
     });
@@ -239,6 +254,7 @@ describe('LicensePlugin', () => {
       expect(plugin._dependencies.has('fake-package')).toBe(true);
       expect(plugin._dependencies.get('fake-package')).toEqual({
         ...fakePackage,
+        self: false,
         licenseText: 'license.md file',
       });
     });
@@ -253,6 +269,7 @@ describe('LicensePlugin', () => {
       expect(plugin._dependencies.has('fake-package')).toBe(true);
       expect(plugin._dependencies.get('fake-package')).toEqual({
         ...fakePackage,
+        self: false,
         licenseText: 'license.md file',
         noticeText: 'notice.md file',
       });
@@ -269,6 +286,7 @@ describe('LicensePlugin', () => {
       expect(plugin._dependencies.has('fake-package')).toBe(true);
       expect(plugin._dependencies.get('fake-package')).toEqual({
         ...fakePackage,
+        self: false,
         licenseText: 'license.md file',
       });
     });
@@ -283,6 +301,7 @@ describe('LicensePlugin', () => {
       expect(plugin._dependencies.has('fake-package')).toBe(true);
       expect(plugin._dependencies.get('fake-package')).toEqual({
         ...fakePackage,
+        self: false,
         licenseText: 'LICENSE.txt file',
       });
     });
@@ -297,6 +316,7 @@ describe('LicensePlugin', () => {
       expect(plugin._dependencies.has('fake-package')).toBe(true);
       expect(plugin._dependencies.get('fake-package')).toEqual({
         ...fakePackage,
+        self: false,
         licenseText: 'LICENSE file',
       });
     });
@@ -312,7 +332,10 @@ describe('LicensePlugin', () => {
       expect(addDependency).toHaveBeenCalled();
       expect(plugin._dependencies.size).toBe(1);
       expect(plugin._dependencies.has('fake-package')).toBe(true);
-      expect(plugin._dependencies.get('fake-package')).toEqual(fakePackage);
+      expect(plugin._dependencies.get('fake-package')).toEqual({
+        self: false,
+        ...fakePackage,
+      });
     });
 
     it('should load pkg and stop on cwd', () => {
@@ -347,11 +370,20 @@ describe('LicensePlugin', () => {
 
       expect(plugin._dependencies.size).toBe(1);
       expect(plugin._dependencies.has('fake-package')).toBe(true);
-      expect(plugin._dependencies.get('fake-package')).toEqual(fakePackage);
+      expect(plugin._dependencies.get('fake-package')).toEqual({
+        self: false,
+        ...fakePackage,
+      });
 
       expect(plugin._cache.size).toBe(2);
-      expect(plugin._cache.get(path.join(__dirname, 'fixtures', 'fake-package-1', 'src'))).toEqual(pkg);
-      expect(plugin._cache.get(path.join(__dirname, 'fixtures', 'fake-package-1'))).toEqual(pkg);
+
+      expect(plugin._cache.get(path.join(__dirname, 'fixtures', 'fake-package-1', 'src'))).toEqual({
+        ...pkg,
+      });
+
+      expect(plugin._cache.get(path.join(__dirname, 'fixtures', 'fake-package-1'))).toEqual({
+        ...pkg,
+      });
     });
 
     it('should load pkg and put null without package', () => {
@@ -374,11 +406,20 @@ describe('LicensePlugin', () => {
 
       expect(plugin._dependencies.size).toBe(1);
       expect(plugin._dependencies.has('fake-package')).toBe(true);
-      expect(plugin._dependencies.get('fake-package')).toEqual(fakePackage);
+      expect(plugin._dependencies.get('fake-package')).toEqual({
+        self: false,
+        ...fakePackage,
+      });
 
       expect(plugin._cache.size).toBe(2);
-      expect(plugin._cache.get(path.join(__dirname, 'fixtures', 'fake-package-1', 'src'))).toEqual(pkg);
-      expect(plugin._cache.get(path.join(__dirname, 'fixtures', 'fake-package-1'))).toEqual(pkg);
+
+      expect(plugin._cache.get(path.join(__dirname, 'fixtures', 'fake-package-1', 'src'))).toEqual({
+        ...pkg,
+      });
+
+      expect(plugin._cache.get(path.join(__dirname, 'fixtures', 'fake-package-1'))).toEqual({
+        ...pkg,
+      });
     });
 
     it('should load pkg and use the cache if available', () => {
@@ -436,7 +477,9 @@ describe('LicensePlugin', () => {
     });
 
     it('should add dependency', () => {
-      plugin.addDependency(pkg);
+      const self = false;
+
+      plugin.addDependency(pkg, self);
 
       expect(plugin._dependencies.size).toBe(1);
       expect(plugin._dependencies.has(pkg.name)).toBe(true);
@@ -445,6 +488,7 @@ describe('LicensePlugin', () => {
       expect(dep).toBeDefined();
       expect(dep).not.toBe(pkg);
       expect(dep).toEqual({
+        self,
         name: 'foo',
         version: '0.0.0',
         description: 'Fake Description',
@@ -474,9 +518,12 @@ describe('LicensePlugin', () => {
     });
 
     it('should warn when adding dependency without name', () => {
-      plugin.addDependency({
+      const self = false;
+      const dependency = {
         type: 'module',
-      });
+      };
+
+      plugin.addDependency(dependency, self);
 
       expect(plugin._dependencies.size).toBe(0);
       expect(warn).toHaveBeenCalledWith(
@@ -485,12 +532,13 @@ describe('LicensePlugin', () => {
     });
 
     it('should add dependency and parse author field', () => {
+      const self = false;
       const dependency = {
         ...pkg,
         author: 'Mickael Jeanroy <mickael.jeanroy@gmail.com> (https://mjeanroy.com)',
       };
 
-      plugin.addDependency(dependency);
+      plugin.addDependency(dependency, self);
 
       expect(plugin._dependencies.size).toBe(1);
       expect(plugin._dependencies.has(pkg.name)).toBe(true);
@@ -502,12 +550,13 @@ describe('LicensePlugin', () => {
     });
 
     it('should add dependency and parse contributors field as a string', () => {
+      const self = false;
       const dependency = {
         ...pkg,
         contributors: 'Mickael Jeanroy <mickael.jeanroy@gmail.com> (https://mjeanroy.com)',
       };
 
-      plugin.addDependency(dependency);
+      plugin.addDependency(dependency, self);
 
       expect(plugin._dependencies.size).toBe(1);
       expect(plugin._dependencies.has(pkg.name)).toBe(true);
@@ -524,6 +573,7 @@ describe('LicensePlugin', () => {
     });
 
     it('should add dependency and parse contributors field', () => {
+      const self = false;
       const contributor1 = 'Mickael Jeanroy <mickael.jeanroy@gmail.com> (https://mjeanroy.com)';
       const contributor2 = {name: 'John Doe', email: 'johndoe@doe.com'};
       const dependency = {
@@ -534,7 +584,7 @@ describe('LicensePlugin', () => {
         ],
       };
 
-      plugin.addDependency(dependency);
+      plugin.addDependency(dependency, self);
 
       expect(plugin._dependencies.size).toBe(1);
       expect(plugin._dependencies.has(pkg.name)).toBe(true);
@@ -556,6 +606,7 @@ describe('LicensePlugin', () => {
     });
 
     it('should add dependency and parse licenses field', () => {
+      const self = false;
       const mit = {type: 'MIT', url: 'http://www.opensource.org/licenses/mit-license.php'};
       const apache2 = {type: 'Apache-2.0', url: 'http://opensource.org/licenses/apache2.0.php'};
       const dependency = {
@@ -567,7 +618,7 @@ describe('LicensePlugin', () => {
         ],
       };
 
-      plugin.addDependency(dependency);
+      plugin.addDependency(dependency, self);
 
       expect(plugin._dependencies.size).toBe(1);
       expect(plugin._dependencies.has(pkg.name)).toBe(true);
@@ -576,7 +627,9 @@ describe('LicensePlugin', () => {
     });
 
     it('should not add dependency twice', () => {
-      plugin.addDependency(pkg);
+      const self = false;
+
+      plugin.addDependency(pkg, self);
 
       expect(plugin._dependencies.size).toBe(1);
       expect(plugin._dependencies.has(pkg.name)).toBe(true);
@@ -587,7 +640,7 @@ describe('LicensePlugin', () => {
 
       // Try to add the same pkg id
 
-      plugin.addDependency(pkg);
+      plugin.addDependency(pkg, self);
       expect(plugin._dependencies.size).toBe(1);
       expect(plugin._dependencies.has(pkg.name)).toBe(true);
     });
@@ -986,6 +1039,7 @@ describe('LicensePlugin', () => {
     });
 
     it('should export single dependency', (done) => {
+      const self = false;
       const file = path.join(tmpDir.name, 'third-party.txt');
       const instance = licensePlugin({
         thirdParty: {
@@ -993,7 +1047,7 @@ describe('LicensePlugin', () => {
         },
       });
 
-      instance.addDependency(pkg1);
+      instance.addDependency(pkg1, self);
       instance.scanThirdParties();
 
       verifyFile(file, done, (content) => {
@@ -1002,6 +1056,7 @@ describe('LicensePlugin', () => {
     });
 
     it('should export single dependency and create directory if needed', (done) => {
+      const self = false;
       const file = path.join(tmpDir.name, 'output', 'third-party.txt');
       const instance = licensePlugin({
         thirdParty: {
@@ -1009,7 +1064,7 @@ describe('LicensePlugin', () => {
         },
       });
 
-      instance.addDependency(pkg1);
+      instance.addDependency(pkg1, self);
       instance.scanThirdParties();
 
       verifyFile(file, done, (content) => {
@@ -1019,6 +1074,7 @@ describe('LicensePlugin', () => {
 
 
     it('should export list of dependencies to given file', (done) => {
+      const self = false;
       const file = path.join(tmpDir.name, 'third-party.txt');
       const instance = licensePlugin({
         thirdParty: {
@@ -1026,8 +1082,8 @@ describe('LicensePlugin', () => {
         },
       });
 
-      instance.addDependency(pkg1);
-      instance.addDependency(pkg2);
+      instance.addDependency(pkg1, self);
+      instance.addDependency(pkg2, self);
       instance.scanThirdParties();
 
       verifyFile(file, done, (content) => {
@@ -1051,6 +1107,7 @@ describe('LicensePlugin', () => {
     });
 
     it('should export list of dependencies with custom encoding to given file', (done) => {
+      const self = false;
       const file = path.join(tmpDir.name, 'third-party.txt');
       const encoding = 'base64';
       const instance = licensePlugin({
@@ -1062,7 +1119,7 @@ describe('LicensePlugin', () => {
         },
       });
 
-      instance.addDependency(pkg1);
+      instance.addDependency(pkg1, self);
       instance.scanThirdParties();
 
       verifyFileWithEncoding(file, encoding, done, (content) => {
@@ -1087,6 +1144,7 @@ describe('LicensePlugin', () => {
     });
 
     it('should not export private dependencies by default', (done) => {
+      const self = false;
       const file = path.join(tmpDir.name, 'third-party.txt');
       const instance = licensePlugin({
         thirdParty: {
@@ -1094,11 +1152,13 @@ describe('LicensePlugin', () => {
         },
       });
 
-      instance.addDependency(pkg1);
-      instance.addDependency({
+      const privateDependency = {
         ...pkg2,
         private: true,
-      });
+      };
+
+      instance.addDependency(pkg1, self);
+      instance.addDependency(privateDependency, self);
 
       instance.scanThirdParties();
 
@@ -1107,20 +1167,23 @@ describe('LicensePlugin', () => {
       });
     });
 
-    it('should export private dependencies to output file if enabled', (done) => {
+    it('should not export private dependencies by default but include self dependency', (done) => {
+      const self = false;
       const file = path.join(tmpDir.name, 'third-party.txt');
       const instance = licensePlugin({
         thirdParty: {
+          includeSelf: true,
           output: file,
-          includePrivate: true,
         },
       });
 
-      instance.addDependency(pkg1);
-      instance.addDependency({
+      const privateSelfDependency = {
         ...pkg2,
         private: true,
-      });
+      };
+
+      instance.addDependency(pkg1, self);
+      instance.addDependency(privateSelfDependency, true);
 
       instance.scanThirdParties();
 
@@ -1144,7 +1207,47 @@ describe('LicensePlugin', () => {
       });
     });
 
+    it('should export private dependencies to output file if enabled', (done) => {
+      const self = false;
+      const file = path.join(tmpDir.name, 'third-party.txt');
+      const instance = licensePlugin({
+        thirdParty: {
+          output: file,
+          includePrivate: true,
+        },
+      });
+
+      const privateDependency = {
+        ...pkg2,
+        private: true,
+      };
+
+      instance.addDependency(pkg1, self);
+      instance.addDependency(privateDependency, self);
+      instance.scanThirdParties();
+
+      verifyFile(file, done, (content) => {
+        expect(content).toEqual(join([
+          'Name: foo',
+          'Version: 1.0.0',
+          'License: MIT',
+          'Private: false',
+          'Description: Foo Package',
+          'Author: Mickael Jeanroy <mickael.jeanroy@gmail.com>',
+          '',
+          '---',
+          '',
+          'Name: bar',
+          'Version: 2.0.0',
+          'License: Apache 2.0',
+          'Private: true',
+          'Description: Bar Package',
+        ]));
+      });
+    });
+
     it('should export list of dependencies to output file using given template', (done) => {
+      const self = false;
       const file = path.join(tmpDir.name, 'third-party.txt');
       const template =
         '<% _.forEach(dependencies, function (dependency) {%>' +
@@ -1160,7 +1263,7 @@ describe('LicensePlugin', () => {
         },
       });
 
-      instance.addDependency(pkg1);
+      instance.addDependency(pkg1, self);
       instance.scanThirdParties();
 
       verifyFile(file, done, (content) => {
@@ -1169,6 +1272,7 @@ describe('LicensePlugin', () => {
     });
 
     it('should export list of dependencies to output JSON file using given template', (done) => {
+      const self = false;
       const file = path.join(tmpDir.name, 'third-party.json');
       const template = jasmine.createSpy('template').and.callFake((dependencies) => JSON.stringify(dependencies));
       const instance = licensePlugin({
@@ -1180,7 +1284,7 @@ describe('LicensePlugin', () => {
         },
       });
 
-      instance.addDependency(pkg1);
+      instance.addDependency(pkg1, self);
       instance.scanThirdParties();
 
       verifyFile(file, done, (content) => {
@@ -1192,6 +1296,7 @@ describe('LicensePlugin', () => {
     });
 
     it('should export list of dependencies to output file using given template function', (done) => {
+      const self = false;
       const file = path.join(tmpDir.name, 'third-party.txt');
       const template = jasmine.createSpy('template').and.callFake((dependencies) => (
         dependencies.map((dependency) => `${dependency.name} => ${dependency.version} (${dependency.license})`).join('\n')
@@ -1206,7 +1311,7 @@ describe('LicensePlugin', () => {
         },
       });
 
-      instance.addDependency(pkg1);
+      instance.addDependency(pkg1, self);
       instance.scanThirdParties();
 
       verifyFile(file, done, (content) => {
@@ -1216,32 +1321,37 @@ describe('LicensePlugin', () => {
     });
 
     it('should not try to export dependencies without output configuration', () => {
+      const self = false;
       const writeFileSync = spyOn(fs, 'writeFileSync').and.callThrough();
       const instance = licensePlugin();
 
-      instance.addDependency(pkg1);
-      instance.addDependency(pkg2);
+      instance.addDependency(pkg1, self);
+      instance.addDependency(pkg2, self);
       instance.scanThirdParties();
 
       expect(writeFileSync).not.toHaveBeenCalled();
     });
 
     it('should export list of non-private dependencies to thirdParty function', () => {
+      const self = false;
       const thirdParty = jasmine.createSpy('output');
       const instance = licensePlugin({
         thirdParty,
       });
 
-      instance.addDependency(pkg1);
-      instance.addDependency({
+      const privateDependency = {
         ...pkg2,
         private: true,
-      });
+      };
+
+      instance.addDependency(pkg1, self);
+      instance.addDependency(privateDependency, self);
 
       instance.scanThirdParties();
 
       expect(thirdParty).toHaveBeenCalledWith([
         {
+          self,
           name: 'foo',
           version: '1.0.0',
           description: 'Foo Package',
@@ -1263,6 +1373,7 @@ describe('LicensePlugin', () => {
     });
 
     it('should export list of non-private dependencies to output function', () => {
+      const self = false;
       const output = jasmine.createSpy('output');
       const instance = licensePlugin({
         thirdParty: {
@@ -1270,16 +1381,19 @@ describe('LicensePlugin', () => {
         },
       });
 
-      instance.addDependency(pkg1);
-      instance.addDependency({
+      const privateDependency = {
         ...pkg2,
         private: true,
-      });
+      };
+
+      instance.addDependency(pkg1, self);
+      instance.addDependency(privateDependency, self);
 
       instance.scanThirdParties();
 
       expect(output).toHaveBeenCalledWith([
         {
+          self,
           name: 'foo',
           version: '1.0.0',
           description: 'Foo Package',
@@ -1301,6 +1415,7 @@ describe('LicensePlugin', () => {
     });
 
     it('should export list of dependencies to output function including private if enabled', () => {
+      const self = false;
       const output = jasmine.createSpy('output');
       const includePrivate = true;
       const instance = licensePlugin({
@@ -1310,16 +1425,19 @@ describe('LicensePlugin', () => {
         },
       });
 
-      instance.addDependency(pkg1);
-      instance.addDependency({
+      const privateDependency = {
         ...pkg2,
         private: true,
-      });
+      };
+
+      instance.addDependency(pkg1, self);
+      instance.addDependency(privateDependency, self);
 
       instance.scanThirdParties();
 
       expect(output).toHaveBeenCalledWith([
         {
+          self,
           name: 'foo',
           version: '1.0.0',
           description: 'Foo Package',
@@ -1338,6 +1456,7 @@ describe('LicensePlugin', () => {
           },
         },
         {
+          self,
           name: 'bar',
           version: '2.0.0',
           description: 'Bar Package',
@@ -1413,6 +1532,7 @@ describe('LicensePlugin', () => {
     });
 
     it('should not warn without any license violations', () => {
+      const self = false;
       const allow = '(Apache-2.0 OR MIT)';
       const instance = licensePlugin({
         thirdParty: {
@@ -1420,14 +1540,14 @@ describe('LicensePlugin', () => {
         },
       });
 
-      instance.addDependency(apache2Dependency);
-      instance.addDependency(mitDependency);
+      instance.addDependency(apache2Dependency, self);
+      instance.addDependency(mitDependency, self);
       instance.scanThirdParties();
 
       expect(warn).not.toHaveBeenCalled();
     });
 
-    it('should warn for license violations', () => {
+    it('should not warn for license violations on the self package', () => {
       const allow = 'MIT';
       const instance = licensePlugin({
         thirdParty: {
@@ -1435,14 +1555,35 @@ describe('LicensePlugin', () => {
         },
       });
 
-      instance.addDependency(apache2Dependency);
-      instance.addDependency(mitDependency);
+      // Self dependency
+      instance.addDependency(apache2Dependency, true);
+
+      // 3rd-party dependency
+      instance.addDependency(mitDependency, false);
+
+      instance.scanThirdParties();
+
+      expect(warn).not.toHaveBeenCalled();
+    });
+
+    it('should warn for license violations', () => {
+      const self = false;
+      const allow = 'MIT';
+      const instance = licensePlugin({
+        thirdParty: {
+          allow,
+        },
+      });
+
+      instance.addDependency(apache2Dependency, self);
+      instance.addDependency(mitDependency, self);
       instance.scanThirdParties();
 
       verifyWarnAboutApache2License();
     });
 
     it('should warn for unlicensed dependencies', () => {
+      const self = false;
       const allow = '(Apache-2.0 OR MIT)';
       const instance = licensePlugin({
         thirdParty: {
@@ -1450,14 +1591,15 @@ describe('LicensePlugin', () => {
         },
       });
 
-      instance.addDependency(apache2Dependency);
-      instance.addDependency(unlicensedDependency);
+      instance.addDependency(apache2Dependency, self);
+      instance.addDependency(unlicensedDependency, self);
       instance.scanThirdParties();
 
       verifyWarnAboutUnlicensedLicense();
     });
 
     it('should warn for invalid dependencies using validator function', () => {
+      const self = false;
       const allow = jasmine.createSpy('allow').and.callFake((dependency) => dependency.license === 'MIT');
       const instance = licensePlugin({
         thirdParty: {
@@ -1465,14 +1607,15 @@ describe('LicensePlugin', () => {
         },
       });
 
-      instance.addDependency(apache2Dependency);
-      instance.addDependency(mitDependency);
+      instance.addDependency(apache2Dependency, self);
+      instance.addDependency(mitDependency, self);
       instance.scanThirdParties();
 
       verifyWarnAboutApache2License();
     });
 
     it('should check for invalid dependencies using object definition option', () => {
+      const self = false;
       const test = 'MIT';
       const instance = licensePlugin({
         thirdParty: {
@@ -1482,14 +1625,15 @@ describe('LicensePlugin', () => {
         },
       });
 
-      instance.addDependency(apache2Dependency);
-      instance.addDependency(mitDependency);
+      instance.addDependency(apache2Dependency, self);
+      instance.addDependency(mitDependency, self);
       instance.scanThirdParties();
 
       verifyWarnAboutApache2License();
     });
 
     it('should check for invalid dependencies using object definition option and validator function', () => {
+      const self = false;
       const test = jasmine.createSpy('allow').and.callFake((dependency) => dependency.license === 'MIT');
       const instance = licensePlugin({
         thirdParty: {
@@ -1499,14 +1643,15 @@ describe('LicensePlugin', () => {
         },
       });
 
-      instance.addDependency(apache2Dependency);
-      instance.addDependency(mitDependency);
+      instance.addDependency(apache2Dependency, self);
+      instance.addDependency(mitDependency, self);
       instance.scanThirdParties();
 
       verifyWarnAboutApache2License();
     });
 
     it('should fail with unlicensed dependencies if enabled', () => {
+      const self = false;
       const instance = licensePlugin({
         thirdParty: {
           allow: {
@@ -1517,9 +1662,9 @@ describe('LicensePlugin', () => {
         },
       });
 
-      instance.addDependency(unlicensedDependency);
-      instance.addDependency(apache2Dependency);
-      instance.addDependency(mitDependency);
+      instance.addDependency(unlicensedDependency, self);
+      instance.addDependency(apache2Dependency, self);
+      instance.addDependency(mitDependency, self);
 
       expect(() => instance.scanThirdParties()).toThrow(new Error(
           'Dependency "baz" does not specify any license.',
@@ -1527,6 +1672,7 @@ describe('LicensePlugin', () => {
     });
 
     it('should fail with license violation if enabled', () => {
+      const self = false;
       const instance = licensePlugin({
         thirdParty: {
           allow: {
@@ -1537,9 +1683,9 @@ describe('LicensePlugin', () => {
         },
       });
 
-      instance.addDependency(unlicensedDependency);
-      instance.addDependency(apache2Dependency);
-      instance.addDependency(mitDependency);
+      instance.addDependency(unlicensedDependency, self);
+      instance.addDependency(apache2Dependency, self);
+      instance.addDependency(mitDependency, self);
 
       expect(() => instance.scanThirdParties()).toThrow(new Error(
           'Dependency "foo" has a license (Apache-2.0) which is not compatible with requirement, looks like a license violation to fix.',

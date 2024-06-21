@@ -27,6 +27,7 @@ import {join} from './utils/join.js';
 
 describe('Dependency', () => {
   it('should extract package fields', () => {
+    const self = false;
     const pkg = {
       name: 'foo',
       version: '1.0.0',
@@ -52,9 +53,10 @@ describe('Dependency', () => {
       ],
     };
 
-    const dependency = new Dependency(pkg);
+    const dependency = new Dependency(pkg, self);
 
     expect(dependency).toEqual({
+      self: false,
       name: 'foo',
       version: '1.0.0',
       license: 'MIT',
@@ -89,6 +91,7 @@ describe('Dependency', () => {
   });
 
   it('should parse author field', () => {
+    const self = false;
     const pkg = {
       name: 'foo',
       version: '1.0.0',
@@ -97,7 +100,7 @@ describe('Dependency', () => {
       author: 'Mickael Jeanroy <mickael.jeanroy@gmail.com> (https://mjeanroy.com)',
     };
 
-    const dependency = new Dependency(pkg);
+    const dependency = new Dependency(pkg, self);
 
     expect(dependency.author).toEqual({
       name: 'Mickael Jeanroy',
@@ -107,6 +110,7 @@ describe('Dependency', () => {
   });
 
   it('should parse contributors field', () => {
+    const self = false;
     const pkg = {
       name: 'foo',
       version: '1.0.0',
@@ -117,7 +121,7 @@ describe('Dependency', () => {
       ],
     };
 
-    const dependency = new Dependency(pkg);
+    const dependency = new Dependency(pkg, self);
 
     expect(dependency.contributors.length).toBe(1);
     expect(dependency.contributors[0]).toEqual({
@@ -128,6 +132,7 @@ describe('Dependency', () => {
   });
 
   it('should parse deprecated licenses field', () => {
+    const self = false;
     const pkg = {
       name: 'foo',
       version: '1.0.0',
@@ -138,20 +143,21 @@ describe('Dependency', () => {
       ],
     };
 
-    const dependency = new Dependency(pkg);
+    const dependency = new Dependency(pkg, self);
 
     expect(dependency.licenses).not.toBeDefined();
     expect(dependency.license).toBe('(MIT OR Apache 2.0)');
   });
 
   it('should format dependency with name, version, and license fields', () => {
+    const self = false;
     const pkg = {
       name: 'foo',
       version: '1.0.0',
       license: 'MIT',
     };
 
-    const dependency = new Dependency(pkg);
+    const dependency = new Dependency(pkg, self);
 
     expect(dependency.text()).toEqual(join([
       `Name: ${pkg.name}`,
@@ -162,6 +168,7 @@ describe('Dependency', () => {
   });
 
   it('should format dependency with optional description fied', () => {
+    const self = false;
     const pkg = {
       name: 'foo',
       version: '1.0.0',
@@ -169,7 +176,7 @@ describe('Dependency', () => {
       description: 'Desc',
     };
 
-    const dependency = new Dependency(pkg);
+    const dependency = new Dependency(pkg, self);
 
     expect(dependency.text()).toEqual(join([
       `Name: ${pkg.name}`,
@@ -181,6 +188,7 @@ describe('Dependency', () => {
   });
 
   it('should format dependency with optional author field', () => {
+    const self = false;
     const pkg = {
       name: 'foo',
       version: '1.0.0',
@@ -191,7 +199,7 @@ describe('Dependency', () => {
       },
     };
 
-    const dependency = new Dependency(pkg);
+    const dependency = new Dependency(pkg, self);
 
     expect(dependency.text()).toEqual(join([
       `Name: ${pkg.name}`,
@@ -203,6 +211,7 @@ describe('Dependency', () => {
   });
 
   it('should format dependency with optional repository field', () => {
+    const self = false;
     const pkg = {
       name: 'foo',
       version: '1.0.0',
@@ -213,7 +222,7 @@ describe('Dependency', () => {
       },
     };
 
-    const dependency = new Dependency(pkg);
+    const dependency = new Dependency(pkg, self);
 
     expect(dependency.text()).toEqual(join([
       `Name: ${pkg.name}`,
@@ -225,6 +234,7 @@ describe('Dependency', () => {
   });
 
   it('should format dependency with optional homepage field', () => {
+    const self = false;
     const pkg = {
       name: 'foo',
       version: '1.0.0',
@@ -232,7 +242,7 @@ describe('Dependency', () => {
       homepage: 'https://github.com/mjeanroy',
     };
 
-    const dependency = new Dependency(pkg);
+    const dependency = new Dependency(pkg, self);
 
     expect(dependency.text()).toEqual(join([
       `Name: ${pkg.name}`,
@@ -244,6 +254,7 @@ describe('Dependency', () => {
   });
 
   it('should format dependency with optional contributors field', () => {
+    const self = false;
     const pkg = {
       name: 'foo',
       version: '1.0.0',
@@ -254,7 +265,7 @@ describe('Dependency', () => {
       ],
     };
 
-    const dependency = new Dependency(pkg);
+    const dependency = new Dependency(pkg, self);
 
     expect(dependency.text()).toEqual(join([
       `Name: ${pkg.name}`,
@@ -268,6 +279,7 @@ describe('Dependency', () => {
   });
 
   it('should format dependency with all optional fields', () => {
+    const self = false;
     const pkg = {
       name: 'foo',
       version: '1.0.0',
@@ -282,7 +294,7 @@ describe('Dependency', () => {
       ],
     };
 
-    const dependency = new Dependency(pkg);
+    const dependency = new Dependency(pkg, self);
 
     expect(dependency.text()).toEqual(join([
       `Name: ${pkg.name}`,
@@ -300,6 +312,7 @@ describe('Dependency', () => {
   });
 
   it('should format dependency with license text', () => {
+    const self = false;
     const pkg = {
       name: 'foo',
       version: '1.0.0',
@@ -326,7 +339,7 @@ describe('Dependency', () => {
       ],
     };
 
-    const dependency = new Dependency(pkg);
+    const dependency = new Dependency(pkg, self);
 
     expect(dependency.text()).toEqual(join([
       `Name: ${pkg.name}`,
@@ -348,6 +361,7 @@ describe('Dependency', () => {
   });
 
   it('should format dependency with notice text', () => {
+    const self = false;
     const pkg = {
       name: 'foo',
       version: '1.0.0',
@@ -358,7 +372,7 @@ describe('Dependency', () => {
       homepage: 'https://github.com/mjeanroy',
     };
 
-    const dependency = new Dependency(pkg);
+    const dependency = new Dependency(pkg, self);
 
     expect(dependency.text()).toEqual(join([
       `Name: ${pkg.name}`,
