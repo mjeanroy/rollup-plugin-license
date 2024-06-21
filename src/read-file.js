@@ -25,8 +25,17 @@
 import path from 'path';
 import fs from 'fs';
 import _ from 'lodash';
-import glob from 'glob';
+import { fdir } from 'fdir';
 
+const pathsMatch = (target) => {
+  const targetLower = target.toLowerCase();
+
+  return (p) => {
+    const pLower = p.toLowerCase();
+    return pLower === targetLower ||
+      pLower.slice(0, pLower.lastIndexOf('.')) === targetLower;
+  };
+};
 /**
  * Find file and returns its content if file exists.
  *
@@ -37,49 +46,27 @@ import glob from 'glob';
  */
 export function readFile(dir, cwd, names) {
   const inputs = _.castArray(names);
+  // eslint-disable-next-line new-cap
+  const finder = new fdir();
 
   for (let i = 0; i < inputs.length; ++i) {
-    const input = generatePattern(inputs[i]);
+    const input = inputs[i];
     const absolutePath = path.join(dir, input);
     const relativeToCwd = path.relative(cwd, absolutePath);
 
-    const findings = glob.sync(relativeToCwd, { cwd });
-    for (let j = 0; j < findings.length; ++j) {
-      const file = path.join(cwd, findings[j]);
-      if (isFile(file)) {
-        return fs.readFileSync(file, 'utf-8');
-      }
+    const findings = finder
+      .withRelativePaths()
+      .filter(pathsMatch(relativeToCwd))
+      .crawl(cwd)
+      .sync();
+
+    const firstPath = findings[0];
+
+    if (firstPath) {
+      const file = path.join(cwd, firstPath);
+      return fs.readFileSync(file, 'utf-8');
     }
   }
 
   return null;
-}
-
-/**
- * Check that given file exists, and is a real file.
- *
- * @param {string} file File path.
- * @returns {boolean} `true` if `file` is a file, `false` otherwise.
- */
-function isFile(file) {
-  return !!fs.existsSync(file) && !!fs.lstatSync(file).isFile();
-}
-
-/**
- * Generate glob pattern for given input.
- *
- * @param {string} input Given input.
- * @returns {string} Glob pattern.
- */
-function generatePattern(input) {
-  let pattern = '';
-
-  for (let i = 0; i < input.length; ++i) {
-    const c = input[i];
-    const up = c.toUpperCase();
-    const low = c.toLowerCase();
-    pattern += up !== low ? `[${low}${up}]` : low;
-  }
-
-  return `${pattern}*`;
 }
