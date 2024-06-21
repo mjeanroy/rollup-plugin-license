@@ -348,6 +348,8 @@ license({
 
 ## Changelogs
 
+- 3.4.1
+  - Add the license for the package itself without having to specify `includePrivate` flag (see [comment](https://github.com/mjeanroy/rollup-plugin-license/issues/1685#issuecomment-2110103508)).
 - 3.4.0
   - Allow adding the license for the package itself into the thirdParty output [#1685](https://github.com/mjeanroy/rollup-plugin-license/issues/1685)
   - Dependency upgrades
