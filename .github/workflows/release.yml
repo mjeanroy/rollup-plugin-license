@@ -61,5 +61,5 @@ jobs:
           git tag --sort=-creatordate
       - name: Git push
         run: |
-          git push origin master
+          git push origin ${{ github.ref_name }} 
           git push --tags
