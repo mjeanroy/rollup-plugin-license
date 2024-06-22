@@ -348,6 +348,10 @@ license({
 
 ## Changelogs
 
+- 3.5.0
+  - Remove `mkidrp` dependency ([#1743](https://github.com/mjeanroy/rollup-plugin-license/pull/1743))
+  - Replace `glob` with `fdir` dependency ([#1742](https://github.com/mjeanroy/rollup-plugin-license/pull/1742))
+  - Dependency upgrades
 - 3.4.1
   - Add the license for the package itself without having to specify `includePrivate` flag (see [comment](https://github.com/mjeanroy/rollup-plugin-license/issues/1685#issuecomment-2110103508)).
 - 3.4.0
