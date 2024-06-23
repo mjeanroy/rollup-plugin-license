@@ -23,30 +23,53 @@
  */
 
 import path from 'path';
+import fs from 'fs';
+import tmp from 'tmp';
 import { readFile } from '../src/read-file';
 
 describe('readFile', () => {
+  let tmpDir;
+
+  beforeEach(() => {
+    tmpDir = tmp.dirSync({
+      unsafeCleanup: true,
+    });
+  });
+
+  afterEach(() => {
+    tmpDir.removeCallback();
+  });
+
   it('should read file using exact name', () => {
     const dir = path.join(__dirname, 'fixtures', 'fake-package-2');
-    const cwd = __dirname;
     const name = 'LICENSE.md';
-    const content = readFile(dir, cwd, name);
+    const content = readFile(dir, name);
+    expect(content).toEqual('LICENSE.md file');
+  });
+
+  it('should read file using exact name following symlink', () => {
+    const dirName = 'fake-package-2';
+    const dir = path.join(__dirname, 'fixtures', dirName);
+    const dirLink = path.join(tmpDir.name, `link-to-${dirName}`);
+
+    fs.symlinkSync(dir, dirLink, 'dir');
+
+    const name = 'LICENSE.md';
+    const content = readFile(dirLink, name);
     expect(content).toEqual('LICENSE.md file');
   });
 
   it('should read file using non matching case name', () => {
     const dir = path.join(__dirname, 'fixtures', 'fake-package-2');
-    const cwd = __dirname;
     const name = 'license.md';
-    const content = readFile(dir, cwd, name);
+    const content = readFile(dir, name);
     expect(content).toEqual('LICENSE.md file');
   });
 
   it('should read file using name without extension', () => {
     const dir = path.join(__dirname, 'fixtures', 'fake-package-2');
-    const cwd = __dirname;
     const name = 'license';
-    const content = readFile(dir, cwd, name);
+    const content = readFile(dir, name);
     expect(content).toEqual('LICENSE.md file');
   });
 });

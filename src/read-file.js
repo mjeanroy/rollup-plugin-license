@@ -40,11 +40,10 @@ const pathsMatch = (target) => {
  * Find file and returns its content if file exists.
  *
  * @param {string} dir File directory.
- * @param {string} cwd Working directory.
  * @param {string|Array<string>} names Potential filenames.
  * @returns {string|null} File content, or `null` if file does not exist.
  */
-export function readFile(dir, cwd, names) {
+export function readFile(dir, names) {
   const inputs = _.castArray(names);
   // eslint-disable-next-line new-cap
   const finder = new fdir();
@@ -52,18 +51,19 @@ export function readFile(dir, cwd, names) {
   for (let i = 0; i < inputs.length; ++i) {
     const input = inputs[i];
     const absolutePath = path.join(dir, input);
-    const relativeToCwd = path.relative(cwd, absolutePath);
+    const relativeToDir = path.relative(dir, absolutePath);
 
     const findings = finder
       .withRelativePaths()
-      .filter(pathsMatch(relativeToCwd))
-      .crawl(cwd)
+      .withSymlinks()
+      .withMaxDepth(input.split(path.sep).length)
+      .filter(pathsMatch(relativeToDir))
+      .crawl(dir)
       .sync();
 
     const firstPath = findings[0];
-
     if (firstPath) {
-      const file = path.join(cwd, firstPath);
+      const file = path.join(dir, firstPath);
       return fs.readFileSync(file, 'utf-8');
     }
   }

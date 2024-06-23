@@ -202,15 +202,12 @@ class LicensePlugin {
           // We found it!
           pkg = pkgJson;
 
-          // Read license & notice files, if it exists.
-          const cwd = this._cwd || process.cwd();
-
-          const licenseText = readFile(dir, cwd, ['license', 'licence']);
+          const licenseText = readFile(dir, ['license', 'licence']);
           if (licenseText) {
             pkg.licenseText = licenseText;
           }
 
-          const noticeText = readFile(dir, cwd, 'notice');
+          const noticeText = readFile(dir, 'notice');
           if (noticeText) {
             pkg.noticeText = noticeText;
           }
