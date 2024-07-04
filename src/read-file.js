@@ -27,15 +27,6 @@ import fs from 'fs';
 import _ from 'lodash';
 import { fdir } from 'fdir';
 
-const pathsMatch = (target) => {
-  const targetLower = target.toLowerCase();
-
-  return (p) => {
-    const pLower = p.toLowerCase();
-    return pLower === targetLower ||
-      pLower.slice(0, pLower.lastIndexOf('.')) === targetLower;
-  };
-};
 /**
  * Find file and returns its content if file exists.
  *
@@ -69,4 +60,43 @@ export function readFile(dir, names) {
   }
 
   return null;
+}
+
+/**
+ * Returns a predicate function that returns `true` if the given path matches the target path.
+ *
+ * @param {string} target Target path.
+ * @returns {function(*): boolean} Predicate function.
+ */
+function pathsMatch(target) {
+  const targetRegExp = generatePattern(target);
+  return (p) => (
+    targetRegExp.test(p)
+  );
+}
+
+/**
+ * Generate a pattern where all regexp special characters are escaped.
+ * @param {string} input Input.
+ * @returns {string} Escaped input.
+ */
+function escapeRegExp(input) {
+  return input.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, '\\$&');
+}
+
+const FILE_FORBIDDEN_CHARACTERS = ['#', '%', '&', '*', ':', '<', '>', '?', '/', path.sep, '{', '|', '}'].map((c) => (
+  escapeRegExp(c)
+));
+
+const FILE_SUFFIX_PTN = `[^${FILE_FORBIDDEN_CHARACTERS.join('')}]`;
+
+/**
+ * Generate filename pattern for the given input: the generated regexp will match any file
+ * starting with `input` (case insensitively).
+ *
+ * @param {string} input Input.
+ * @returns {RegExp} Generated pattern.
+ */
+function generatePattern(input) {
+  return new RegExp(`^${input}(${FILE_SUFFIX_PTN})*$`, 'i');
 }
