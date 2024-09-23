@@ -36,15 +36,14 @@ import { fdir } from 'fdir';
  */
 export function readFile(dir, names) {
   const inputs = _.castArray(names);
-  // eslint-disable-next-line new-cap
-  const finder = new fdir();
 
   for (let i = 0; i < inputs.length; ++i) {
     const input = inputs[i];
     const absolutePath = path.join(dir, input);
     const relativeToDir = path.relative(dir, absolutePath);
 
-    const findings = finder
+    // eslint-disable-next-line new-cap
+    const findings = new fdir()
       .withRelativePaths()
       .withSymlinks()
       .withMaxDepth(input.split(path.sep).length)

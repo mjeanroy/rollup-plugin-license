@@ -458,6 +458,21 @@ describe('LicensePlugin', () => {
         licenseText: 'LICENSE-MIT file',
       });
     });
+
+    it('should load pkg including license text from LICENCE file', () => {
+      const id = path.join(__dirname, 'fixtures', 'fake-package-13', 'src', 'index.js');
+
+      plugin.scanDependency(id);
+
+      expect(addDependency).toHaveBeenCalled();
+      expect(plugin._dependencies.size).toBe(1);
+      expect(plugin._dependencies.has('fake-package')).toBe(true);
+      expect(plugin._dependencies.get('fake-package')).toEqual({
+        ...fakePackage,
+        self: false,
+        licenseText: 'LICENCE.md file',
+      });
+    });
   });
 
   describe('when adding dependencies', () => {
