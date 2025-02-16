@@ -44,7 +44,7 @@ jobs:
       - uses: actions/setup-node@v4.2.0
         name: Set up NodeJS
         with:
-          node-version: 18
+          node-version: 22
       - name: Configure Git User
         run: |
           git config user.email "mickael.jeanroy@gmail.com"
