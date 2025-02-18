@@ -348,6 +348,9 @@ license({
 
 ## Changelogs
 
+- 3.6.0
+  - Use semver versioning for the `fdir` dependency ([#1895](https://github.com/mjeanroy/rollup-plugin-license/pull/1895))
+  - Dependency upgrades
 - 3.5.0
   - Remove `mkidrp` dependency ([#1743](https://github.com/mjeanroy/rollup-plugin-license/pull/1743))
   - Replace `glob` with `fdir` dependency ([#1742](https://github.com/mjeanroy/rollup-plugin-license/pull/1742))
