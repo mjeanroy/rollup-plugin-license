@@ -105,7 +105,7 @@ export class Dependency {
     }
 
     if (this.licenseText) {
-      lines.push('License Copyright:');
+      lines.push('License Text:');
       lines.push('===');
       lines.push('');
       lines.push(this.licenseText);
