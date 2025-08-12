@@ -74,7 +74,7 @@
     "rollup": "4.46.2",
     "rollup-plugin-prettier": "4.1.2",
     "rollup-plugin-strip-banner": "3.1.0",
-    "tmp": "0.2.4",
+    "tmp": "0.2.5",
     "typescript": "5.9.2"
   },
   "engines": {
