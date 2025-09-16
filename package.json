@@ -62,7 +62,7 @@
     "eslint-config-airbnb-base": "15.0.0",
     "eslint-plugin-import": "2.32.0",
     "fancy-log": "2.0.0",
-    "fs-extra": "11.3.1",
+    "fs-extra": "11.3.2",
     "globalthis": "1.0.4",
     "gulp": "5.0.1",
     "gulp-conventional-changelog": "5.0.0",
