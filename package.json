@@ -67,7 +67,7 @@
     "gulp": "5.0.1",
     "gulp-conventional-changelog": "5.0.0",
     "gulp-jasmine": "4.0.0",
-    "jasmine": "3.10.0",
+    "jasmine": "6.0.0",
     "jasmine-core": "3.10.1",
     "prettier": "3.7.4",
     "rimraf": "6.1.2",
