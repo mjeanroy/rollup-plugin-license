@@ -67,5 +67,3 @@ jobs:
       - name: Publish
         if: inputs.dry_run == false
         run: npm publish
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
