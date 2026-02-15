@@ -32,7 +32,7 @@ import virtual from '@rollup/plugin-virtual';
 import licensePlugin from '../../src/index';
 import { join } from '../utils/join';
 
-describe('rollup-plugin-license', () => {
+describe('[it] rollup-plugin-license', () => {
   let warn;
   let tmpDir;
 
