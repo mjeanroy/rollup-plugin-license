@@ -22,8 +22,8 @@
  * SOFTWARE.
  */
 
-import path from 'path';
-import fs from 'fs';
+import path from 'node:path';
+import fs from 'node:fs/promises';
 import tmp from 'tmp';
 import { readFile } from '../src/read-file';
 
@@ -47,12 +47,12 @@ describe('readFile', () => {
     expect(content).toEqual('LICENSE.md file');
   });
 
-  it('should read file using exact name following symlink', () => {
+  it('should read file using exact name following symlink', async () => {
     const dirName = 'fake-package-2';
     const dir = path.join(__dirname, 'fixtures', dirName);
     const dirLink = path.join(tmpDir.name, `link-to-${dirName}`);
 
-    fs.symlinkSync(dir, dirLink, 'dir');
+    await fs.symlink(dir, dirLink, 'dir');
 
     const name = 'LICENSE.md';
     const content = readFile(dirLink, name);

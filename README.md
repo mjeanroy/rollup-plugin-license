@@ -17,7 +17,7 @@ Install the plugin with NPM:
 Then add it to your rollup configuration:
 
 ```javascript
-const path = require('path');
+const path = require('node:path');
 const license = require('rollup-plugin-license');
 
 module.exports = {
@@ -163,7 +163,7 @@ Until version 0.10.0, banner file was defined as:
 
 
 ```javascript
-const path = require('path');
+const path = require('node:path');
 const license = require('rollup-plugin-license');
 
 module.exports = {
@@ -181,7 +181,7 @@ module.exports = {
 This format has been deprecated with version 0.11.0 and removed with version 1.0.O, and the banner file should be defined inside `banner.content` entry:
 
 ```javascript
-const path = require('path');
+const path = require('node:path');
 const license = require('rollup-plugin-license');
 
 module.exports = {

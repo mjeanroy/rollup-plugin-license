@@ -24,8 +24,8 @@
 
 /* eslint-disable import/no-dynamic-require, global-require */
 
-import fs from 'fs/promises';
-import path from 'path';
+import fs from 'node:fs/promises';
+import path from 'node:path';
 import tmp from 'tmp';
 import moment from 'moment';
 import { licensePlugin } from '../src/license-plugin';

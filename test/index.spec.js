@@ -22,8 +22,8 @@
  * SOFTWARE.
  */
 
-import path from 'path';
-import fs from 'fs/promises';
+import path from 'node:path';
+import fs from 'node:fs/promises';
 import tmp from 'tmp';
 import rollupPluginLicense from '../src/index';
 import { join } from './utils/join';

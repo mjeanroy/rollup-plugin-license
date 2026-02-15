@@ -22,9 +22,9 @@
  * SOFTWARE.
  */
 
-import path from 'path';
+import path from 'node:path';
 import tmp from 'tmp';
-import fs from 'fs/promises';
+import fs from 'node:fs/promises';
 import * as rollup from 'rollup';
 import nodeResolve from '@rollup/plugin-node-resolve';
 import commonjs from '@rollup/plugin-commonjs';
