@@ -63,7 +63,7 @@ jobs:
       - name: npm install
         run: npm install --no-audit --no-fund
       - name: Publish (test)
-        run: npm publish --dry-run
+        run: NODE_AUTH_TOKEN="" npm publish --dry-run
       - name: Publish
         if: inputs.dry_run == false
-        run: npm publish
+        run: NODE_AUTH_TOKEN="" npm publish
