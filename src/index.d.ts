@@ -235,7 +235,7 @@ type ThirdPartyOutputTemplate = string;
 /**
  * Template function.
  */
-type ThirdPartyOutputTemplateFn = (dependencies: Dependency[]) => void;
+type ThirdPartyOutputTemplateFn = (dependencies: Dependency[]) => string;
 
 /**
  * Third Party output options object.
