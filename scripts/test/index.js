@@ -24,21 +24,43 @@
 
 const path = require('node:path');
 const gulp = require('gulp');
-const jasmine = require('gulp-jasmine');
+const Jasmine = require('jasmine');
 const config = require('../config');
 
+function loadJasmine() {
+  const runner = new Jasmine();
+
+  runner.loadConfig({
+    failSpecWithNoExpectations: false,
+    jsLoader: 'require',
+    spec_dir: path.basename(config.test),
+    spec_files: [
+      '**/*-spec.js',
+      '**/*.spec.js',
+    ],
+  });
+
+  runner.exitOnCompletion = false;
+  return runner.execute.bind(runner);
+}
+
+function deleteRequireCache() {
+  Object.keys(require.cache).forEach((id) => {
+    delete require.cache[id];
+  });
+}
+
 /**
- * Run unit tests and exit.
+ * Run unit test suite and exit.
  *
- * @return {WritableStream} The gulp pipe stream.
+ * @return {Promise} A promise resolved when the test suite succeeds, rejected otherwise.
  */
 function test() {
-  const src = [
-    path.join(config.test, 'base.spec.js'),
-    path.join(config.test, '**', '*.spec.js'),
-  ];
-
-  return gulp.src(src).pipe(jasmine());
+  return loadJasmine()().then((result) => {
+    if (result.overallStatus !== 'passed') {
+      throw new Error('JasmineError');
+    }
+  });
 }
 
 /**
@@ -48,8 +70,19 @@ function test() {
  * @return {void}
  */
 function tdd(done) {
-  gulp.watch(path.join(config.src, '**', '*.js'), test);
-  gulp.watch(path.join(config.test, '**', '*.js'), test);
+  const inputs = [
+    path.join(config.src, '**', '*.js'),
+    path.join(config.test, '**', '*.js'),
+  ];
+
+  gulp.watch(inputs, () => {
+    // Usually, the require.cache is not a problem, because the process should exit after load.
+    // But in tdd mode, the process never exit.
+    // So, when it runs a second time, jasmine does not detect anything because the cache is
+    // already bloated, and jasmine does not detect any changes, or load outdated files.
+    deleteRequireCache();
+    return loadJasmine()();
+  });
 
   done();
 }
