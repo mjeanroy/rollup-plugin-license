@@ -22,8 +22,8 @@
  * SOFTWARE.
  */
 
-import fs from 'node:fs';
-import path from 'node:path';
+import fs from 'fs';
+import path from 'path';
 import _ from 'lodash';
 import moment from 'moment';
 import MagicString from 'magic-string';
