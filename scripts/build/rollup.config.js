@@ -65,9 +65,7 @@ module.exports = {
   ],
 
   external: [
-    'node:fs',
-    'node:path',
-
+    ...['fs', 'path'].flatMap((m) => [m, `node:${m}`]),
     ...Object.keys(pkg.dependencies),
     ...Object.keys(pkg.peerDependencies),
   ],
