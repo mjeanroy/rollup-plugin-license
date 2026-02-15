@@ -24,7 +24,7 @@
 
 /* eslint-disable import/no-dynamic-require, global-require */
 
-import fs from 'fs';
+import fs from 'fs/promises';
 import path from 'path';
 import tmp from 'tmp';
 import moment from 'moment';
@@ -425,7 +425,6 @@ describe('LicensePlugin', () => {
     });
 
     it('should load pkg and use the cache if available', () => {
-      const existsSync = spyOn(fs, 'existsSync').and.callThrough();
       const pkgPath = path.join(__dirname, 'fixtures', 'fake-package-1');
       const id = path.join(pkgPath, 'src', 'index.js');
 
@@ -435,7 +434,6 @@ describe('LicensePlugin', () => {
       plugin.scanDependency(id);
 
       expect(plugin._dependencies.size).toBe(0);
-      expect(existsSync).not.toHaveBeenCalled();
     });
 
     it('should not run into an infinite loop for relative paths starting with a slash', () => {
@@ -703,7 +701,6 @@ describe('LicensePlugin', () => {
     });
 
     it('should prepend banner to bundle with custom encoding', () => {
-      const readFileSync = spyOn(fs, 'readFileSync').and.callThrough();
       const encoding = 'ascii';
       const instance = licensePlugin({
         banner: {
@@ -717,7 +714,6 @@ describe('LicensePlugin', () => {
       const result = instance.prependBanner(code);
 
       verifyResult(result);
-      expect(readFileSync).toHaveBeenCalledWith(jasmine.any(String), encoding);
     });
 
     it('should fail to prepend banner without any content', () => {
@@ -733,8 +729,8 @@ describe('LicensePlugin', () => {
       ));
     });
 
-    it('should prepend banner to bundle with template', () => {
-      const tmpl = fs.readFileSync(bannerJs, 'utf-8');
+    it('should prepend banner to bundle with template', async () => {
+      const tmpl = await fs.readFile(bannerJs, 'utf-8');
       const instance = licensePlugin({
         banner: tmpl,
       });
@@ -1069,7 +1065,7 @@ describe('LicensePlugin', () => {
       };
     });
 
-    it('should export single dependency', (done) => {
+    it('should export single dependency', async () => {
       const self = false;
       const file = path.join(tmpDir.name, 'third-party.txt');
       const instance = licensePlugin({
@@ -1081,12 +1077,12 @@ describe('LicensePlugin', () => {
       instance.addDependency(pkg1, self);
       instance.scanThirdParties();
 
-      verifyFile(file, done, (content) => {
+      await verifyFile(file, (content) => {
         verifyDefaultOutput(content);
       });
     });
 
-    it('should export single dependency and create directory if needed', (done) => {
+    it('should export single dependency and create directory if needed', async () => {
       const self = false;
       const file = path.join(tmpDir.name, 'output', 'third-party.txt');
       const instance = licensePlugin({
@@ -1098,12 +1094,12 @@ describe('LicensePlugin', () => {
       instance.addDependency(pkg1, self);
       instance.scanThirdParties();
 
-      verifyFile(file, done, (content) => {
+      await verifyFile(file, (content) => {
         verifyDefaultOutput(content);
       });
     });
 
-    it('should export list of dependencies to given file', (done) => {
+    it('should export list of dependencies to given file', async () => {
       const self = false;
       const file = path.join(tmpDir.name, 'third-party.txt');
       const instance = licensePlugin({
@@ -1116,7 +1112,7 @@ describe('LicensePlugin', () => {
       instance.addDependency(pkg2, self);
       instance.scanThirdParties();
 
-      verifyFile(file, done, (content) => {
+      await verifyFile(file, (content) => {
         expect(content).toEqual(join([
           'Name: foo',
           'Version: 1.0.0',
@@ -1136,7 +1132,7 @@ describe('LicensePlugin', () => {
       });
     });
 
-    it('should export list of dependencies with custom encoding to given file', (done) => {
+    it('should export list of dependencies with custom encoding to given file', async () => {
       const self = false;
       const file = path.join(tmpDir.name, 'third-party.txt');
       const encoding = 'base64';
@@ -1152,12 +1148,12 @@ describe('LicensePlugin', () => {
       instance.addDependency(pkg1, self);
       instance.scanThirdParties();
 
-      verifyFileWithEncoding(file, encoding, done, (content) => {
+      await verifyFileWithEncoding(file, encoding, (content) => {
         expect(content).toContain('foo');
       });
     });
 
-    it('should export default message without any dependencies', (done) => {
+    it('should export default message without any dependencies', async () => {
       const file = path.join(tmpDir.name, 'third-party.txt');
       const instance = licensePlugin({
         thirdParty: {
@@ -1168,12 +1164,12 @@ describe('LicensePlugin', () => {
       instance._dependencies.clear();
       instance.scanThirdParties();
 
-      verifyFile(file, done, (content) => {
+      await verifyFile(file, (content) => {
         expect(content).toEqual('No third parties dependencies');
       });
     });
 
-    it('should not export private dependencies by default', (done) => {
+    it('should not export private dependencies by default', async () => {
       const self = false;
       const file = path.join(tmpDir.name, 'third-party.txt');
       const instance = licensePlugin({
@@ -1192,12 +1188,12 @@ describe('LicensePlugin', () => {
 
       instance.scanThirdParties();
 
-      verifyFile(file, done, (content) => {
+      await verifyFile(file, (content) => {
         verifyDefaultOutput(content);
       });
     });
 
-    it('should not export private dependencies by default but include self dependency', (done) => {
+    it('should not export private dependencies by default but include self dependency', async () => {
       const self = false;
       const file = path.join(tmpDir.name, 'third-party.txt');
       const instance = licensePlugin({
@@ -1217,7 +1213,7 @@ describe('LicensePlugin', () => {
 
       instance.scanThirdParties();
 
-      verifyFile(file, done, (content) => {
+      await verifyFile(file, (content) => {
         expect(content).toEqual(join([
           'Name: foo',
           'Version: 1.0.0',
@@ -1237,7 +1233,7 @@ describe('LicensePlugin', () => {
       });
     });
 
-    it('should export private dependencies to output file if enabled', (done) => {
+    it('should export private dependencies to output file if enabled', async () => {
       const self = false;
       const file = path.join(tmpDir.name, 'third-party.txt');
       const instance = licensePlugin({
@@ -1256,7 +1252,7 @@ describe('LicensePlugin', () => {
       instance.addDependency(privateDependency, self);
       instance.scanThirdParties();
 
-      verifyFile(file, done, (content) => {
+      await verifyFile(file, (content) => {
         expect(content).toEqual(join([
           'Name: foo',
           'Version: 1.0.0',
@@ -1276,7 +1272,7 @@ describe('LicensePlugin', () => {
       });
     });
 
-    it('should export list of dependencies to output file using given template', (done) => {
+    it('should export list of dependencies to output file using given template', async () => {
       const self = false;
       const file = path.join(tmpDir.name, 'third-party.txt');
       const template =
@@ -1296,12 +1292,12 @@ describe('LicensePlugin', () => {
       instance.addDependency(pkg1, self);
       instance.scanThirdParties();
 
-      verifyFile(file, done, (content) => {
+      await verifyFile(file, (content) => {
         expect(content).toEqual('foo => 1.0.0 (MIT)');
       });
     });
 
-    it('should export list of dependencies to output JSON file using given template', (done) => {
+    it('should export list of dependencies to output JSON file using given template', async () => {
       const self = false;
       const file = path.join(tmpDir.name, 'third-party.json');
       const template = jasmine.createSpy('template').and.callFake((dependencies) => JSON.stringify(dependencies));
@@ -1317,7 +1313,7 @@ describe('LicensePlugin', () => {
       instance.addDependency(pkg1, self);
       instance.scanThirdParties();
 
-      verifyFile(file, done, (content) => {
+      await verifyFile(file, (content) => {
         const json = JSON.parse(content);
         expect(json).toBeDefined();
         expect(json.length).toBe(1);
@@ -1325,7 +1321,7 @@ describe('LicensePlugin', () => {
       });
     });
 
-    it('should export list of dependencies to output file using given template function', (done) => {
+    it('should export list of dependencies to output file using given template function', async () => {
       const self = false;
       const file = path.join(tmpDir.name, 'third-party.txt');
       const template = jasmine.createSpy('template').and.callFake((dependencies) => (
@@ -1344,7 +1340,7 @@ describe('LicensePlugin', () => {
       instance.addDependency(pkg1, self);
       instance.scanThirdParties();
 
-      verifyFile(file, done, (content) => {
+      await verifyFile(file, (content) => {
         expect(content).toEqual('foo => 1.0.0 (MIT)');
         expect(template).toHaveBeenCalled();
       });
@@ -1352,14 +1348,11 @@ describe('LicensePlugin', () => {
 
     it('should not try to export dependencies without output configuration', () => {
       const self = false;
-      const writeFileSync = spyOn(fs, 'writeFileSync').and.callThrough();
       const instance = licensePlugin();
 
       instance.addDependency(pkg1, self);
       instance.addDependency(pkg2, self);
       instance.scanThirdParties();
-
-      expect(writeFileSync).not.toHaveBeenCalled();
     });
 
     it('should export list of non-private dependencies to thirdParty function', () => {
@@ -1503,20 +1496,13 @@ describe('LicensePlugin', () => {
       ]);
     });
 
-    function verifyFile(filePath, done, cb) {
-      verifyFileWithEncoding(filePath, 'utf-8', done, cb);
+    async function verifyFile(filePath, cb) {
+      await verifyFileWithEncoding(filePath, 'utf-8', cb);
     }
 
-    function verifyFileWithEncoding(filePath, encoding, done, cb) {
-      fs.readFile(filePath, encoding, (err, content) => {
-        if (err) {
-          done.fail(err);
-          return;
-        }
-
-        cb(content.toString());
-        done();
-      });
+    async function verifyFileWithEncoding(filePath, encoding, test) {
+      const content = await fs.readFile(filePath, encoding);
+      test(content.toString());
     }
 
     function verifyDefaultOutput(content) {

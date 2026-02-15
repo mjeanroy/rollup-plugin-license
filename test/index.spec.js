@@ -23,7 +23,7 @@
  */
 
 import path from 'path';
-import fs from 'fs';
+import fs from 'fs/promises';
 import tmp from 'tmp';
 import rollupPluginLicense from '../src/index';
 import { join } from './utils/join';
@@ -46,7 +46,7 @@ describe('rollup-plugin-license', () => {
     expect(instance.name).toBe('rollup-plugin-license');
   });
 
-  it('should scan dependencies when chunk is rendered', (done) => {
+  it('should scan dependencies when chunk is rendered', async () => {
     const thirdPartyOutput = path.join(tmpDir.name, 'dependencies.txt');
     const instance = rollupPluginLicense({
       thirdParty: {
@@ -72,19 +72,13 @@ describe('rollup-plugin-license', () => {
     instance.renderChunk(code, chunk, outputOptions);
     instance.generateBundle();
 
-    fs.readFile(thirdPartyOutput, 'utf8', (err, data) => {
-      if (err) {
-        done.fail(err);
-      }
-
-      const content = data.toString();
-      expect(content).toBeDefined();
-      expect(content).toContain('fake-package');
-      done();
-    });
+    const data = await fs.readFile(thirdPartyOutput, 'utf8');
+    const content = data.toString();
+    expect(content).toBeDefined();
+    expect(content).toContain('fake-package');
   });
 
-  it('should scan dependencies when chunk is rendered and skip tree-shaken modules', (done) => {
+  it('should scan dependencies when chunk is rendered and skip tree-shaken modules', async () => {
     const thirdPartyOutput = path.join(tmpDir.name, 'dependencies.txt');
     const instance = rollupPluginLicense({
       thirdParty: {
@@ -119,17 +113,11 @@ describe('rollup-plugin-license', () => {
     instance.renderChunk(code, chunk, outputOptions);
     instance.generateBundle();
 
-    fs.readFile(thirdPartyOutput, 'utf8', (err, data) => {
-      if (err) {
-        done.fail(err);
-      }
-
-      const content = data.toString();
-      expect(content).toBeDefined();
-      expect(content).toContain('fake-package');
-      expect(content).not.toContain('lodash');
-      done();
-    });
+    const data = await fs.readFile(thirdPartyOutput, 'utf8');
+    const content = data.toString();
+    expect(content).toBeDefined();
+    expect(content).toContain('fake-package');
+    expect(content).not.toContain('lodash');
   });
 
   it('should prepend banner when bundle is transformed', () => {
@@ -155,7 +143,7 @@ describe('rollup-plugin-license', () => {
     ]));
   });
 
-  it('should create third-parties file when bundle is generated', (done) => {
+  it('should create third-parties file when bundle is generated', async () => {
     const thirdPartyOutput = path.join(tmpDir.name, 'dependencies.txt');
     const instance = rollupPluginLicense({
       thirdParty: {
@@ -180,16 +168,10 @@ describe('rollup-plugin-license', () => {
     instance.renderChunk(code, chunk, outputOptions);
     instance.generateBundle();
 
-    fs.readFile(thirdPartyOutput, 'utf8', (err, data) => {
-      if (err) {
-        done.fail(err);
-      }
-
-      const content = data.toString();
-      expect(content).toBeDefined();
-      expect(content.length).not.toBe(0);
-      done();
-    });
+    const data = await fs.readFile(thirdPartyOutput, 'utf8');
+    const content = data.toString();
+    expect(content).toBeDefined();
+    expect(content.length).not.toBe(0);
   });
 
   it('should initialize plugin with sourcemap option', () => {
