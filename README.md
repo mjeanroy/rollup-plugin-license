@@ -348,6 +348,9 @@ license({
 
 ## Changelogs
 
+- 3.7.0
+  - Fix type of template function ([#2069](https://github.com/mjeanroy/rollup-plugin-license/pull/2069))
+  - Dependency upgrades
 - 3.6.0
   - Use semver versioning for the `fdir` dependency ([#1895](https://github.com/mjeanroy/rollup-plugin-license/pull/1895))
   - Dependency upgrades
