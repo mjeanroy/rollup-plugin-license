@@ -54,16 +54,20 @@ jobs:
         with:
           node-version: 24
           registry-url: 'https://registry.npmjs.org'
+      - uses: pnpm/action-setup@fc06bc1257f339d1d5d8b3a19a8cae5388b55320 # v5.0.0
+        name: Set up PNPM
+        with:
+          version: 10.33.0
       - name: Fetch all tags
         run: |
           git fetch --prune --unshallow --tags
           git tag --list --sort=committerdate
       - name: Checkout tag
         run: git checkout ${{ inputs.version }}
-      - name: npm install
-        run: npm install --no-audit --no-fund
+      - name: pnpm install
+        run: pnpm install --no-audit --no-fund
       - name: Publish (test)
-        run: NODE_AUTH_TOKEN="" npm publish --dry-run
+        run: NODE_AUTH_TOKEN="" pnpm publish --dry-run
       - name: Publish
         if: inputs.dry_run == false
-        run: NODE_AUTH_TOKEN="" npm publish
+        run: NODE_AUTH_TOKEN="" pnpm publish

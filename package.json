@@ -13,7 +13,7 @@
     "test": "gulp test",
     "tdd": "gulp tdd",
     "changelog": "gulp changelog",
-    "prepare": "npm run build",
+    "prepare": "gulp build",
     "release": "gulp release:minor",
     "release:patch": "gulp release:patch",
     "release:minor": "gulp release:minor",

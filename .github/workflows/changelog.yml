@@ -36,17 +36,21 @@ jobs:
       - uses: actions/setup-node@395ad3262231945c25e8478fd5baf05154b1d79f # v6.0.1
         name: Set up NodeJS
         with:
-          node-version: 22
+          node-version: 24
+      - uses: pnpm/action-setup@fc06bc1257f339d1d5d8b3a19a8cae5388b55320 # v5.0.0
+        name: Set up PNPM
+        with:
+          version: 10.33.0
       - name: Configure Git User
         run: |
           git config user.email "mickael.jeanroy@gmail.com"
           git config user.name "Mickael Jeanroy"
       - name: Install
-        run: npm install
+        run: pnpm install
       - name: Git fetch
         run: git fetch --prune --unshallow --tags
       - name: Changelog
-        run: npm run changelog
+        run: pnpm run changelog
       - name: Git commit
         run: |
           git add CHANGELOG.md

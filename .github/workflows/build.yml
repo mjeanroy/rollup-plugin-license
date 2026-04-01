@@ -38,7 +38,11 @@ jobs:
         name: Set up NodeJS
         with:
           node-version: ${{ matrix.node }}
+      - uses: pnpm/action-setup@fc06bc1257f339d1d5d8b3a19a8cae5388b55320 # v5.0.0
+        name: Set up PNPM
+        with:
+          version: 10.33.0
       - name: Install
-        run: npm install
+        run: pnpm install
       - name: Test
-        run: npm test
+        run: pnpm test
