@@ -64,7 +64,7 @@ export class Dependency {
     if (!this.license && pkg.licenses) {
       // Map it to a valid license field.
       // See: https://docs.npmjs.com/files/package.json#license
-      this.license = `(${pkg.licenses.map((license) => license.type || license).join(' OR ')})`;
+      this.license = `(${_.castArray(pkg.licenses).map((license) => license.type || license).join(" OR ")})`;
     }
   }
 
