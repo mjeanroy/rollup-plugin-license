@@ -42,3 +42,5 @@ node_modules/
 /.nvmrc
 /.travis.yml
 /*.tar.gz
+/pnpm-workspace.yaml
+/pnpm-lock.yaml
