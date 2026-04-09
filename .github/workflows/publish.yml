@@ -65,7 +65,7 @@ jobs:
       - name: Checkout tag
         run: git checkout ${{ inputs.version }}
       - name: pnpm install
-        run: pnpm install --no-audit --no-fund
+        run: pnpm install
       - name: Publish (test)
         run: NODE_AUTH_TOKEN="" pnpm publish --dry-run
       - name: Publish
