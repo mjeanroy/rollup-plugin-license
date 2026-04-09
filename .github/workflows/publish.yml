@@ -28,7 +28,7 @@ on:
   workflow_dispatch:
     inputs:
       version:
-        description: "Version to publish"
+        description: "Version to publish (vX.Y.Z)"
         required: true
         type: string
       dry_run:
