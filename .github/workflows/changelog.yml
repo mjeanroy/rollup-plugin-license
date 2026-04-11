@@ -49,10 +49,6 @@ jobs:
         name: Set up PNPM
         with:
           version: 10.33.0
-      - name: Configure Git User
-        run: |
-          git config user.email "mickael.jeanroy@gmail.com"
-          git config user.name "Mickael Jeanroy"
       - name: Install
         run: pnpm install
       - name: Git fetch
@@ -61,6 +57,12 @@ jobs:
         run: pnpm run changelog
       - name: Git diff
         run: git diff
+      - uses: photostructure/git-ssh-signing-action@eb48d0517cdf304a5fde87d539702a74ebc01e09 # v2.0.0
+        name: Git Sign
+        with:
+          ssh-signing-key: ${{ secrets.SSH_SIGNING_KEY }}
+          git-user-name: ${{ secrets.GIT_USER_NAME }}
+          git-user-email: ${{ secrets.GIT_USER_EMAIL }}
       - name: Git commit
         run: |
           git add CHANGELOG.md
@@ -68,9 +70,7 @@ jobs:
       - name: Git show
         run: git show HEAD
       - name: Git push (dry-run)
-        run: |
-          git push --dry-run origin master
+        run: git push --dry-run origin master
       - name: Git push
         if: inputs.dry_run == false
-        run: |
-          git push origin master
+        run: git push origin master
