@@ -61,6 +61,9 @@ jobs:
         run: |
           git add CHANGELOG.md
           git commit -m "chore: update changelog"
+      - name: Git push (dry-run)
+        run: |
+          git push --dry-run origin master
       - name: Git push
         if: inputs.dry_run == false
         run: |
