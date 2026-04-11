@@ -26,6 +26,12 @@ name: Changelog
 
 on:
   workflow_dispatch:
+    inputs:
+      dry_run:
+        description: "Dry run"
+        required: true
+        type: boolean
+        default: true
 
 jobs:
   build:
@@ -56,5 +62,6 @@ jobs:
           git add CHANGELOG.md
           git commit -m "chore: update changelog"
       - name: Git push
+        if: inputs.dry_run == false
         run: |
           git push origin master
