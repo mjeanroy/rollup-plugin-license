@@ -23,8 +23,13 @@
 ##
 
 name: CI
-on: [push]
+
+on:
+  push:
+  workflow_dispatch:
+
 permissions: {}
+
 jobs:
   build:
     runs-on: ${{ matrix.os }}
