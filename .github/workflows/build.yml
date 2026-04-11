@@ -24,6 +24,7 @@
 
 name: CI
 on: [push]
+permissions: {}
 jobs:
   build:
     runs-on: ${{ matrix.os }}
