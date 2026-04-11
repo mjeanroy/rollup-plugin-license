@@ -85,14 +85,14 @@ jobs:
           git tag --sort=-creatordate
       - name: git push (dry-run)
         run: |
-          git push --dry-run origin "${TAG_NAME}"
+          git push --dry-run origin "${REF_NAME}"
           git push --dry-run --tags
         env:
-          TAG_NAME: ${{ github.ref_name }}
+          REF_NAME: ${{ github.ref_name }}
       - name: git push
         if: inputs.dry_run == false
         run: |
-          git push origin "${TAG_NAME}"
+          git push origin "${REF_NAME}"
           git push --tags
         env:
-          TAG_NAME: ${{ github.ref_name }}
+          REF_NAME: ${{ github.ref_name }}
