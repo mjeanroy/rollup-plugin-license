@@ -57,24 +57,29 @@ jobs:
         name: Set up PNPM
         with:
           version: 10.33.0
-      - name: Configure Git User
-        run: |
-          git config user.email "mickael.jeanroy@gmail.com"
-          git config user.name "Mickael Jeanroy"
       - name: Install
         run: pnpm install
       - name: Test
         run: pnpm test
+      - uses: photostructure/git-ssh-signing-action@eb48d0517cdf304a5fde87d539702a74ebc01e09 # v2.0.0
+        name: Setup git sign
+        with:
+          ssh-signing-key: ${{ secrets.SSH_SIGNING_KEY }}
+          git-user-name: ${{ secrets.GIT_USER_NAME }}
+          git-user-email: ${{ secrets.GIT_USER_EMAIL }}
       - name: Release
         run: pnpm run release:${{ inputs.version }}
-      - name: Git log
+      - name: git verify-commit
+        run: |
+          git verify-commit HEAD^1
+          git verify-commit HEAD
+      - name: git log
         run: |
           git log -n5 --oneline
           git tag --sort=-creatordate
-      - name: Git push (dry-run)
-        run: |
-          git push --dry-run origin master
-      - name: Git push
+      - name: git push (dry-run)
+        run: git push --dry-run origin master
+      - name: git push
         if: inputs.dry_run == false
         run: |
           git push origin ${{ github.ref_name }} 
