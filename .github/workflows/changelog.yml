@@ -57,10 +57,14 @@ jobs:
         run: git fetch --prune --unshallow --tags
       - name: Changelog
         run: pnpm run changelog
+      - name: Git diff
+        run: git diff
       - name: Git commit
         run: |
           git add CHANGELOG.md
           git commit -m "chore: update changelog"
+      - name: Git show
+        run: git show HEAD
       - name: Git push (dry-run)
         run: |
           git push --dry-run origin master
