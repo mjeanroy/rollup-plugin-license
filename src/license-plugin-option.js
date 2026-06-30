@@ -64,6 +64,11 @@ const SCHEMA = {
       includePrivate: validators.boolean(),
       includeSelf: validators.boolean(),
       multipleVersions: validators.boolean(),
+      alwaysInclude: [
+        validators.func(),
+        validators.array(),
+      ],
+      filter: validators.func(),
 
       allow: [
         validators.string(),
