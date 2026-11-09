@@ -64,7 +64,7 @@ jobs:
         run: pnpm run changelog
       - name: git diff
         run: git diff
-      - uses: photostructure/git-ssh-signing-action@eb48d0517cdf304a5fde87d539702a74ebc01e09 # v2.0.0
+      - uses: photostructure/git-ssh-signing-action@abd2a642ab7d704f66193472b47c72375d85a0c1 # v2.0.1
         name: Setup git sign
         with:
           ssh-signing-key: ${{ secrets.SSH_SIGNING_KEY }}
