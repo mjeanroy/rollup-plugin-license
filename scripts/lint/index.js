@@ -23,55 +23,33 @@
  */
 
 const path = require('node:path');
+const { spawn } = require('node:child_process');
 const log = require('../log');
 const config = require('../config');
 
 module.exports = function lint() {
-  const nodeVersion = process.versions.node;
-  const major = Number(nodeVersion.split('.')[0]);
-  if (major <= 14) {
-    log.debug(`Skipping ESLint because of node version compatibility (currenly in used: ${nodeVersion})`);
-    return Promise.resolve();
-  }
-
-  const inputs = [
-    path.join(config.root, '*.js'),
-    path.join(config.src, '**', '*.js'),
-    path.join(config.test, '**', '*.js'),
-    path.join(config.scripts, '**', '*.js'),
-
-    path.join(config.root, '*.ts'),
-    path.join(config.src, '**', '*.ts'),
-    path.join(config.test, '**', '*.ts'),
-    path.join(config.scripts, '**', '*.ts'),
+  const isWindows = process.platform === 'win32';
+  const bin = path.join(config.root, 'node_modules', '.bin', isWindows ? 'oxlint.cmd' : 'oxlint');
+  const args = [
+    '--deny-warnings',
   ];
 
-  log.debug('Linting files: ');
+  log.debug(`Running: ${bin} ${args.join(' ')}`);
 
-  inputs.forEach((input) => (
-    log.debug(`  ${input}`)
-  ));
+  return new Promise((resolve, reject) => {
+    const child = spawn(bin, args, {
+      cwd: config.root,
+      stdio: 'inherit',
+      shell: isWindows,
+    });
 
-  // eslint-disable-next-line global-require
-  const { ESLint } = require('eslint');
-
-  // eslint-disable-next-line global-require
-  const fancyLog = require('fancy-log');
-
-  const eslint = new ESLint({
-    errorOnUnmatchedPattern: false,
-  });
-
-  const lintFiles = eslint.lintFiles(inputs);
-  const loadFormatter = eslint.loadFormatter('stylish');
-
-  return Promise.all([lintFiles, loadFormatter]).then(([results, formatter]) => {
-    for (let i = 0; i < results.length; i++) {
-      const lintResult = results[i];
-      if (lintResult.warningCount > 0 || lintResult.errorCount > 0 || lintResult.fatalErrorCount > 0) {
-        fancyLog(formatter.format(results));
-        throw new Error('ESLintError');
+    child.on('error', reject);
+    child.on('close', (code) => {
+      if (code === 0) {
+        resolve();
+      } else {
+        reject(new Error('OxlintError'));
       }
-    }
+    });
   });
 };

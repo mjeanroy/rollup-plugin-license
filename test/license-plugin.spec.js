@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-/* eslint-disable import/no-dynamic-require, global-require */
+/* eslint-disable import/no-dynamic-require, node/global-require */
 
 import fs from 'node:fs/promises';
 import path from 'node:path';

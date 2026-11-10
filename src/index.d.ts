@@ -56,7 +56,7 @@ declare namespace rollupPluginLicense {
     /**
      * Person URL.
      */
-     readonly url: string | null;
+    readonly url: string | null;
 
     /**
      * Turns the person into a formatted string

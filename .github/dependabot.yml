@@ -32,9 +32,6 @@ updates:
   cooldown:
     default-days: 2
   groups:
-    typescript-eslint:
-      patterns:
-        - "@typescript-eslint/*"
     babel:
       patterns:
         - "@babel/*"

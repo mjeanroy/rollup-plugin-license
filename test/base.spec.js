@@ -31,7 +31,7 @@ import { Person } from '../src/person';
  * normalized dependency object.
  *
  * @param {Dependency|object} input Input.
- * @returns {object} Normalized output.
+ * @return {object} Normalized output.
  */
 function normalizeDependencyObject(input) {
   const output = _.toPlainObject(input);

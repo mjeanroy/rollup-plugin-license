@@ -30,7 +30,7 @@ const config = require('../config');
 
 /**
  * Run command with a pre-configured `cwd` (current working directory)
- * and an encoding set to `utf-8'.
+ * and an encoding set to `utf-8`.
  *
  * @param {string} cmd Command to run.
  * @return {Promise<void>} A promise resolved when the command has been executed.

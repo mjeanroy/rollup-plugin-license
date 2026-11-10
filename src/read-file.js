@@ -32,7 +32,7 @@ import { fdir } from 'fdir';
  *
  * @param {string} dir File directory.
  * @param {string|Array<string>} names Potential filenames.
- * @returns {string|null} File content, or `null` if file does not exist.
+ * @return {string|null} File content, or `null` if file does not exist.
  */
 export function readFile(dir, names) {
   const inputs = _.castArray(names);
@@ -65,7 +65,7 @@ export function readFile(dir, names) {
  * Returns a predicate function that returns `true` if the given path matches the target path.
  *
  * @param {string} target Target path.
- * @returns {function(*): boolean} Predicate function.
+ * @return {function(*): boolean} Predicate function.
  */
 function pathsMatch(target) {
   const targetRegExp = generatePattern(target);
@@ -77,7 +77,7 @@ function pathsMatch(target) {
 /**
  * Generate a pattern where all regexp special characters are escaped.
  * @param {string} input Input.
- * @returns {string} Escaped input.
+ * @return {string} Escaped input.
  */
 function escapeRegExp(input) {
   return input.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, '\\$&');
@@ -94,7 +94,7 @@ const FILE_SUFFIX_PTN = `[^${FILE_FORBIDDEN_CHARACTERS.join('')}]`;
  * starting with `input` (case insensitively).
  *
  * @param {string} input Input.
- * @returns {RegExp} Generated pattern.
+ * @return {RegExp} Generated pattern.
  */
 function generatePattern(input) {
   return new RegExp(`^${input}(${FILE_SUFFIX_PTN})*$`, 'i');

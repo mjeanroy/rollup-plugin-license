@@ -32,7 +32,7 @@ import { formatPath } from './format-path';
  * @param {*} value The value being validated.
  * @param {Array<Object>|Object} schema The validation schema.
  * @param {Array<string|number>} path The path being validated.
- * @returns {Array<Object>} Found errors.
+ * @return {Array<Object>} Found errors.
  */
 function doItemValidation(value, schema, path) {
   const validators = _.castArray(schema);
@@ -69,7 +69,7 @@ function doItemValidation(value, schema, path) {
  * @param {Object} obj The object to validate.
  * @param {Array<Object>|Object} schema The validation schema.
  * @param {Array<string|number>} current The current path being validated.
- * @returns {Array<Object>} Found errors.
+ * @return {Array<Object>} Found errors.
  */
 function validateObject(obj, schema, current) {
   const errors = [];

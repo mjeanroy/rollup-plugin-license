@@ -104,7 +104,7 @@ class LicensePlugin {
     this._dependencies = new Map();
     this._debug = this._options.debug || false;
 
-    // eslint-disable-next-line import/no-dynamic-require, global-require
+    // eslint-disable-next-line import/no-dynamic-require, node/global-require
     this._pkg = require(path.join(this._cwd, 'package.json'));
 
     // SourceMap can now be disable/enable on the plugin.
