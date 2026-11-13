@@ -68,7 +68,7 @@
     "gulp-conventional-changelog": "5.0.0",
     "jasmine": "6.1.0",
     "jasmine-core": "6.1.0",
-    "prettier": "3.9.10",
+    "prettier": "3.10.0",
     "rimraf": "6.1.4",
     "rollup": "4.68.2",
     "rollup-plugin-prettier": "4.2.0",
