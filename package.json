@@ -12,6 +12,7 @@
     "watch": "gulp watch",
     "test": "gulp test",
     "tdd": "gulp tdd",
+    "test:unit": "gulp test:unit",
     "changelog": "gulp changelog",
     "prepare": "gulp build",
     "release": "gulp release:minor",
