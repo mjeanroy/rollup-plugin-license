@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project
 
-`rollup-plugin-license`: a Rollup plugin (peer: rollup 1–4) that (1) prepends a license banner to each generated chunk and (2) scans bundled modules to produce a third-party license summary and/or check licenses against an SPDX allow-list. Package manager is **pnpm** (CI pins 10.33.0). Use a recent version, because older versions silently ignore the supply-chain settings in `pnpm-workspace.yaml` such as `minimumReleaseAge`. Don't add `engines.pnpm`: it is published with the package and would affect plugin users; the source is ES modules compiled by Babel to a CommonJS `dist/index.js` (Node ≥ 14 target).
+`rollup-plugin-license`: a Rollup plugin (peer: rollup 1–4) that (1) prepends a license banner to each generated chunk and (2) scans bundled modules to produce a third-party license summary and/or check licenses against an SPDX allow-list. Package manager is **pnpm 11** (CI pins 11.28.12 through `pnpm/setup`; pnpm 11 itself needs Node ≥ 22.13, but CI installs its standalone binary, so the Node 18–21 runners still work). pnpm settings live in `pnpm-workspace.yaml`: pnpm 11 only reads auth/registry settings from `.npmrc`, which is kept for npm (`npm version` in the release task). Don't add `engines.pnpm`: it is published with the package and would affect plugin users; the source is ES modules compiled by Babel to a CommonJS `dist/index.js` (Node ≥ 14 target).
 
 ## Commands
 

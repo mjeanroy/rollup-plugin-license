@@ -27,3 +27,7 @@ blockExoticSubdeps: true
 trustPolicy: no-downgrade
 trustPolicyExclude:
   - 'semver@6.3.1 || 5.7.2'
+
+# Since pnpm 11, these settings are no longer read from .npmrc (auth/registry only).
+lockfile: false
+saveExact: true
