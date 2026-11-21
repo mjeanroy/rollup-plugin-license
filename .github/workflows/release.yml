@@ -65,6 +65,7 @@ jobs:
           version: 11.28.12
           node-version-file: false
           install: false
+          cache: false
       - name: Install
         run: pnpm install
       - name: Test
