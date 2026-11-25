@@ -282,6 +282,32 @@ license({
 })
 ```
 
+
+You can also add or remove dependencies using a `filter` function:
+
+```javascript
+license({
+  thirdParty: {
+    output: path.join(__dirname, 'dist', 'dependencies.txt'),
+    filter: (deps) => deps.filter((dep) => !dep.name.include('mycorp'),
+  },
+})
+```
+
+Or add packages that must always appear in the output, but would otherwise be omitted:
+
+
+```javascript
+license({
+  thirdParty: {
+    output: path.join(__dirname, 'dist', 'dependencies.txt'),
+    alwaysInclude: [ './node_modules/tailwindcss/package.json' ],
+    }
+  },
+})
+
+`alwaysInclude` may be either an array or a function that returns an array.
+
 ## License Checks
 
 Starting with version 0.13, it is possible to ensure that dependencies does not violate any license restriction.

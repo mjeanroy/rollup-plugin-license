@@ -9,6 +9,7 @@
     "lint": "gulp lint",
     "clean": "gulp clean",
     "build": "gulp build",
+    "prepare": "gulp build",
     "watch": "gulp watch",
     "test": "gulp test",
     "tdd": "gulp tdd",
