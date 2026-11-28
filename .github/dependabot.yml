@@ -47,3 +47,8 @@ updates:
     # Since rollup still supports node 18, ignore major until rollup@5 is released.
     - dependency-name: magic-string
       update-types: ["version-update:semver-major"]
+    # Babel 8 requires node ^22.18.0 || >=24.11.0, which means dropping old node versions in the CI.
+    # Revisit when old node versions are not supported anymore (likely with rollup >= 5).
+    # Also, @rollup/plugin-babel does not officially support Babel 8 (peer dependency: @babel/core ^7).
+    - dependency-name: "@babel/*"
+      update-types: ["version-update:semver-major"]
